@@ -25,6 +25,7 @@ module cascara.ui {
     exports io.github.qishr.cascara.ui.control;
     exports io.github.qishr.cascara.ui.data;
     exports io.github.qishr.cascara.ui.form;
+    exports io.github.qishr.cascara.ui.l10n;
     exports io.github.qishr.cascara.ui.menu;
     exports io.github.qishr.cascara.ui.render;
     exports io.github.qishr.cascara.ui.render.control;

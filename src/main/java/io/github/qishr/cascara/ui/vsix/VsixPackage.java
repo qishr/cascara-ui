@@ -10,14 +10,17 @@ import io.github.qishr.cascara.common.util.ArchiveFile;
 import io.github.qishr.cascara.common.io.IOUtils;
 import io.github.qishr.cascara.common.util.Properties;
 import io.github.qishr.cascara.common.content.ResourceContent;
+import io.github.qishr.cascara.common.diagnostic.LocalizableException;
+import io.github.qishr.cascara.common.diagnostic.LocalizableIOException;
+import io.github.qishr.cascara.common.diagnostic.code.GenericDiagnosticCode;
 import io.github.qishr.cascara.common.lang.ast.ScalarAstNode;
-import io.github.qishr.cascara.common.lang.exception.ParserException;
 import io.github.qishr.cascara.lang.json.processor.JsonParser;
 import io.github.qishr.cascara.lang.json.ast.JsonMapEntryNode;
 import io.github.qishr.cascara.lang.json.ast.JsonMapNode;
 import io.github.qishr.cascara.lang.json.ast.JsonNode;
 import io.github.qishr.cascara.lang.json.ast.JsonSequenceNode;
 import io.github.qishr.cascara.lang.xml.processor.XmlParser;
+import io.github.qishr.cascara.schema.SchemaDiagnosticCode;
 import io.github.qishr.cascara.ui.data.UiDataException;
 import io.github.qishr.cascara.lang.xml.ast.XmlNode;
 
@@ -29,15 +32,15 @@ public class VsixPackage extends ArchiveFile { // implements Importable {
     private URI downloadOrigin = null;
     private URI previewUri = null;
 
-    public static VsixPackage load(Path vsixPath) throws IOException {
+    public static VsixPackage load(Path vsixPath) throws LocalizableIOException {
         String packageInfo = new String(extractFile(vsixPath, "extension/package.json"));
         String vsixManifest = new String(extractFile(vsixPath, "extension.vsixmanifest"));
         VsixPackage vsix;
-        try {
+        // try {
             vsix = new VsixPackage(vsixPath);
-        } catch (ParserException e) {
-            throw new UiDataException("Error parsing JSON: " + e.getMessage(), e);
-        }
+        // } catch (ParserException e) {
+        //     throw new UiDataException("Error parsing JSON: " + e.getMessage(), e);
+        // }
         vsix.parseManifest(vsixManifest);
         vsix.parsePackageManifest(packageInfo);
         return vsix;
@@ -47,18 +50,18 @@ public class VsixPackage extends ArchiveFile { // implements Importable {
         super(vsixPath);
     }
 
-    public static VsixPackage fromJson(String jsonString) {
+    public static VsixPackage fromJson(String jsonString) throws LocalizableException {
         JsonParser jsonParser = new JsonParser();
         JsonMapNode json = null;
-        try {
+        // try {
             if (jsonParser.parse(jsonString) instanceof JsonMapNode m) {
                 json = m;
             } else {
-                throw new UiDataException("Error parsing JSON: Root is not a map", null);
+                throw new UiDataException(SchemaDiagnosticCode.ROOT_MUST_BE_MAP);
             }
-        } catch (ParserException e) {
-            throw new UiDataException("Error parsing JSON: " + e.getMessage(), e);
-        }
+        // } catch (ParserException e) {
+        //     throw new UiDataException("Error parsing JSON: " + e.getMessage(), e);
+        // }
 
         // Use getEntries() from MappingAstNode
         io.github.qishr.cascara.lang.json.ast.JsonNode extensionFiles =
@@ -91,14 +94,14 @@ public class VsixPackage extends ArchiveFile { // implements Importable {
         vsix.getProperties().set("displayName", getPropertyAsString(json, "displayName"));
         //TODO: The rest
 
-        try {
+        // try {
             // Get package info...
             String manifestUri = vsix.getProperties().getString("manifestUri");
-            ResourceContent manifest = IOUtils.getResource(new URI(manifestUri));
+            ResourceContent manifest = IOUtils.getResource(URI.create(manifestUri));
             vsix.parsePackageManifest(manifest.content());
-        } catch (URISyntaxException | IOException e) {
-            throw new UiDataException("Error parsing VSIX from URL: " + e.getMessage(), e);
-        }
+        // } catch (URISyntaxException | IOException e) {
+        //     throw new UiDataException("Error parsing VSIX from URL: " + e.getMessage(), e);
+        // }
 
 
         // String displayName = json.get("displayName").asText();
@@ -114,20 +117,20 @@ public class VsixPackage extends ArchiveFile { // implements Importable {
         return "";
     }
 
-    private void parsePackageManifest(String jsonString) throws IOException {
+    private void parsePackageManifest(String jsonString) throws LocalizableIOException {
         if (jsonString == null || jsonString.isBlank()) return;
         JsonParser jsonParser = new JsonParser();
         JsonMapNode json;
-        try {
+        // try {
             JsonNode rootNode = jsonParser.parse(jsonString);
             if (rootNode instanceof JsonMapNode m) {
                 json = m;
             } else {
-                throw new UiDataException("Error parsing JSON: Root is not a map", null);
+                throw new UiDataException(SchemaDiagnosticCode.ROOT_MUST_BE_MAP);
             }
-        } catch (ParserException e) {
-            throw new UiDataException("Error parsing JSON: " + e.getMessage(), e);
-        }
+        // } catch (ParserException e) {
+        //     throw new UiDataException("Error parsing JSON: " + e.getMessage(), e);
+        // }
 
         for (JsonMapEntryNode entry : json.getEntries()) {
             String name = entry.getKey().asString();
@@ -230,7 +233,7 @@ public class VsixPackage extends ArchiveFile { // implements Importable {
         return themes;
     }
 
-    private void parseManifest(String manifest) throws IOException {
+    private void parseManifest(String manifest) throws LocalizableIOException {
         if (manifest == null || manifest.isBlank()) return;
         try {
             XmlParser xmlParser = new XmlParser();
@@ -244,7 +247,7 @@ public class VsixPackage extends ArchiveFile { // implements Importable {
             }
         }catch (Exception e) {
             e.printStackTrace();
-            throw new UiDataException(e.getMessage(), e);
+            throw new UiDataException(e, GenericDiagnosticCode.ERROR, e.getMessage());
         }
     }
 }

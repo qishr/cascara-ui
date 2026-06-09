@@ -18,6 +18,7 @@ import io.github.qishr.cascara.schema.rule.ValidationRule;
 import io.github.qishr.cascara.ui.api.render.Renderer;
 import io.github.qishr.cascara.ui.api.render.RendererFactory;
 import io.github.qishr.cascara.common.data.TableData;
+import io.github.qishr.cascara.common.diagnostic.code.GenericDiagnosticCode;
 import io.github.qishr.cascara.ui.data.UiDataException;
 import io.github.qishr.cascara.ui.option.OptionProvider;
 import io.github.qishr.cascara.ui.option.OptionProviderRegistry;
@@ -81,7 +82,7 @@ public class FieldMetadata {
         String optionProviderId = null;
 
         if (fieldName == null) {
-            throw new UiDataException("fieldName should not be null");
+            throw new UiDataException(GenericDiagnosticCode.UNEXPECTED_NULL, "fieldName");
         }
 
         if (fieldSchema == null) {

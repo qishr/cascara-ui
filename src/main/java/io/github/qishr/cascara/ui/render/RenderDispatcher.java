@@ -8,6 +8,7 @@ import io.github.qishr.cascara.common.diagnostic.GlobalReporter;
 import io.github.qishr.cascara.common.diagnostic.Reporter;
 import io.github.qishr.cascara.schema.SchemaType;
 import io.github.qishr.cascara.schema.structure.SchemaNode;
+import io.github.qishr.cascara.ui.api.UiDiagnosticCode;
 import io.github.qishr.cascara.ui.api.data.DataProvider;
 import io.github.qishr.cascara.ui.api.render.ArrayEditorRenderer;
 import io.github.qishr.cascara.ui.api.render.ScalarRenderer;
@@ -48,7 +49,7 @@ public class RenderDispatcher {
                 control = renderer.render(view, list, dataProvider, meta);
             } else {
                 REPORTER.warn(
-                    "NULL Renderer for property \"%s\" (Schema type: %s, Content type: %s)",
+                    UiDiagnosticCode.NO_RENDERER_SET,
                     meta.getName(), meta.getSchemaType(), meta.getContentType()
                 );
             }

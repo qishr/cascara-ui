@@ -3,7 +3,9 @@ package io.github.qishr.cascara.ui.control;
 import java.util.List;
 import java.util.function.Consumer;
 
+import io.github.qishr.cascara.common.diagnostic.code.GenericDiagnosticCode;
 import io.github.qishr.cascara.ui.api.ToolTipProvider;
+import io.github.qishr.cascara.ui.api.UiDiagnosticCode;
 import io.github.qishr.cascara.ui.api.data.ObservableTableData;
 import io.github.qishr.cascara.ui.api.render.ScalarRenderer;
 import io.github.qishr.cascara.ui.data.ColumnMetadata;
@@ -313,18 +315,18 @@ public class CascaraTree<T extends ObservableTreeNode<T,?>> extends StackPane {
                 TreeItem<T> treeItem = data.getValue();
 
                 if (treeItem == null) {
-                    throw new UiDataException("TreeItem should not be null");
+                    throw new UiDataException(GenericDiagnosticCode.UNEXPECTED_NULL, "TreeItem");
                 }
                 T observableTreeNode = treeItem.getValue();
                 if (observableTreeNode == null) {
-                    throw new UiDataException("ObservableTreeNode should not be null");
+                    throw new UiDataException(GenericDiagnosticCode.UNEXPECTED_NULL, "ObservableTreeNode");
                 }
 
                 String columnName = def.getName();
 
                 Observable observable = observableTreeNode.getObservable(columnName);
                 if (observable == null) {
-                    throw new UiDataException("Unrecognized property name: " + columnName);
+                    throw new UiDataException(UiDiagnosticCode.PROPERTY_NOT_RECOGNIZED, columnName);
                 }
 
                 if (observable instanceof ObjectProperty property) {

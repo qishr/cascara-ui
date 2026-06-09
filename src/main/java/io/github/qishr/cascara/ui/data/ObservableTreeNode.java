@@ -21,12 +21,9 @@ public abstract class ObservableTreeNode<T extends ObservableTreeNode<T,V>,V ext
     private final SimpleObjectProperty<V> physicalValue;
     private final SimpleObjectProperty<T> parent;
     private final ObservableList<T> children = FXCollections.observableArrayList();
-    // private final SimpleStringProperty id = new SimpleStringProperty(this, "id", "");
 
     @SchemaProperty
     private ObjectProperty<String> nodeName; // AbstractObservableAstNode.NODE_NAME_PROPERTY imust match this exactly
-
-    // private String name;
 
     public ObservableTreeNode(T parent, String nodeName) {
         super();
@@ -46,7 +43,6 @@ public abstract class ObservableTreeNode<T extends ObservableTreeNode<T,V>,V ext
     public ObjectProperty<SchemaType> typeProperty() { return schemaType; }
     public ObjectProperty<SchemaNode> schemaProperty() { return schema; }
 
-    // public final SimpleStringProperty idProperty() {return nodeName;}
     public final ObjectProperty<String> nodeNameProperty() {return nodeName;}
     public final SimpleObjectProperty<T> parentProperty() {return parent;}
     public SimpleObjectProperty<V> payloadProperty() { return physicalValue; }

@@ -2,11 +2,15 @@ package io.github.qishr.cascara.ui.render.control;
 
 
 import java.time.LocalDate;
+import java.time.chrono.Chronology;
 import java.time.format.DateTimeParseException;
+import java.util.Locale;
 
 import io.github.qishr.cascara.ui.api.data.DataProvider;
 import io.github.qishr.cascara.ui.api.render.ScalarEditorRenderer;
 import io.github.qishr.cascara.ui.form.FieldMetadata;
+import io.github.qishr.cascara.ui.l10n.Localization;
+import io.github.qishr.cascara.ui.l10n.Localizer;
 import io.github.qishr.cascara.ui.render.AbstractScalarRenderer;
 import javafx.beans.Observable;
 import javafx.beans.property.ObjectProperty;
@@ -30,6 +34,9 @@ public class DateChooserRenderer extends AbstractScalarRenderer implements Scala
         if (data instanceof ObjectProperty prop) {
 
             DatePicker control = new DatePicker();
+
+            Localization.bindLocale(control);
+
             try {
                 control.setValue(LocalDate.parse(extractString(prop)));
             } catch (DateTimeParseException e) {
