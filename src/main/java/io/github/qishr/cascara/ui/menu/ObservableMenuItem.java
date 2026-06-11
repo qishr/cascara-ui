@@ -1,9 +1,14 @@
 package io.github.qishr.cascara.ui.menu;
 
 import io.github.qishr.cascara.common.diagnostic.GlobalReporter;
+import io.github.qishr.cascara.common.diagnostic.LocalizableException;
+import io.github.qishr.cascara.common.diagnostic.LocalizableRuntimeException;
 import io.github.qishr.cascara.common.diagnostic.Reporter;
+import io.github.qishr.cascara.common.diagnostic.code.GenericDiagnosticCode;
 import io.github.qishr.cascara.schema.annotation.SchemaDefinition;
 import io.github.qishr.cascara.schema.annotation.SchemaProperty;
+import io.github.qishr.cascara.ui.api.UiDiagnosticCode;
+import io.github.qishr.cascara.ui.api.UiException;
 import io.github.qishr.cascara.ui.data.ObservableTreeNode;
 import io.github.qishr.cascara.ui.data.UiDataException;
 
@@ -196,7 +201,7 @@ public class ObservableMenuItem extends ObservableTreeNode<ObservableMenuItem, O
             }
         } else {
             if (isRoot) {
-                throw new UiDataException("createMenuItem is unsupported for root");
+                throw new LocalizableRuntimeException(UiDiagnosticCode.ADD_UNSUPPORTED);
             }
             if (this.fxMenuItem instanceof Menu fxParentMenu) {
                 try {
@@ -205,8 +210,8 @@ public class ObservableMenuItem extends ObservableTreeNode<ObservableMenuItem, O
                     } else {
                         fxParentMenu.getItems().add(item.fxMenuItem);
                     }
-                } catch (java.lang.UnsupportedOperationException e) {
-                    throw new UiDataException(e.getMessage(), e);
+                } catch (UnsupportedOperationException e) {
+                    throw new UiException(e, GenericDiagnosticCode.UNSUPPORTED_OPERATION, e.getMessage());
                 }
             }
         }

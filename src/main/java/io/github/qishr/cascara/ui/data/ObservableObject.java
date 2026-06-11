@@ -18,6 +18,7 @@ import io.github.qishr.cascara.schema.structure.SchemaNode;
 import io.github.qishr.cascara.schema.util.SchemaCompiler;
 import io.github.qishr.cascara.schema.util.SchemaGenerator;
 import io.github.qishr.cascara.schema.util.CascaraSchemaUri;
+import io.github.qishr.cascara.ui.api.UiDiagnosticCode;
 import io.github.qishr.cascara.ui.api.data.ObservableTableData;
 import io.github.qishr.cascara.ui.schema.TypeAnalyzers;
 import io.github.qishr.cascara.ui.schema.UiTypeAnalyzer;
@@ -52,7 +53,7 @@ public class ObservableObject implements Observable, ObservableTableData {
         displayStringProperty = new SimpleObjectProperty<>(this, "displayString", "");
         createObjectSchema();
         if (objectSchema.get() == null) {
-            throw new UiDataException("ObservableObject failed to create schema for " + this.getClass().getSimpleName());
+            throw new UiDataException(UiDiagnosticCode.SCHEMA_GENERATION_ERROR, this.getClass().getSimpleName());
         }
         registerProperties();
     }
@@ -88,7 +89,7 @@ public class ObservableObject implements Observable, ObservableTableData {
             Schema compiledSchema = compiler.compile(doc, schemaUri.toUri());
             schemaNode = compiledSchema.getRoot();
             if (schemaNode == null) {
-                throw new UiDataException("ObservableObject failed to compile schema");
+                throw new UiDataException(UiDiagnosticCode.SCHEMA_COMPILATION_ERROR);
             }
             objectSchemas.put(getClass(), schemaNode);
         }
@@ -98,10 +99,6 @@ public class ObservableObject implements Observable, ObservableTableData {
     public Set<String> getPropertyNames() { return properties.keySet(); }
 
     public final PropertyMetadata getPropertyMetadata(String name) { return properties.get(name); }
-
-    // public final void defineProperty(String name, SchemaType schemaType, String mediaType) {
-    //     defineProperty(name, schemaType, mediaType, false);
-    // }
 
     private final void defineProperty(String name, SchemaType schemaType, String mediaType, boolean isDeclaredProperty) {
         properties.put(name, new PropertyMetadata(schemaType, mediaType, isDeclaredProperty));
@@ -152,7 +149,7 @@ public class ObservableObject implements Observable, ObservableTableData {
                 field.set(this, property);
             } catch (IllegalArgumentException | IllegalAccessException e) {
                 // The field value was unset and we can't set it.
-                throw new UiDataException("Unable to set value for " + propertyName + ". " + e.getMessage(), e);
+                throw new UiDataException(e, UiDiagnosticCode.CANNOT_SET_VALUE, propertyName, e.getMessage());
             }
         }
 
@@ -357,7 +354,7 @@ public class ObservableObject implements Observable, ObservableTableData {
                 list.setAll(collection);
             }
         } else {
-            throw new UiDataException("Unrecognized property name: " + key);
+            throw new UiDataException(UiDiagnosticCode.PROPERTY_NOT_RECOGNIZED, key);
         }
         invalidate();
     }

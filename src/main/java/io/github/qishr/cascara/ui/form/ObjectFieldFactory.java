@@ -4,12 +4,14 @@ import java.util.Map.Entry;
 
 import io.github.qishr.cascara.common.diagnostic.GlobalReporter;
 import io.github.qishr.cascara.common.diagnostic.Reporter;
+import io.github.qishr.cascara.common.diagnostic.code.GenericDiagnosticCode;
 import io.github.qishr.cascara.common.service.ServiceProviderLayer;
 import io.github.qishr.cascara.schema.Schema;
 import io.github.qishr.cascara.schema.SchemaType;
 import io.github.qishr.cascara.schema.structure.SchemaNode;
 import io.github.qishr.cascara.schema.rule.ValidationRule;
 import io.github.qishr.cascara.schema.rule.MaxLengthRule;
+import io.github.qishr.cascara.ui.api.UiDiagnosticCode;
 import io.github.qishr.cascara.ui.api.data.ObservableTableData;
 import io.github.qishr.cascara.ui.data.UiDataException;
 import io.github.qishr.cascara.ui.render.Renderers;
@@ -87,7 +89,7 @@ public class ObjectFieldFactory extends AbstractFieldFactory {
     public UnlabeledField createField(String fieldName) throws UiDataException {
         SchemaNode fieldSchema = getFieldSchema(fieldName);
         if (fieldSchema == null) {
-            REPORTER.error(null, "Failed to create form field. No schema specified.");
+            REPORTER.error(UiDiagnosticCode.SCHEMA_NOT_SPECIFIED);
             return null;
         }
 
@@ -95,8 +97,7 @@ public class ObjectFieldFactory extends AbstractFieldFactory {
         meta.setRenderers(new Renderers(rendererFactories, meta));
         Observable data = object.getObservablesMap().get(fieldName);
         if (data == null) {
-            String message = String.format("Object %s is missing %s from its observables map", object.getClass().getSimpleName(), fieldName);
-            throw new UiDataException(message, null);
+            throw new UiDataException(UiDiagnosticCode.PROPERTY_NOT_FOUND_IN_MAP, object.getClass().getSimpleName(), fieldName);
         }
 
         if (meta.isArrayField() && data instanceof ObservableList list) {
@@ -110,8 +111,9 @@ public class ObjectFieldFactory extends AbstractFieldFactory {
         ViewAndControl viewAndControl = createControl(meta, data);
 
         if (viewAndControl == null) {
-            REPORTER.error(null, "Failed to create form field: " + fieldSchema.getOriginUri());
-            return null;
+            throw new UiDataException(GenericDiagnosticCode.UNEXPECTED_NULL, "viewAndControl");
+            // REPORTER.error(null, "Failed to create form field: " + fieldSchema.getOriginUri());
+            // return null;
         }
         UnlabeledField field = new UnlabeledField(data, viewAndControl, meta);
 

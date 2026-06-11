@@ -5,6 +5,7 @@ import java.util.function.Consumer;
 import io.github.qishr.cascara.schema.structure.SchemaNode;
 import io.github.qishr.cascara.schema.util.ValidationResult;
 import io.github.qishr.cascara.common.data.TableData;
+import io.github.qishr.cascara.common.diagnostic.code.GenericDiagnosticCode;
 import io.github.qishr.cascara.ui.data.UiDataException;
 import io.github.qishr.cascara.ui.style.custom.FormStyle;
 
@@ -28,7 +29,7 @@ public class UnlabeledField extends Field {
 
     public UnlabeledField(Observable observable, ViewAndControl inputControl, FieldMetadata metadata) {
         if (inputControl == null) {
-            throw new UiDataException("inputControl must not be null");
+            throw new UiDataException(GenericDiagnosticCode.UNEXPECTED_NULL, "inputControl");
         }
         if (observable instanceof ObjectProperty obj) {
             this.property = obj;
@@ -55,7 +56,7 @@ public class UnlabeledField extends Field {
     /// @param metadata i
     public UnlabeledField(ObservableList<?> list, ViewAndControl inputControl, FieldMetadata metadata) {
         if (inputControl == null) {
-            throw new UiDataException("inputControl must not be null");
+            throw new UiDataException(GenericDiagnosticCode.UNEXPECTED_NULL, "inputControl");
         }
         this.inputControl = inputControl;
         this.metadata = metadata;

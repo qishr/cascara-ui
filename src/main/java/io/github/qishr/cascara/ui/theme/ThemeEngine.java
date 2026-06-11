@@ -15,7 +15,11 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import io.github.qishr.cascara.common.diagnostic.LocalizableIOException;
+import io.github.qishr.cascara.common.diagnostic.code.GenericDiagnosticCode;
 import io.github.qishr.cascara.ui.api.HighlightingToken;
+import io.github.qishr.cascara.ui.api.UiDiagnosticCode;
+import io.github.qishr.cascara.ui.api.UiException;
 import io.github.qishr.cascara.ui.color.ColorDefinition;
 import io.github.qishr.cascara.ui.color.ColorException;
 import io.github.qishr.cascara.ui.color.ColorUtil;
@@ -165,7 +169,7 @@ public class ThemeEngine implements AutoCloseable {
 
     public void setTheme(CascaraTheme theme) {
         if (theme == null) {
-            throw new UiDataException("Theme must not be null");
+            throw new UiException(GenericDiagnosticCode.UNEXPECTED_NULL, "CascaraTheme");
         }
         activeTheme.set(theme);
         setVariation(theme.getVariations().getFirst());
@@ -295,18 +299,18 @@ public class ThemeEngine implements AutoCloseable {
     //     }
     // }
 
-    private void applyVariation(Variation variation, ThemableObject object) throws ColorException {
-        if (object == null) {
-            throw new UiDataException("Object must be a Scene or a Parent");
+    private void applyVariation(Variation variation, ThemableObject target) throws ColorException {
+        if (target == null) {
+            throw new UiException(UiDiagnosticCode.INVALID_THEMING_TARGET);
         }
         setFontFamily("Verdana");
 
         String themeCss = getStylesheet(variation);
         String dataUri = getDataUri(themeCss);
 
-        object.getStylesheets().clear();
-        object.getStylesheets().add(getClass().getResource("/io/github/qishr/cascara/ui/theme/fonts.css").toExternalForm());
-        object.getStylesheets().add(dataUri);
+        target.getStylesheets().clear();
+        target.getStylesheets().add(getClass().getResource("/io/github/qishr/cascara/ui/theme/fonts.css").toExternalForm());
+        target.getStylesheets().add(dataUri);
     }
 
     private void applyStyle(ControlStyle style, ThemableObject object) {
@@ -341,7 +345,8 @@ public class ThemeEngine implements AutoCloseable {
         VsixPackage vsixPackage;
         try {
             vsixPackage = VsixPackage.load(packagePath);
-        } catch (IOException e) {
+        } catch (LocalizableIOException e) {
+            // TODO: Handle this properly
             e.printStackTrace();
             return null;
         }
@@ -539,7 +544,7 @@ public class ThemeEngine implements AutoCloseable {
 
         public static ThemableObject of(Scene scene) {
             if (scene == null) {
-                throw new UiDataException("Parameter must not be null");
+                throw new UiException(GenericDiagnosticCode.UNEXPECTED_NULL, "Scene");
             }
             ThemableObject object = new ThemableObject();
             object.scene = scene;
@@ -548,7 +553,7 @@ public class ThemeEngine implements AutoCloseable {
 
         public static ThemableObject of(Parent parent) {
             if (parent == null) {
-                throw new UiDataException("Parameter nust not be null");
+                throw new UiException(GenericDiagnosticCode.UNEXPECTED_NULL, "Parent");
             }
             ThemableObject object = new ThemableObject();
             object.parent = parent;
@@ -562,7 +567,7 @@ public class ThemeEngine implements AutoCloseable {
             if (scene != null) {
                 return scene.getStylesheets();
             }
-            throw new UiDataException("Inconsisten state");
+            throw new UiException(GenericDiagnosticCode.INCONSISTENT_STATE);
         }
     }
 }

@@ -7,18 +7,15 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.qishr.cascara.common.content.type.ContentTypeException;
-import io.github.qishr.cascara.common.content.type.ContentTypeRegistry;
-import io.github.qishr.cascara.common.content.type.ContentTypeStore;
+import io.github.qishr.cascara.common.diagnostic.LocalizableIOException;
 import io.github.qishr.cascara.common.diagnostic.NoOpReporter;
 import io.github.qishr.cascara.common.diagnostic.Reporter;
+import io.github.qishr.cascara.common.diagnostic.code.GenericDiagnosticCode;
 import io.github.qishr.cascara.common.io.filewatcher.FileWatcher;
 import io.github.qishr.cascara.common.io.filewatcher.FileChangeHandler;
 import io.github.qishr.cascara.common.io.filewatcher.FileChangeType;
-import io.github.qishr.cascara.common.util.ContentType;
 import io.github.qishr.cascara.common.util.Properties;
-import io.github.qishr.cascara.lang.yaml.processor.YamlSerializer;
-import io.github.qishr.cascara.ui.menu.ObservableMenuItem;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -30,7 +27,7 @@ public class VsixPackageStore implements AutoCloseable {
     private FileWatcher fileWatcher;
     private static VsixPackageStore instance;
 
-    private Reporter reporter = new NoOpReporter();
+    // private Reporter reporter = new NoOpReporter();
 
     private VsixPackageStore() {
         init();
@@ -79,13 +76,13 @@ public class VsixPackageStore implements AutoCloseable {
         return instance;
     }
 
-    public void setReporter(Reporter reporter) {
-        if (reporter == null) {
-            this.reporter = new NoOpReporter();
-        } else {
-            this.reporter = reporter;
-        }
-    }
+    // public void setReporter(Reporter reporter) {
+    //     if (reporter == null) {
+    //         this.reporter = new NoOpReporter();
+    //     } else {
+    //         this.reporter = reporter;
+    //     }
+    // }
 
     public ObservableList<VsixPackageInfo> getPackages() {
         // enumeratePackages();
@@ -127,16 +124,21 @@ public class VsixPackageStore implements AutoCloseable {
             }
             VsixPackageInfo info = new VsixPackageInfo(path, name, displayName);
             return info;
-        } catch (IOException e) {
+        } catch (LocalizableIOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
             return null;
         }
     }
 
-    public void install(Path packagePath) throws IOException {
+    public void install(Path packagePath) throws LocalizableIOException {
         Path fileName = packagePath.getFileName();
-        Files.copy(packagePath, packageDir.resolve(fileName));
-
+        try {
+            Files.copy(packagePath, packageDir.resolve(fileName));
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            throw new LocalizableIOException(e, GenericDiagnosticCode.IO_ERROR, e.getMessage());
+        }
     }
 }

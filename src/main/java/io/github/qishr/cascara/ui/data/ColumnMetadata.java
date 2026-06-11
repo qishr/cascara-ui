@@ -1,11 +1,10 @@
 package io.github.qishr.cascara.ui.data;
 
-import java.net.URI;
 import java.util.Comparator;
 import java.util.List;
-import java.util.function.Consumer;
 
-import io.github.qishr.cascara.common.type.TypeDescriptor;
+import io.github.qishr.cascara.common.lang.type.ScalarDescriptor;
+import io.github.qishr.cascara.common.lang.type.TypeDescriptor;
 import io.github.qishr.cascara.schema.structure.SchemaNode;
 import io.github.qishr.cascara.ui.api.render.Renderer;
 import io.github.qishr.cascara.ui.api.render.RendererFactory;
@@ -23,7 +22,7 @@ import javafx.util.Callback;
 public class ColumnMetadata extends FieldMetadata {
 
     private Comparator<ObservableValue<?>> comparator;
-    private TypeDescriptor typeDescriptor;
+    private TypeDescriptor<?> typeDescriptor;
 
     private String headerStyle = "";
     private String cellStyle = "";
@@ -66,7 +65,7 @@ public class ColumnMetadata extends FieldMetadata {
         if (title != null) setTitle(title);
     }
 
-    public TypeDescriptor getTypeDescriptor() { return typeDescriptor; }
+    public TypeDescriptor<?> getTypeDescriptor() { return typeDescriptor; }
     public Comparator<ObservableValue<?>> getComparator() {
         if (comparator == null) {
             configureComparator();
@@ -79,7 +78,7 @@ public class ColumnMetadata extends FieldMetadata {
     public String getCellStyle() { return cellStyle; }
     public String getHeaderStyle() { return headerStyle; }
 
-    public ColumnMetadata setTypeDescriptor(TypeDescriptor v) { typeDescriptor = v; return this;}
+    public ColumnMetadata setTypeDescriptor(TypeDescriptor<?> v) { typeDescriptor = v; return this;}
     public ColumnMetadata setComparator(Comparator<ObservableValue<?>> v) { comparator = v; return this; }
     public ColumnMetadata setMinWidth(double value) { this.minWidth = value; return this; }
     public ColumnMetadata setPrefWidth(double value) { this.prefWidth = value; return this; }
@@ -92,9 +91,13 @@ public class ColumnMetadata extends FieldMetadata {
             Object o1 = v1.getValue();
             Object o2 = v2.getValue();
 
-            if (typeDescriptor != null) {
-                String s1 = typeDescriptor.toText(o1);
-                String s2 = typeDescriptor.toText(o2);
+            if (typeDescriptor instanceof ScalarDescriptor descriptor) {
+                // String s1 = descriptor.toText(o1);
+                // String s2 = descriptor.toText(o2);
+
+                String s1 = descriptor.toPrimitive(o1).toString();
+                String s2 = descriptor.toPrimitive(o2).toString();
+
                 return s1.compareTo(s2);
             }
 

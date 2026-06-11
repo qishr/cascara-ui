@@ -3,6 +3,8 @@ package io.github.qishr.cascara.ui.render.control;
 import java.util.List;
 import java.util.Map;
 
+import io.github.qishr.cascara.common.diagnostic.code.GenericDiagnosticCode;
+import io.github.qishr.cascara.ui.api.UiException;
 import io.github.qishr.cascara.ui.api.data.DataProvider;
 import io.github.qishr.cascara.ui.api.render.ScalarEditorRenderer;
 import io.github.qishr.cascara.ui.control.OptionChooser;
@@ -34,7 +36,7 @@ public class OptionChooserRenderer extends AbstractScalarRenderer implements Sca
         Option initialValue = null;
 
         if (meta.getOptionProvider() == null) {
-            throw new UiDataException("OptionProvider must not be null");
+            throw new UiException(GenericDiagnosticCode.UNEXPECTED_NULL, "OptionProvider");
         }
 
         if (data instanceof ObjectProperty prop) {

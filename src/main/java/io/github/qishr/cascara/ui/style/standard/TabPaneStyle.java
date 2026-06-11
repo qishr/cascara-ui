@@ -140,7 +140,8 @@ public class TabPaneStyle extends ControlStyle {
 
         defineRule(newRule()
             .addSelector (classSelector("tab-pane > .tab-content-area"))
-            .addDeclaration(FX_PADDING, values(sides(px(16), ZERO, ZERO, ZERO)), false)
+            // .addDeclaration(FX_PADDING, values(sides(px(16), ZERO, ZERO, ZERO)), false)
+            .addDeclaration(FX_PADDING, values(ZERO), false)
             .build()
         );
 
