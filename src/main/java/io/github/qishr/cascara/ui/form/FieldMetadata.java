@@ -30,9 +30,11 @@ import io.github.qishr.cascara.ui.schema.ItemsEditableConstraint;
 import io.github.qishr.cascara.ui.schema.OptionConstraint;
 
 import javafx.beans.property.Property;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 public class FieldMetadata {
-    private final String fieldName;
+    private final StringProperty fieldName = new SimpleStringProperty();
     private final SchemaNode fieldSchema;
     private final SchemaType schemaType;
     private final String format;
@@ -76,7 +78,7 @@ public class FieldMetadata {
                 OptionProviderRegistry optionProviderRegistry,
                 List<RendererFactory<?>> rendererFactories) {
         this. fieldSchema = fieldSchema;
-        this.fieldName = fieldName;
+        this.fieldName.set(fieldName);
         this.optionProviderRegistry = optionProviderRegistry;
         this.rendererFactories = rendererFactories;
         String optionProviderId = null;
@@ -165,6 +167,8 @@ public class FieldMetadata {
         return renderers;
     }
 
+    public StringProperty nameProperty() { return fieldName; }
+
     public void setDataContext(Map<String,Property<?>> context) { this.dataContext = context; }
     public void setColumnMetaList(Collection<ColumnMeta> v) { columnMetas = v; }
     public void setAddRowHandler(Runnable addRow) { this.addRowHandler = addRow; }
@@ -176,7 +180,7 @@ public class FieldMetadata {
     public boolean allowEdit() { return allowEdit; }
     public boolean allowDelete() { return allowDelete; }
     public boolean allowAdd() { return allowAdd; }
-    public String getName() { return fieldName; }
+    public String getName() { return fieldName.get(); }
     public SchemaNode getSchema() { return fieldSchema; }
     public SchemaNode getItemsSchema() { return itemsSchema; }
     public SchemaType getSchemaType() { return schemaType; }
@@ -219,7 +223,9 @@ public class FieldMetadata {
     private List<String> findEnumValues(SchemaNode schema) {
         if (schema == null) return null;
 
-        if ("type".equals(fieldName) && SchemaKeyword.exists(fieldName)) {
+        // TODO: This seems wrong.
+        // Should it not be: SchemaKeyword.TYPE.asString().equals(fieldName.get())
+        if ("type".equals(fieldName.get()) && SchemaKeyword.exists(fieldName.get())) {
             SchemaNode meta = fieldSchema.getMetaSchema();
             if (meta != null && isMetaSchema(meta.getOriginUri())) {
                 return SchemaKeyword.TYPE.suggestions();
