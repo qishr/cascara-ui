@@ -39,6 +39,7 @@ public class ColumnMetadata extends FieldMetadata {
 
         super(name, schema, optionProviderRegistry, rendererFactories);
         if (title != null) setTitle(title);
+        setRenderers(new Renderers(rendererFactories, this));
     }
 
     public ColumnMetadata(String name, String title, SchemaNode schema,
@@ -47,6 +48,7 @@ public class ColumnMetadata extends FieldMetadata {
 
         super(name, schema, optionProviderRegistry, rendererFactories);
         if (title != null) setTitle(title);
+        setRenderers(new Renderers(rendererFactories, this));
     }
 
     public ColumnMetadata(String name, String title, Renderer renderer) {
@@ -95,6 +97,7 @@ public class ColumnMetadata extends FieldMetadata {
     public ColumnMetadata setMaxWidth(double value) { this.maxWidth = value; return this; }
     public ColumnMetadata setCellStyle(String value) { this.cellStyle = value; return this; }
     public ColumnMetadata setHeaderStyle(String value) { this.headerStyle = value; return this; }
+    public ColumnMetadata setAllowEdit(boolean v) { allowEdit = v; return this; }
 
     private void configureComparator() {
         comparator = (ObservableValue<?> v1, ObservableValue<?> v2) -> {

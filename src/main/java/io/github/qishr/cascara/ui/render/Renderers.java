@@ -99,7 +99,7 @@ public class Renderers {
         if (schemaType != null && !schemaType.isBlank() && format != null && !format.isBlank()) {
             String schemaTypeAndFormat = schemaType + "/" + format;
             for (RendererFactory<? extends Renderer> item : rendererFactories) {
-                if (item instanceof ScalarEditorRendererFactory factory) {
+                if (meta.allowEdit() && item instanceof ScalarEditorRendererFactory factory) {
                     ScalarEditorRenderer renderer = factory.getRendererForSchemaType(schemaType, format);
                     if (renderer != null && scalarEditorRenderer == null) {
                         scalarEditorRenderer = renderer;
@@ -121,7 +121,7 @@ public class Renderers {
             for (RendererFactory<? extends Renderer> item : rendererFactories) {
                 if (item instanceof ScalarEditorRendererFactory factory) {
                     ScalarEditorRenderer renderer = factory.getRendererForContentType(contentType);
-                    if (renderer != null && scalarEditorRenderer == null) {
+                    if (meta.allowEdit() && renderer != null && scalarEditorRenderer == null) {
                         scalarEditorRenderer = renderer;
                         logRenderer(meta.getName(), renderer, "editor renderer by contentType " + contentType);
                     }

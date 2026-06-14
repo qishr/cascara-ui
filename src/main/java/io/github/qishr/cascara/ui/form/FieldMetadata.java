@@ -175,7 +175,7 @@ public class FieldMetadata {
     public void setAddRowHandler(Runnable addRow) { this.addRowHandler = addRow; }
     public void setRemoveRowHandler(Consumer<TableData> removeRow) { this.removeRow = removeRow; }
     public void setOnChange(Runnable onChange) { this.onChange = onChange; }
-    public void setAllowEdit(boolean v) { allowEdit = v; }
+    public FieldMetadata setAllowEdit(boolean v) { allowEdit = v; return this; }
     public void setTitle(String v) { title.set(v); }
 
     public boolean allowEdit() { return allowEdit; }
