@@ -360,6 +360,10 @@ public class CascaraTree<T extends ObservableTreeNode<T,?>> extends StackPane {
 
         col.setCellFactory(buildCellFactory(def));
 
+        if (def.getComparator() != null) {
+            col.setComparator(def.getComparator());
+        }
+
         if (def.getMinWidth() != -1) col.setMinWidth(def.getMinWidth());
         if (def.getPrefWidth() != -1) col.setPrefWidth(def.getPrefWidth());
         if (def.getMaxWidth() != -1) col.setMaxWidth(def.getMaxWidth());
