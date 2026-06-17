@@ -221,6 +221,14 @@ public class FieldMetadata {
     //
     //
 
+
+
+
+
+
+// TODO REmoves these
+
+
     private List<String> findEnumValues(SchemaNode schema) {
         if (schema == null) return null;
 
@@ -249,6 +257,14 @@ public class FieldMetadata {
                 uriString.contains("cema-meta") ||
                 uriString.contains("schema-service/schema");
     }
+
+
+
+
+
+
+
+
 
     private String getItemsMediaType(SchemaNode array) {
         if (itemsSchema == null) {

@@ -1,10 +1,9 @@
-package io.github.qishr.cascara.ui.l10n;
+package io.github.qishr.cascara.ui.language;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -14,77 +13,135 @@ import io.github.qishr.cascara.common.diagnostic.Reporter;
 import io.github.qishr.cascara.common.diagnostic.code.DiagnosticCode;
 import io.github.qishr.cascara.common.diagnostic.code.GenericDiagnosticCode;
 import io.github.qishr.cascara.lang.yaml.processor.YamlSerializer;
-import io.github.qishr.cascara.ui.option.AbstractObservableOptionProvider;
-import io.github.qishr.cascara.ui.option.LanguageOption;
+import io.github.qishr.cascara.ui.language.detect.HybridLocaleDetector;
+import io.github.qishr.cascara.ui.option.Option;
 import io.github.qishr.cascara.ui.option.OptionProvider;
-import io.github.qishr.cascara.ui.option.SimpleStringOption;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.Property;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
-public class StandardLocalizer implements UiLocalizer {
-    private static final Reporter REPORTER = GlobalReporter.forClass(StandardLocalizer.class);
+public class UiLocalizer implements ObservableLocalizer {
+    private static final Reporter REPORTER = GlobalReporter.forClass(UiLocalizer.class);
 
-    private static final String defaultLanguageTag = "en_US";
+    private static final String AUTOMATIC = "System";
 
-    private final ObservableList<LanguageOption> languages = FXCollections.observableArrayList();
+
+    // TODO: Called should be able to set these...
+    private static final String fallbackLanguageTag = "en-US";
+    private static final Locale fallbackLocale = Locale.forLanguageTag(fallbackLanguageTag);
+
+
+    private static final LanguageOption systemLanguageOption = new LanguageOption(AUTOMATIC, "title.system");
+
+    private final LanguageOptionProvider languageOptionProvider;
+
+    private final ObservableList<Option> languageOptions = FXCollections.observableArrayList();
+
+    private final Map<String,LanguageOption> languageOptionsMap = new HashMap<>();
+
+    private final ReadOnlyObjectWrapper<LanguageOption> activeLanguageOption = new ReadOnlyObjectWrapper<>();
+
+
+    private final ReadOnlyObjectWrapper<Locale> activeLocale = new ReadOnlyObjectWrapper<>();
 
     private final Map<String, Map<String, Object>> translationsByLanguage = new HashMap<>();
 
-    private ObjectProperty<Locale> activeLocale = new SimpleObjectProperty<>();
-
     private String activeLanguageTag;
 
-    private LanguageOptionProvider languageOptionProvider;
+    private boolean usingAutoLocale;
 
 
-    public StandardLocalizer() {
-        languages.add(new LanguageOption("System"));
-        activeLocale.addListener((ob,old,val) -> {
-            activeLanguageTag = val.toLanguageTag();
-        });
-        activeLocale.set(Locale.forLanguageTag(defaultLanguageTag));
+
+    public UiLocalizer() {
+        languageOptionProvider = new LanguageOptionProvider();
+        languageOptions.add(systemLanguageOption);
+        setActiveLanguage(AUTOMATIC);
     }
 
-
-    /// {@inheritDoc}
-    @Override
-    public ObjectProperty<Locale> activeLocaleProperty() {
-        return activeLocale;
+    public OptionProvider getLanguageOptionProvider() {
+        return languageOptionProvider;
     }
 
     /// {@inheritDoc}
     @Override
-    public ObservableList<LanguageOption> getLanguages() {
-        return languages;
+    public ObservableList<Option> getLanguageOptions() {
+        return languageOptions;
     }
 
     public boolean hasLanguage(String languageTag) {
         return translationsByLanguage.containsKey(languageTag);
     }
 
-    public Locale getLocale() {
-        return activeLocale.get();
+    public ReadOnlyObjectWrapper<LanguageOption> activeLanguageOptionProperty() {
+        return activeLanguageOption;
     }
 
-    public void setLocale(Locale locale) {
-        activeLocale.setValue(locale);
+    public LanguageOption getActiveLanguageOption() {
+        return activeLanguageOption.get();
     }
 
-    public OptionProvider getOptionProvider() {
-        if (languageOptionProvider == null) {
-            languageOptionProvider = new LanguageOptionProvider(this);
+    public LanguageOption getAutoLanguageOption() {
+        return systemLanguageOption;
+    }
+
+    public void setActiveLanguage(Option option) {
+        if ( option instanceof LanguageOption languageOption) {
+            setActiveLocale(languageOption.getLocale());
         }
-        return languageOptionProvider;
+    }
+
+    public void setActiveLanguage(String languageTag) {
+        boolean automatic = shouldUseAutoLocale(languageTag);
+        if (automatic) {
+            if (!usingAutoLocale) {
+                Locale locale = getSystemLocale();
+                String systemLanguageTag = locale.toLanguageTag();
+                if (translationsByLanguage.containsKey(systemLanguageTag)) {
+                    activeLanguageTag = systemLanguageTag;
+                    activeLocale.setValue(locale);
+                } else {
+                    activeLanguageTag = fallbackLanguageTag;
+                    activeLocale.setValue(fallbackLocale);
+                }
+                activeLanguageOption.set(systemLanguageOption);
+            }
+        } else {
+            if (!languageTag.equals(activeLanguageTag)) {
+                Locale locale = Locale.forLanguageTag(languageTag);
+
+                // activeLanguageTag must be set before the activeLocale
+                activeLanguageTag = languageTag;
+                activeLocale.setValue(locale);
+                activeLanguageOption.set(languageOptionsMap.get(languageTag));
+            }
+        }
+        usingAutoLocale = automatic;
     }
 
     /// {@inheritDoc}
     @Override
-    public void registerTranslations(InputStream yamlStream) {
+    public ReadOnlyObjectProperty<Locale> activeLocaleProperty() {
+        return activeLocale.getReadOnlyProperty();
+    }
+
+    public Locale getActiveLocale() {
+        return activeLocale.get();
+    }
+
+    public void setActiveLocale(Locale locale) {
+        String languageTag = locale == null ? null : locale.toLanguageTag();
+        setActiveLanguage(languageTag);
+    }
+
+    public Locale getSystemLocale() {
+        return HybridLocaleDetector.detectOSLocale();
+    }
+
+    /// {@inheritDoc}
+    @Override
+    public boolean registerTranslations(InputStream yamlStream) {
         try {
             // TODO:
             // cascara://organizer/CASC-00045D2F
@@ -92,20 +149,27 @@ public class StandardLocalizer implements UiLocalizer {
 
             String content = new String(yamlStream.readAllBytes(), StandardCharsets.UTF_8);
             YamlSerializer serializer = new YamlSerializer();
-            Translation trans = serializer.fromText(content, Translation.class);
-            String languageTag = trans.getLanguageTag();
+            Translation translation = serializer.fromText(content, Translation.class);
+            String languageTag = translation.getLanguageTag();
             if (languageTag == null) {
                 REPORTER.error(GenericDiagnosticCode.ERROR, "No `lang` key specified in translations file");
-                return;
+                return false;
             }
             Map<String, Object> translations = translationsByLanguage.get(languageTag);
             if (translations == null) {
-                translations = addLanguage(languageTag);
+                translations = addLanguage(translation);
             }
-            mergeMaps(translations, trans.getTranslations());
+            mergeMaps(translations, translation.getTranslations());
+
+            if (usingAutoLocale) {
+                setActiveLocale(HybridLocaleDetector.detectOSLocale());
+            }
+
+            return true;
 
         } catch (Exception e) {
             REPORTER.error(e, GenericDiagnosticCode.ERROR, "Failed to load translations: " + e.getMessage());
+            return false;
         }
     }
 
@@ -148,10 +212,20 @@ public class StandardLocalizer implements UiLocalizer {
     // Retrieval
     //
 
+    private boolean shouldUseAutoLocale(String languageTag) {
+        // If languageTag is null or "System", detect the system one
+        if (languageTag == null || languageTag.toLowerCase().equals(AUTOMATIC)) {
+            return true;
+        } else {
+            // Otherwise, check if the language is registered
+            return !translationsByLanguage.containsKey(languageTag);
+        }
+    }
+
     private String get(String key) {
         Object value = resolveKey(key, translationsByLanguage.get(activeLanguageTag));
         if (value == null) {
-            value = resolveKey(key, translationsByLanguage.get(defaultLanguageTag));
+            value = resolveKey(key, translationsByLanguage.get(fallbackLanguageTag));
         }
         return value == null ? null : value.toString();
     }
@@ -202,7 +276,9 @@ public class StandardLocalizer implements UiLocalizer {
     //
 
     /// @param localeTag IETF BCP 47 language tag string
-    private Map<String, Object> addLanguage(String languageTag) {
+    private Map<String, Object> addLanguage(Translation translation) {
+        String languageTag = translation.getLanguageTag();
+        String title = translation.getTitle();
         // In Locale:
         //
         // Language is an ISO 639 alpha-2 or alpha-3 code or registered language subtag.
@@ -214,28 +290,14 @@ public class StandardLocalizer implements UiLocalizer {
         // IANA Language Subtag Registry: Language, Region, Variant, Script
         // https://www.iana.org/assignments/language-subtag-registry/language-subtag-registry
         Locale locale = Locale.forLanguageTag(languageTag);
-        LanguageOption option = new LanguageOption(locale);
-        languages.add(option);
+        LanguageOption option = new LanguageOption(locale, title);
         Map<String, Object> translations = new HashMap<>();
+        languageOptions.add(option);
+        languageOptionsMap.put(languageTag, option);
         translationsByLanguage.put(languageTag, translations);
         return translations;
     }
 
-    public static class LanguageOptionProvider extends AbstractObservableOptionProvider {
-        private UiLocalizer localizer;
 
-        @Override
-        public List<LanguageOption> getOptions(Map<String,Property<?>> contextData, String parameter) {
-            return localizer.getLanguages();
-        }
-
-
-        public LanguageOptionProvider(UiLocalizer localizer) {
-            this.localizer = localizer;
-            localizer.getLanguages().addListener((ListChangeListener<? super SimpleStringOption>)c -> {
-                listeners.forEach(Runnable::run);
-            });
-        }
-    }
 
 }

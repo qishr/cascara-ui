@@ -1,26 +1,43 @@
 package io.github.qishr.cascara.ui.render;
 
 import io.github.qishr.cascara.common.util.Properties;
+import io.github.qishr.cascara.schema.SchemaType;
+import io.github.qishr.cascara.ui.api.ServicePropertyName;
 import io.github.qishr.cascara.ui.api.render.Renderer;
 
 public abstract class AbstractRenderer implements Renderer {
-    public static final String RENDERER_CONTENT_TYPE = "contentType";
-    public static final String RENDERER_SCHEMA_TYPE = "schemaType";
-    public static final String RENDERER_SCHEMA_FORMAT = "schemaFormat";
+    private final String contentType;
+    private final String schemaType;
+    private final String format;
+
+    private Properties properties;
+
+    /// @param contentType
+    /// @param schemaType
+    /// @param format
+    protected AbstractRenderer(String contentType, SchemaType schemaType, String format) {
+        this.contentType = contentType;
+        this.schemaType = schemaType == null ? null : schemaType.asString();
+        this.format = format;
+    }
 
     @Override
     public Properties getServiceProperties() {
-        Properties capabilities = new Properties();
-        if (getContentType() != null) {
-            capabilities.set(RENDERER_CONTENT_TYPE, getContentType());
+        if (properties == null) {
+            properties = new Properties();
+            if (contentType != null) properties.set(ServicePropertyName.CONTENT_TYPE.asString(), contentType);
+            if (schemaType != null) properties.set(ServicePropertyName.SCHEMA_TYPE.asString(), schemaType);
+            if (format != null) properties.set(ServicePropertyName.SCHEMA_FORMAT.asString(), format);
         }
-        if (getSchemaType() != null) {
-            capabilities.set(RENDERER_SCHEMA_TYPE, getSchemaType());
-        }
-        if (getSchemaFormat() != null) {
-            capabilities.set(RENDERER_SCHEMA_FORMAT, getSchemaFormat());
-        }
-        return capabilities;
+        return properties;
     }
 
+    @Override
+    public String getContentType() { return contentType; }
+
+    @Override
+    public String getSchemaType() { return schemaType; }
+
+    @Override
+    public String getSchemaFormat() { return format; }
 }

@@ -471,7 +471,7 @@ variations:
         hexColor: "#BBDABF"
       comment:
         name: "<name>"
-        hexColor: "#5D50A6"
+        hexColor: "#766ea1"
       keyword:
         name: "<name>"
         hexColor: "#D0ADCD"

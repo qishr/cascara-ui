@@ -11,7 +11,7 @@ import io.github.qishr.cascara.ui.api.render.RendererFactory;
 import io.github.qishr.cascara.ui.api.render.ScalarEditorRenderer;
 import io.github.qishr.cascara.ui.api.render.ScalarRenderer;
 import io.github.qishr.cascara.ui.form.FieldMetadata;
-import io.github.qishr.cascara.ui.l10n.Localization;
+import io.github.qishr.cascara.ui.language.Localization;
 import io.github.qishr.cascara.ui.option.OptionProviderRegistry;
 import io.github.qishr.cascara.ui.render.Renderers;
 

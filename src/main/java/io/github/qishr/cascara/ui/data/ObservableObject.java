@@ -81,11 +81,10 @@ public class ObservableObject implements Observable, ObservableTableData {
             if (!TypeAnalyzers.isRegistered(UiTypeAnalyzer.class)) {
                 TypeAnalyzers.register(new UiTypeAnalyzer());
             }
-            CascaraSchemaUri schemaUri = new CascaraSchemaUri(getClass());
+            CascaraSchemaUri schemaUri = CascaraSchemaUri.of(getClass());
             SchemaGenerator generator = new SchemaGenerator();
             AstNode doc = generator.generate(this);
             SchemaCompiler compiler = new SchemaCompiler();
-            compiler.setResolver(TypeAnalyzers.getSchemaResolver());
             Schema compiledSchema = compiler.compile(doc, schemaUri.toUri());
             schemaNode = compiledSchema.getRoot();
             if (schemaNode == null) {

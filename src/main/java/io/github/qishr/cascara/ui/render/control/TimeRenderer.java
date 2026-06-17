@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
+import io.github.qishr.cascara.schema.SchemaType;
 import io.github.qishr.cascara.ui.api.data.DataProvider;
 import io.github.qishr.cascara.ui.api.render.ScalarRenderer;
 import io.github.qishr.cascara.ui.form.FieldMetadata;
@@ -16,14 +17,9 @@ public class TimeRenderer extends AbstractScalarRenderer implements ScalarRender
     private static final DateTimeFormatter FORMATTER =
         DateTimeFormatter.ofPattern("HH:mm:ss.SSS").withZone(ZoneId.systemDefault());
 
-    @Override
-    public String getContentType() { return null; }
-
-    @Override
-    public String getSchemaType() { return "string"; }
-
-    @Override
-    public String getSchemaFormat() { return "time"; }
+    public TimeRenderer() {
+        super(null, SchemaType.STRING, "time");
+    }
 
     @Override
     public Node render(Labeled view, Object data, DataProvider dataProvider, FieldMetadata meta) {

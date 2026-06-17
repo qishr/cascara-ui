@@ -1,5 +1,6 @@
 package io.github.qishr.cascara.ui.render.standard;
 
+import io.github.qishr.cascara.schema.SchemaType;
 import io.github.qishr.cascara.ui.api.data.DataProvider;
 import io.github.qishr.cascara.ui.api.render.ScalarRenderer;
 import io.github.qishr.cascara.ui.form.FieldMetadata;
@@ -10,14 +11,9 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Labeled;
 
 public class StandardBooleanRenderer extends AbstractScalarRenderer implements ScalarRenderer {
-    @Override
-    public String getContentType() { return null; }
-
-    @Override
-    public String getSchemaType() { return "boolean"; }
-
-    @Override
-    public String getSchemaFormat() { return null; }
+    public StandardBooleanRenderer() {
+        super(null, SchemaType.BOOLEAN, null);
+    }
 
     @Override
     public Node render(Labeled view, Object data, DataProvider dataProvider, FieldMetadata meta) {

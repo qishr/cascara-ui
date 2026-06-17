@@ -12,15 +12,9 @@ import javafx.scene.Node;
 import javafx.scene.control.Labeled;
 
 public class DiagnosticRenderer extends AbstractScalarRenderer implements ScalarRenderer  {
-
-    @Override
-    public String getContentType() { return "cascara/diagnostic-level"; }
-
-    @Override
-    public String getSchemaType() { return null; }
-
-    @Override
-    public String getSchemaFormat() { return null; }
+    public DiagnosticRenderer() {
+        super("cascara/diagnostic-level", null, null);
+    }
 
     @Override
     public Node render(Labeled view, Object data, DataProvider dataProvider, FieldMetadata meta) {

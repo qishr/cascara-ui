@@ -1,5 +1,6 @@
 package io.github.qishr.cascara.ui.render.standard;
 
+import io.github.qishr.cascara.schema.SchemaType;
 import io.github.qishr.cascara.ui.api.data.DataProvider;
 import io.github.qishr.cascara.ui.api.render.ScalarEditorRenderer;
 import io.github.qishr.cascara.ui.form.FieldMetadata;
@@ -14,14 +15,9 @@ import javafx.scene.control.TextFormatter;
 public class StandardNumberEditorRenderer extends AbstractScalarRenderer implements ScalarEditorRenderer {
     private boolean isUpdatingControl;
 
-    @Override
-    public String getContentType() { return null; }
-
-    @Override
-    public String getSchemaType() { return "number"; }
-
-    @Override
-    public String getSchemaFormat() { return null; }
+    public StandardNumberEditorRenderer() {
+        super(null, SchemaType.NUMBER, null);
+    }
 
     @SuppressWarnings("unchecked")
     @Override

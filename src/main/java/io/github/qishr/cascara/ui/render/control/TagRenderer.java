@@ -11,14 +11,9 @@ import javafx.scene.control.Labeled;
 
 public class TagRenderer extends AbstractScalarRenderer implements ScalarRenderer {
 
-    @Override
-    public String getContentType() { return "cascara/tag"; }
-
-    @Override
-    public String getSchemaType() { return null; }
-
-    @Override
-    public String getSchemaFormat() { return null; }
+    public TagRenderer() {
+        super("cascara/tag", null, null);
+    }
 
     @Override
     public Node render(Labeled cell, Object data, DataProvider dataProvider, FieldMetadata meta) {

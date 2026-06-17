@@ -55,6 +55,11 @@ public class ThemeVariation implements Variation {
         return name;
     }
 
+    @Override
+    public String getOptionTranslationKey() {
+        return null;
+    }
+
     public String getName() {
         return name;
     }

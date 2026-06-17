@@ -6,8 +6,8 @@ import java.util.Map;
 
 import io.github.qishr.cascara.common.service.ServiceProviderLayer;
 import io.github.qishr.cascara.common.service.ServiceMetadata;
+import io.github.qishr.cascara.ui.api.ServicePropertyName;
 import io.github.qishr.cascara.ui.api.render.Renderer;
-import io.github.qishr.cascara.ui.render.AbstractRenderer;
 
 public abstract class AbstractSpiRendererFactory<T extends Renderer> {
     protected final Class<T> serviceType;
@@ -38,14 +38,14 @@ public abstract class AbstractSpiRendererFactory<T extends Renderer> {
         // with the providers registered closest to the caller, we don't want
         // to overwrite them.
 
-        String contentType = provider.getProperty(AbstractRenderer.RENDERER_CONTENT_TYPE);
+        String contentType = provider.getProperty(ServicePropertyName.CONTENT_TYPE.asString());
         if (contentType != null  && !renderersByContentType.containsKey(contentType)) {
             renderersByContentType.put(contentType, (Class) provider.getType());
         }
 
-        String schemaType = provider.getProperty(AbstractRenderer.RENDERER_SCHEMA_TYPE);
+        String schemaType = provider.getProperty(ServicePropertyName.SCHEMA_TYPE.asString());
         if (schemaType != null) {
-            String format = provider.getProperty(AbstractRenderer.RENDERER_SCHEMA_FORMAT);
+            String format = provider.getProperty(ServicePropertyName.SCHEMA_FORMAT.asString());
             if (format == null) {
                 if (!renderersBySchemaType.containsKey(schemaType)) {
                     renderersBySchemaType.put(schemaType, (Class) provider.getType());

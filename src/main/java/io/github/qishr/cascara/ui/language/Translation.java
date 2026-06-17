@@ -1,4 +1,4 @@
-package io.github.qishr.cascara.ui.l10n;
+package io.github.qishr.cascara.ui.language;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +15,7 @@ import io.github.qishr.cascara.schema.annotation.SchemaProperty;
 public class Translation {
 
     @SchemaProperty
-    private String lang;
+    private Meta meta;
 
     @DataIgnore
     private Map<String, Object> translations = new HashMap<>();
@@ -31,7 +31,21 @@ public class Translation {
     }
 
     public String getLanguageTag() {
-        return lang;
+        return meta.lang;
+    }
+
+    public String getTitle() {
+        return meta.title;
+    }
+
+    @Serializable
+    @SchemaDefinition
+    public static class Meta {
+        @SchemaProperty
+        private String lang;
+
+        @SchemaProperty
+        private String title;
     }
 
 }

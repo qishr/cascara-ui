@@ -25,7 +25,7 @@ module cascara.ui {
     exports io.github.qishr.cascara.ui.control;
     exports io.github.qishr.cascara.ui.data;
     exports io.github.qishr.cascara.ui.form;
-    exports io.github.qishr.cascara.ui.l10n;
+    exports io.github.qishr.cascara.ui.language;
     exports io.github.qishr.cascara.ui.menu;
     exports io.github.qishr.cascara.ui.render;
     exports io.github.qishr.cascara.ui.render.control;
@@ -50,8 +50,14 @@ module cascara.ui {
     opens io.github.qishr.cascara.ui.theme;
     opens io.github.qishr.cascara.ui.window;
 
-    opens io.github.qishr.cascara.ui.l10n to cascara.schema, cascara.lang.yaml;
+    // For demo app
+    exports io.github.qishr.cascara.ui.demo to javafx.base, javafx.graphics;
+    opens io.github.qishr.cascara.ui.demo to cascara.schema, javafx.base;
 
+    // For deserializing translation files
+    opens io.github.qishr.cascara.ui.language to cascara.schema, cascara.lang.yaml;
+
+    // For ObservableObject
     opens io.github.qishr.cascara.ui.data to cascara.schema;
     opens io.github.qishr.cascara.ui.menu to cascara.schema;
 
@@ -71,4 +77,9 @@ module cascara.ui {
              io.github.qishr.cascara.ui.render.control.TagRenderer,
              io.github.qishr.cascara.ui.render.control.TimeRenderer,
              io.github.qishr.cascara.ui.render.control.UriRenderer;
+
+    provides io.github.qishr.cascara.ui.option.OptionProvider
+        with io.github.qishr.cascara.ui.language.LanguageOptionProvider,
+             io.github.qishr.cascara.ui.theme.ThemeOptionProvider,
+             io.github.qishr.cascara.ui.theme.VariationOptionProvider;
 }

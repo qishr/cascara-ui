@@ -1,5 +1,6 @@
 package io.github.qishr.cascara.ui.render.standard;
 
+import io.github.qishr.cascara.schema.SchemaType;
 import io.github.qishr.cascara.ui.api.data.DataProvider;
 import io.github.qishr.cascara.ui.api.render.ScalarEditorRenderer;
 import io.github.qishr.cascara.ui.form.FieldMetadata;
@@ -11,14 +12,9 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Labeled;
 
 public class StandardBooleanEditorRenderer extends AbstractScalarRenderer implements ScalarEditorRenderer {
-    @Override
-    public String getContentType() { return null; }
-
-    @Override
-    public String getSchemaType() { return "boolean"; }
-
-    @Override
-    public String getSchemaFormat() { return null; }
+    public StandardBooleanEditorRenderer() {
+        super(null, SchemaType.BOOLEAN, null);
+    }
 
     @SuppressWarnings("unchecked")
     @Override

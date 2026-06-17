@@ -1,6 +1,5 @@
-package io.github.qishr.cascara.ui.l10n;
+package io.github.qishr.cascara.ui.language;
 
-import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -10,37 +9,37 @@ import java.util.function.Consumer;
 import io.github.qishr.cascara.common.diagnostic.code.DiagnosticCode;
 import io.github.qishr.cascara.schema.structure.SchemaNode;
 import io.github.qishr.cascara.schema.util.SchemaGenerator;
-import io.github.qishr.cascara.ui.option.LanguageOption;
 
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.Property;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.StringProperty;
-import javafx.collections.ObservableList;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Labeled;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TextField;
 import javafx.util.StringConverter;
 
 public class Localization {
-    private static volatile UiLocalizer localizer = new DummyLocalizer();
+    private static volatile ObservableLocalizer localizer = new UiLocalizer();
 
-    public static void setLocalizer(UiLocalizer customLocalizer) {
-        localizer = customLocalizer != null ? customLocalizer : new DummyLocalizer();
+    public static ObservableLocalizer getLocalizer() {
+        return localizer;
     }
 
-    public static ObjectProperty<Locale> localeProperty() {
+    public static void setLocalizer(ObservableLocalizer customLocalizer) {
+        localizer = customLocalizer != null ? customLocalizer : new UiLocalizer();
+    }
+
+    public static ReadOnlyObjectProperty<Locale> localeProperty() {
         return localizer.activeLocaleProperty();
     }
 
+    // TODO: Is this really needed?
     public static Locale getLocale() {
         return localeProperty().get();
     }
-
-    // public static String getLanguageTag() {
-    //     Locale locale = getLocale();
-    //     return locale == null ? null : locale.toLanguageTag();
-    // }
 
     public static String format(String key, Object... details) {
         return localizer.format(key, details);
@@ -50,22 +49,18 @@ public class Localization {
         return localizer.format(diagnosticCode, details);
     }
 
-    public static void bind(Labeled node, String key, Object... args) {
-        InvalidationListener listener = o -> node.setText(localizer.format(key, args));
-        listener.invalidated(null);
-        if (localizer.activeLocaleProperty() != null) {
-            localizer.activeLocaleProperty().addListener(listener);
-        }
-    }
-
     @SuppressWarnings("unchecked")
     public static void bind(Property<?> prop, String key, Object... args) {
         InvalidationListener listener = null;
 
         if (prop instanceof ObjectProperty objProp) {
-            listener = o -> objProp.set(localizer.format(key, args));
+            listener = o -> {
+                objProp.set(localizer.format(key, args));
+            };
         } else if (prop instanceof StringProperty stringProp) {
-            listener = o -> stringProp.setValue(localizer.format(key, args));
+            listener = o -> {
+                stringProp.setValue(localizer.format(key, args));
+            };
         }
 
         if (listener != null) {
@@ -73,6 +68,34 @@ public class Localization {
             if (localizer.activeLocaleProperty() != null) {
                 localizer.activeLocaleProperty().addListener(listener);
             }
+        }
+    }
+
+    public static void bind(Labeled node, String key, Object... args) {
+        InvalidationListener listener = o -> {
+            node.setText(localizer.format(key, args));
+        };
+        listener.invalidated(null);
+        if (localizer.activeLocaleProperty() != null) {
+            localizer.activeLocaleProperty().addListener(listener);
+        }
+    }
+
+    public static void bind(TextField node, String key, Object... args) {
+        InvalidationListener listener = o -> {
+            node.setText(localizer.format(key, args));
+        };
+        listener.invalidated(null);
+        if (localizer.activeLocaleProperty() != null) {
+            localizer.activeLocaleProperty().addListener(listener);
+        }
+    }
+
+    public static void bind(Tab node, String key, Object... args) {
+        InvalidationListener listener = o -> node.setText(localizer.format(key, args));
+        listener.invalidated(null);
+        if (localizer.activeLocaleProperty() != null) {
+            localizer.activeLocaleProperty().addListener(listener);
         }
     }
 
@@ -159,19 +182,5 @@ public class Localization {
             }
         }
         return null;
-    }
-
-    //
-    //
-    //
-
-    private static class DummyLocalizer implements UiLocalizer {
-        private ObjectProperty<Locale> locale = new SimpleObjectProperty<>();
-        public DummyLocalizer() { locale.set(Locale.getDefault()); }
-        @Override public String format(String code, Object... details) { return code; }
-        @Override public String format(DiagnosticCode diagnosticCode, Object... details) { return diagnosticCode.getCode(); }
-        @Override public ObjectProperty<Locale> activeLocaleProperty() { return locale; }
-        @Override public ObservableList<LanguageOption> getLanguages() { return null; }
-        @Override public void registerTranslations(InputStream yamlStream) { }
     }
 }

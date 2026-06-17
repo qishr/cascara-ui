@@ -21,6 +21,9 @@ public class SpiScalarEditorRendererFactory extends AbstractSpiRendererFactory<S
 
     @Override
     public ScalarEditorRenderer getRendererForSchemaType(String schemaType, String format) {
+        if (format == null || format.isEmpty()) {
+            return getRendererForSchemaType(schemaType);
+        }
         String typeAndFormat = schemaType + "/" + format;
         Class<ScalarEditorRenderer> clazz = renderersBySchemaTypeAndFormat.get(typeAndFormat);
         if (clazz == null) {

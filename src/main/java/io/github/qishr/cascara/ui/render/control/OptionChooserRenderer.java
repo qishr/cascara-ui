@@ -1,5 +1,6 @@
 package io.github.qishr.cascara.ui.render.control;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -7,11 +8,14 @@ import io.github.qishr.cascara.common.diagnostic.code.GenericDiagnosticCode;
 import io.github.qishr.cascara.ui.api.UiException;
 import io.github.qishr.cascara.ui.api.data.DataProvider;
 import io.github.qishr.cascara.ui.api.render.ScalarEditorRenderer;
+import io.github.qishr.cascara.ui.control.EnumOptionChooser;
 import io.github.qishr.cascara.ui.control.OptionChooser;
-import io.github.qishr.cascara.ui.data.UiDataException;
 import io.github.qishr.cascara.ui.form.FieldMetadata;
+import io.github.qishr.cascara.ui.option.EnumOptionProvider;
 import io.github.qishr.cascara.ui.option.Option;
+import io.github.qishr.cascara.ui.option.OptionProvider;
 import io.github.qishr.cascara.ui.render.AbstractScalarRenderer;
+
 import javafx.beans.Observable;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.Property;
@@ -22,42 +26,83 @@ import javafx.scene.control.Labeled;
 public class OptionChooserRenderer extends AbstractScalarRenderer implements ScalarEditorRenderer {
     private boolean updating = false;
 
-    @Override
-    public String getContentType() { return "cascara/option"; }
-
-    @Override
-    public String getSchemaType() { return null; }
-
-    @Override
-    public String getSchemaFormat() { return null; }
+    public OptionChooserRenderer() {
+        super("cascara/option", null, null);
+    }
 
     @Override
     public Node render(Labeled view, Observable data, DataProvider dataProvider, FieldMetadata meta) {
-        Option initialValue = null;
+        Option initialOption = null;
+        Enum<?> initialEnumValue = null;
+        String initialStringValue = null;
+        boolean isJvmEnum = false;
 
-        if (meta.getOptionProvider() == null) {
-            throw new UiException(GenericDiagnosticCode.UNEXPECTED_NULL, "OptionProvider");
-        }
+        OptionProvider optionProvider = meta.getOptionProvider();
 
         if (data instanceof ObjectProperty prop) {
-            if (prop.get() instanceof Option option) {
-                initialValue = option;
-            } else if (prop.get() instanceof String string) {
-                initialValue = extractOption(meta, string);
+            Object propValue = prop.get();
+            if (propValue != null) {
+                if (propValue instanceof Option option) {
+                    initialOption = option;
+                } else if (propValue instanceof String string) {
+                    initialOption = extractOption(meta, string);
+                } else if (propValue instanceof Enum<?> e) {
+                    initialEnumValue = e;
+                    isJvmEnum = true;
+                }
             }
         }
 
-        OptionChooser chooser = new OptionChooser(
-            meta.getRenderers().getScalarRenderer(), // This is for the individual options
-            meta.getOptionProvider(),
-            meta.getProviderParameter(),
-            initialValue,
-            meta.getDataContext()
-        );
+        OptionChooser chooser;
+        EnumOptionChooser enumChooser;
+
+        if (optionProvider == null) {
+            if (isJvmEnum) {
+                enumChooser = new EnumOptionChooser(
+                    meta.getSchema(),
+                    initialEnumValue
+                );
+            } else {
+                if (initialStringValue == null && initialOption != null) {
+                    initialStringValue = initialOption.getOptionId();
+                }
+                enumChooser = new EnumOptionChooser(
+                    meta.getSchema(),
+                    initialStringValue
+                );
+            }
+            chooser = enumChooser;
+        } else {
+            enumChooser = null;
+            if (meta.getOptionProvider() == null) {
+                throw new UiException(GenericDiagnosticCode.UNEXPECTED_NULL, "OptionProvider");
+            }
+            chooser = new OptionChooser(
+                meta.getOptionProvider(),
+                meta.getProviderParameter(),
+                meta.getDataContext()
+            );
+        }
 
         ReadOnlyObjectProperty<Option> selectedItem = chooser.getSelectionModel().selectedItemProperty();
         if (data instanceof ObjectProperty<?> prop) {
-            if (prop.get() instanceof Option || prop.get() == null) {
+            if (isJvmEnum) {
+                @SuppressWarnings("unchecked")
+                ObjectProperty<Enum<?>> enumProp = ((ObjectProperty<Enum<?>>)prop);
+                selectedItem.addListener((obs, old, val) -> {
+                    if (updating || val == null || !valueChanged(val, enumProp.getValue())) return;
+                    updating = true;
+                    enumProp.set(enumChooser.getEnumValue());
+                    if (meta.getOnChange() != null) meta.getOnChange().run();
+                    updating = false;
+                });
+                enumProp.addListener((obs,old,val) -> {
+                    if (updating || val == null) return;
+                    updating = true;
+                    enumChooser.setEnumValue(val);
+                    updating = false;
+                });
+            } else if (prop.get() instanceof Option || prop.get() == null) {
                 @SuppressWarnings("unchecked")
                 ObjectProperty<Option> optionProp = ((ObjectProperty<Option>)prop);
                 selectedItem.addListener((obs, old, val) -> {
@@ -92,7 +137,7 @@ public class OptionChooserRenderer extends AbstractScalarRenderer implements Sca
             }
         }
 
-        // comboBox.makeSearchable();
+        // TODO: comboBox.makeSearchable();
         chooser.setMaxWidth(Double.MAX_VALUE);
         view.setGraphic(chooser);
         view.setText(null);
@@ -117,18 +162,25 @@ public class OptionChooserRenderer extends AbstractScalarRenderer implements Sca
         return true;
     }
 
+    private boolean valueChanged(Option value, Enum<?> old) {
+        if (value == null) return false;
+        if (old == null) return true;
+        if (old.toString().equals(value.getOptionId())) {
+            return false;
+        }
+        return true;
+    }
+
     private Option extractOption(FieldMetadata meta, String string) {
-        // String initialString = String.valueOf(observableNode.getValue());
-        List<? extends Option> options;
+        List<Option> options;
         if (!meta.hasProviderParameter()) {
-            // AstNode contextNode = (observableNode.getParent() != null) ? observableNode.getParent().getRawAstNode() : null;
-            // options = meta.getOptionProvider().getOptions(meta.getSchema(), contextNode, null);
-
-            // Map<String,Property<?>> contextData = extractContextData(observableNode);
             Map<String,Property<?>> contextData = meta.getDataContext();
-
-            options = meta.getOptionProvider().getOptions(contextData, null);
-            // meta.setContextNode(contextNode);
+            if (meta.getOptionProvider() == null) {
+                options = new ArrayList<>();
+                EnumOptionProvider.populateEnumOptions(options, meta.getSchema(), null);
+            } else {
+                options = meta.getOptionProvider().getOptions(contextData, null);
+            }
         } else {
             options = meta.getOptionProvider().getOptions(null, meta.getProviderParameter());
         }
