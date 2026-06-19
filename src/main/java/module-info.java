@@ -51,7 +51,7 @@ module cascara.ui {
     opens io.github.qishr.cascara.ui.language to cascara.schema, cascara.lang.yaml;
 
     // For ObservableObject
-    opens io.github.qishr.cascara.ui.data to cascara.schema;
+    opens io.github.qishr.cascara.ui.data to cascara.schema, cascara.lang.yaml;
     opens io.github.qishr.cascara.ui.menu to cascara.schema;
 
     // SPI
