@@ -4,6 +4,9 @@ import java.util.List;
 
 import io.github.qishr.cascara.common.diagnostic.GlobalReporter;
 import io.github.qishr.cascara.common.diagnostic.Reporter;
+import io.github.qishr.cascara.schema.rule.EnumRule;
+import io.github.qishr.cascara.schema.rule.ValidationRule;
+import io.github.qishr.cascara.schema.structure.SchemaNode;
 import io.github.qishr.cascara.ui.api.render.ArrayEditorRenderer;
 import io.github.qishr.cascara.ui.api.render.ArrayEditorRendererFactory;
 import io.github.qishr.cascara.ui.api.render.Renderer;
@@ -29,11 +32,12 @@ public class Renderers {
     }
 
     public Renderers(List<RendererFactory<?>> rendererFactories, FieldMetadata meta) {
+        boolean isEnum = findEnumValues(meta.getSchema()) != null;
         if (rendererFactories != null) {
             if (meta.isArrayField()) {
                 configureArrayRenderer(rendererFactories, meta);
             } else {
-                if (meta.hasOptionProvider()) {
+                if (meta.hasOptionProvider() || isEnum) {
                     scalarEditorRenderer = new OptionChooserRenderer();
                 } else {
                     configureScalarRenderers(rendererFactories, meta);
@@ -53,6 +57,30 @@ public class Renderers {
     public ArrayEditorRenderer getArrayEditorRenderer() {
         return arrayEditorRenderer;
     }
+
+    // TODO: Should we be doing this in the schema?
+    private List<String> findEnumValues(SchemaNode schema) {
+        if (schema == null) return null;
+
+        // TODO: this...
+
+        // // TODO: This seems wrong.
+        // // Should it not be: SchemaKeyword.TYPE.asString().equals(fieldName.get())
+        // if ("type".equals(fieldName.get()) && SchemaKeyword.exists(fieldName.get())) {
+        //     SchemaNode meta = fieldSchema.getMetaSchema();
+        //     if (meta != null && isMetaSchema(meta.getOriginUri())) {
+        //         return SchemaKeyword.TYPE.suggestions();
+        //     }
+        // }
+
+        for (ValidationRule rule : schema.getRules()) {
+            if (rule instanceof EnumRule enumRule) {
+                return enumRule.getAllowedValues();
+            }
+        }
+        return null;
+    }
+
 
     private void configureArrayRenderer(List<RendererFactory<?>> rendererFactories, FieldMetadata meta) {
         if (rendererFactories == null) return;
@@ -99,7 +127,7 @@ public class Renderers {
         if (schemaType != null && !schemaType.isBlank() && format != null && !format.isBlank()) {
             String schemaTypeAndFormat = schemaType + "/" + format;
             for (RendererFactory<? extends Renderer> item : rendererFactories) {
-                if (item instanceof ScalarEditorRendererFactory factory) {
+                if (meta.allowEdit() && item instanceof ScalarEditorRendererFactory factory) {
                     ScalarEditorRenderer renderer = factory.getRendererForSchemaType(schemaType, format);
                     if (renderer != null && scalarEditorRenderer == null) {
                         scalarEditorRenderer = renderer;
@@ -121,7 +149,7 @@ public class Renderers {
             for (RendererFactory<? extends Renderer> item : rendererFactories) {
                 if (item instanceof ScalarEditorRendererFactory factory) {
                     ScalarEditorRenderer renderer = factory.getRendererForContentType(contentType);
-                    if (renderer != null && scalarEditorRenderer == null) {
+                    if (meta.allowEdit() && renderer != null && scalarEditorRenderer == null) {
                         scalarEditorRenderer = renderer;
                         logRenderer(meta.getName(), renderer, "editor renderer by contentType " + contentType);
                     }

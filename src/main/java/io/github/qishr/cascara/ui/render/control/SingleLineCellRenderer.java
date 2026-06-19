@@ -1,5 +1,6 @@
 package io.github.qishr.cascara.ui.render.control;
 
+import io.github.qishr.cascara.schema.SchemaType;
 import io.github.qishr.cascara.ui.api.data.DataProvider;
 import io.github.qishr.cascara.ui.api.render.ScalarRenderer;
 import io.github.qishr.cascara.ui.form.FieldMetadata;
@@ -9,14 +10,9 @@ import javafx.scene.control.Labeled;
 import javafx.scene.control.OverrunStyle;
 
 public class SingleLineCellRenderer extends AbstractScalarRenderer implements ScalarRenderer {
-    @Override
-    public String getContentType() { return null; }
-
-    @Override
-    public String getSchemaType() { return "string"; }
-
-    @Override
-    public String getSchemaFormat() { return null; }
+    public SingleLineCellRenderer() {
+        super(null, SchemaType.STRING, null);
+    }
 
     @Override
     public Node render(Labeled view, Object data, DataProvider dataProvider, FieldMetadata meta) {

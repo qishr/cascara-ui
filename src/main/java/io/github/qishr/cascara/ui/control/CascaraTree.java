@@ -6,12 +6,12 @@ import java.util.function.Consumer;
 import io.github.qishr.cascara.common.diagnostic.code.GenericDiagnosticCode;
 import io.github.qishr.cascara.ui.api.ToolTipProvider;
 import io.github.qishr.cascara.ui.api.UiDiagnosticCode;
-import io.github.qishr.cascara.ui.api.data.ObservableTableData;
 import io.github.qishr.cascara.ui.api.render.ScalarRenderer;
 import io.github.qishr.cascara.ui.data.ColumnMetadata;
 import io.github.qishr.cascara.ui.data.ObservableObject;
 import io.github.qishr.cascara.ui.data.ObservableTreeNode;
 import io.github.qishr.cascara.ui.data.UiDataException;
+import io.github.qishr.cascara.ui.render.RenderDispatcher;
 import io.github.qishr.cascara.ui.style.standard.TreeTableViewStyle;
 
 import javafx.beans.Observable;
@@ -21,7 +21,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.control.TableColumn;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeTableCell;
 import javafx.scene.control.TreeTableColumn;
@@ -47,8 +46,9 @@ public class CascaraTree<T extends ObservableTreeNode<T,?>> extends StackPane {
     private SortType st = null;
     private TreeTableColumn<T, ObservableValue<?>> sortColumn = null;
 
-    boolean autoExpand = false;
+    private boolean autoExpand = false;
     private boolean lazy = false;
+    private boolean allowEdit = false;
 
     @FunctionalInterface
     public interface ContextMenuHandler<T> {
@@ -57,6 +57,10 @@ public class CascaraTree<T extends ObservableTreeNode<T,?>> extends StackPane {
 
     public CascaraTree() {
         getChildren().add(initializeView());
+    }
+
+    public void setAllowEdit(boolean v) {
+        allowEdit = v;
     }
 
     public void setAutoExpand(boolean expand) {
@@ -288,8 +292,13 @@ public class CascaraTree<T extends ObservableTreeNode<T,?>> extends StackPane {
     }
 
     @SuppressWarnings("unchecked")
-    private TreeTableColumn<T,Object> createColumn(ColumnMetadata def) {
-        TreeTableColumn<T,Object> col = new TreeTableColumn<>(def.getTitle());
+    private TreeTableColumn<T,ObservableValue<?>> createColumn(ColumnMetadata def) {
+        TreeTableColumn<T,ObservableValue<?>> col = new TreeTableColumn<>(def.getTitle());
+
+        def.titleProperty().addListener((obs,old,val) -> {
+            col.setText(val);
+        });
+
         if (def.getHeaderStyle() != null && !def.getHeaderStyle().isEmpty()) {
             col.getStyleClass().add(def.getHeaderStyle());
         }
@@ -329,20 +338,31 @@ public class CascaraTree<T extends ObservableTreeNode<T,?>> extends StackPane {
                     throw new UiDataException(UiDiagnosticCode.PROPERTY_NOT_RECOGNIZED, columnName);
                 }
 
+                if (observable instanceof ObservableValue obs) {
+                    ObservableValue<ObservableValue<?>> wrapped = new SimpleObjectProperty<>(obs);
+                    return wrapped;
+                }
+
                 if (observable instanceof ObjectProperty property) {
                     return property;
                 }
 
                 // Fall back to returning the whole observableTreeNode
 
-                ObservableValue<Object> wrapped = new SimpleObjectProperty<>(observableTreeNode);
-                return wrapped;
+                // ObservableValue<Object> wrapped = new SimpleObjectProperty<>(observableTreeNode);
+                // return wrapped;
+
+                return null;
             } catch (RuntimeException e) {
                 return null;
             }
         });
 
         col.setCellFactory(buildCellFactory(def));
+
+        if (def.getComparator() != null) {
+            col.setComparator(def.getComparator());
+        }
 
         if (def.getMinWidth() != -1) col.setMinWidth(def.getMinWidth());
         if (def.getPrefWidth() != -1) col.setPrefWidth(def.getPrefWidth());
@@ -351,12 +371,12 @@ public class CascaraTree<T extends ObservableTreeNode<T,?>> extends StackPane {
         return col;
     }
 
-    private Callback<TreeTableColumn<T,Object>, TreeTableCell<T,Object>> buildCellFactory(ColumnMetadata meta) {
+    private Callback<TreeTableColumn<T,ObservableValue<?>>, TreeTableCell<T,ObservableValue<?>>> buildCellFactory(ColumnMetadata meta) {
         return new Callback<>() {
-            @Override public TreeTableCell<T,Object> call(TreeTableColumn<T,Object> param) {
+            @Override public TreeTableCell<T,ObservableValue<?>> call(TreeTableColumn<T,ObservableValue<?>> param) {
                 return new TreeTableCell<>() {
 
-                    @Override protected void updateItem(Object item, boolean empty) {
+                    @Override protected void updateItem(ObservableValue<?> item, boolean empty) {
                         if (item == getItem()) return;
                         super.updateItem(item, empty);
                         if (item == null) {
@@ -364,7 +384,12 @@ public class CascaraTree<T extends ObservableTreeNode<T,?>> extends StackPane {
                             super.setGraphic(null);
                         } else {
                             String columnName = meta.getName();
-                            if (meta.getRenderers().getScalarRenderer() instanceof ScalarRenderer renderer) {
+                            if (!allowEdit) {
+                                meta.setAllowEdit(false);
+                            }
+                            if (item instanceof Observable obs) {
+                                RenderDispatcher.render(this, obs, null, meta);
+                            } else if (meta.getRenderers().getScalarRenderer() instanceof ScalarRenderer renderer) {
                                 renderer.render(this, item, null, meta);
                             } else if (item instanceof ObservableObject object) {
                                 this.setText(object.getString(columnName));

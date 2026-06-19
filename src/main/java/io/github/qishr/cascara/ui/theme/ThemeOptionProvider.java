@@ -10,17 +10,20 @@ import java.util.List;
 import java.util.Map;
 
 import io.github.qishr.cascara.common.io.filewatcher.FileWatcher;
-import io.github.qishr.cascara.ui.option.AbstractObservableOptionProvider;
+import io.github.qishr.cascara.ui.option.AbstractOptionProvider;
+import io.github.qishr.cascara.ui.option.Option;
 import io.github.qishr.cascara.ui.option.SimpleStringOption;
 import io.github.qishr.cascara.ui.option.StringOption;
-
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.SetProperty;
 import javafx.beans.property.SimpleSetProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableSet;
 
-public class ThemeOptionProvider extends AbstractObservableOptionProvider implements AutoCloseable {
+public class ThemeOptionProvider extends AbstractOptionProvider implements AutoCloseable {
+    public static final String NAME = "ui-theme";
+
     private final Path cascaraDir = Paths.get(System.getProperty("user.home")).resolve(".cascara");
     private final Path themesDir = cascaraDir.resolve("themes");
     private final Path packagesDir = cascaraDir.resolve("packages");
@@ -33,7 +36,12 @@ public class ThemeOptionProvider extends AbstractObservableOptionProvider implem
     private final ObservableSet<StringOption> vsixThemeSet = FXCollections.observableSet();
     private final SetProperty<StringOption> vsixThemes = new SimpleSetProperty<>(vsixThemeSet);
 
+    private ObjectProperty<Option> activeOption;
+
     public ThemeOptionProvider() throws IOException {
+        super(NAME, null, null, null);
+        this.activeOption = ThemeEngine.instance().activeThemeOptionProperty();
+        // this.activeOption = activeOption;
         if (!Files.isDirectory(themesDir)) {
             Files.createDirectories(themesDir);
         }
@@ -56,9 +64,19 @@ public class ThemeOptionProvider extends AbstractObservableOptionProvider implem
         themesWatcher.clear();
     }
 
+    // @Override
+    // public String getName() {
+    //     return NAME;
+    // }
+
     @Override
-    public List<StringOption> getOptions(Map<String,Property<?>> contextData, String parameter) {
-        List<StringOption> result = new ArrayList<>();
+    public Option getActiveOption() {
+        return activeOption.get();
+    }
+
+    @Override
+    public List<Option> getOptions(Map<String,Property<?>> contextData, String parameter) {
+        List<Option> result = new ArrayList<>();
         result.addAll(cascThemes.get());
         result.addAll(vsixThemes.get());
         return result;

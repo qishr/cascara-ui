@@ -1,10 +1,16 @@
 package io.github.qishr.cascara.ui.render;
 
+import io.github.qishr.cascara.schema.SchemaType;
 import io.github.qishr.cascara.schema.structure.SchemaNode;
 import io.github.qishr.cascara.ui.form.FieldMetadata;
 import javafx.beans.property.ObjectProperty;
 
 public abstract class AbstractScalarRenderer extends AbstractRenderer {
+
+    protected AbstractScalarRenderer(String contentType, SchemaType schemaType, String format) {
+        super(contentType, schemaType, format);
+    }
+
     protected String extractString(ObjectProperty<?> prop) {
         return prop.getValue() == null ? "" : String.valueOf(prop.getValue());
     }

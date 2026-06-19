@@ -12,6 +12,7 @@ public class CascaraTheme {
     private YamlParser parser = new YamlParser();
     private YamlMapNode projectYaml = null;
     private String name;
+    private String themeId;
     private List<Variation> variations = new ArrayList<>();
 
     public CascaraTheme() {
@@ -40,6 +41,14 @@ public class CascaraTheme {
 
     void setName(String name) {
         this.name = name;
+    }
+
+    public String getThemeId() {
+        return themeId;
+    }
+
+    public void setThemeId(String path) {
+        this.themeId = path;
     }
 
     public List<Variation> getVariations() {

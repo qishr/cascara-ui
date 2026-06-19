@@ -3,6 +3,7 @@ package io.github.qishr.cascara.ui.render.control;
 import java.net.URI;
 import java.nio.file.Path;
 
+import io.github.qishr.cascara.schema.SchemaType;
 import io.github.qishr.cascara.schema.structure.SchemaNode;
 import io.github.qishr.cascara.ui.api.data.DataProvider;
 import io.github.qishr.cascara.ui.api.render.ScalarEditorRenderer;
@@ -17,14 +18,9 @@ import javafx.scene.control.Labeled;
 public class FileChooserRenderer extends AbstractScalarRenderer implements ScalarEditorRenderer {
     private boolean isUpdatingControl;
 
-    @Override
-    public String getContentType() { return null; }
-
-    @Override
-    public String getSchemaType() { return "string"; }
-
-    @Override
-    public String getSchemaFormat() { return "path"; }
+    public FileChooserRenderer() {
+        super(null, SchemaType.STRING, "path");
+    }
 
     @Override
     public Node render(Labeled view, Observable data, DataProvider dataProvider, FieldMetadata meta) {

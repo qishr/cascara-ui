@@ -3,12 +3,13 @@ package io.github.qishr.cascara.ui.schema;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.github.qishr.cascara.schema.util.Schemas;
 import io.github.qishr.cascara.schema.util.SchemaResolver;
 import io.github.qishr.cascara.schema.util.TypeAnalyzer;
 
 public class TypeAnalyzers {
     private static TypeAnalyzers instance;
-    private SchemaResolver schemaResolver;
+    private SchemaResolver schemaResolver = Schemas.getResolver();
     private Map<String, TypeAnalyzer> analyzers = new HashMap<>();
 
     private TypeAnalyzers() {}

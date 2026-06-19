@@ -27,18 +27,9 @@ import javafx.scene.layout.VBox;
 public class TableRenderer extends AbstractArrayRenderer implements ArrayEditorRenderer {
     private FieldMetadata tableMeta;
 
-    @Override
-    public String getContentType() {
-        return "cascara/table-row";
+    public TableRenderer() {
+        super("cascara/table-row", null, null);
     }
-
-    @Override
-    public String getSchemaType() {
-        return null;
-    }
-
-    @Override
-    public String getSchemaFormat() { return null; }
 
     @SuppressWarnings("unchecked")
 	@Override

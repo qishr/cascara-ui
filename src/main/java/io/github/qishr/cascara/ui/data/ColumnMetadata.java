@@ -11,6 +11,7 @@ import io.github.qishr.cascara.ui.api.render.RendererFactory;
 import io.github.qishr.cascara.ui.api.render.ScalarEditorRenderer;
 import io.github.qishr.cascara.ui.api.render.ScalarRenderer;
 import io.github.qishr.cascara.ui.form.FieldMetadata;
+import io.github.qishr.cascara.ui.language.Localization;
 import io.github.qishr.cascara.ui.option.OptionProviderRegistry;
 import io.github.qishr.cascara.ui.render.Renderers;
 
@@ -38,6 +39,7 @@ public class ColumnMetadata extends FieldMetadata {
 
         super(name, schema, optionProviderRegistry, rendererFactories);
         if (title != null) setTitle(title);
+        setRenderers(new Renderers(rendererFactories, this));
     }
 
     public ColumnMetadata(String name, String title, SchemaNode schema,
@@ -46,6 +48,7 @@ public class ColumnMetadata extends FieldMetadata {
 
         super(name, schema, optionProviderRegistry, rendererFactories);
         if (title != null) setTitle(title);
+        setRenderers(new Renderers(rendererFactories, this));
     }
 
     public ColumnMetadata(String name, String title, Renderer renderer) {
@@ -63,6 +66,15 @@ public class ColumnMetadata extends FieldMetadata {
     public ColumnMetadata(String name, String title) {
         super(name, null, null, null);
         if (title != null) setTitle(title);
+    }
+
+    public ColumnMetadata(String name) {
+        super(name, null, null, null);
+    }
+
+    public ColumnMetadata bindTitle(String key) {
+        Localization.bind(titleProperty(), key);
+        return this;
     }
 
     public TypeDescriptor<?> getTypeDescriptor() { return typeDescriptor; }
@@ -85,6 +97,7 @@ public class ColumnMetadata extends FieldMetadata {
     public ColumnMetadata setMaxWidth(double value) { this.maxWidth = value; return this; }
     public ColumnMetadata setCellStyle(String value) { this.cellStyle = value; return this; }
     public ColumnMetadata setHeaderStyle(String value) { this.headerStyle = value; return this; }
+    public ColumnMetadata setAllowEdit(boolean v) { allowEdit = v; return this; }
 
     private void configureComparator() {
         comparator = (ObservableValue<?> v1, ObservableValue<?> v2) -> {
@@ -92,17 +105,14 @@ public class ColumnMetadata extends FieldMetadata {
             Object o2 = v2.getValue();
 
             if (typeDescriptor instanceof ScalarDescriptor descriptor) {
-                // String s1 = descriptor.toText(o1);
-                // String s2 = descriptor.toText(o2);
-
                 String s1 = descriptor.toPrimitive(o1).toString();
                 String s2 = descriptor.toPrimitive(o2).toString();
 
                 return s1.compareTo(s2);
             }
 
-            if (o1 instanceof Comparable s1 && o2 instanceof Comparable s2) {
-                return s1.compareTo(s2);
+            if (o1 instanceof Comparable c1 && o2 instanceof Comparable c2) {
+                return c1.compareTo(c2);
             }
 
             return 0;

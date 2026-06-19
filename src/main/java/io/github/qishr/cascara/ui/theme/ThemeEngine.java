@@ -23,7 +23,6 @@ import io.github.qishr.cascara.ui.api.UiException;
 import io.github.qishr.cascara.ui.color.ColorDefinition;
 import io.github.qishr.cascara.ui.color.ColorException;
 import io.github.qishr.cascara.ui.color.ColorUtil;
-import io.github.qishr.cascara.ui.data.UiDataException;
 import io.github.qishr.cascara.ui.option.Option;
 import io.github.qishr.cascara.ui.option.OptionProvider;
 import io.github.qishr.cascara.ui.option.SimpleStringOption;
@@ -96,6 +95,9 @@ public class ThemeEngine implements AutoCloseable {
     private SimpleObjectProperty<CascaraTheme> activeTheme = new SimpleObjectProperty<>();
     private SimpleObjectProperty<Variation> activeVariation = new SimpleObjectProperty<>();
 
+    private SimpleObjectProperty<Option> activeThemeOption = new SimpleObjectProperty<>();
+    private SimpleObjectProperty<Option> activeVariationOption = new SimpleObjectProperty<>();
+
     private ThemeOptionProvider themeOptionProvider;
     private VariationOptionProvider variationOptionProvider;
 
@@ -114,6 +116,14 @@ public class ThemeEngine implements AutoCloseable {
             instance = new ThemeEngine();
         }
         return instance;
+    }
+
+    public SimpleObjectProperty<Option> activeThemeOptionProperty() {
+        return activeThemeOption;
+    }
+
+    public SimpleObjectProperty<Option> activeVariationOptionProperty() {
+        return activeVariationOption;
     }
 
     @Override
@@ -140,6 +150,10 @@ public class ThemeEngine implements AutoCloseable {
 
     public static CascaraTheme getDefaultTheme() { return defaultTheme; }
 
+    public Option getActiveThemeOption() {
+        return activeThemeOption.get();
+    }
+
     public Option getDefaultThemeOption() { return defaultThemeOption; }
 
     public CascaraTheme getTheme() { return activeTheme.get(); }
@@ -150,6 +164,7 @@ public class ThemeEngine implements AutoCloseable {
         }
         if (themeId.endsWith(".vsix")) {
             CascaraTheme theme = convertVsix(themeId);
+            theme.setThemeId(themeId);
             return theme;
         } else {
             Path path = themesDir.resolve(themeId);
@@ -157,6 +172,7 @@ public class ThemeEngine implements AutoCloseable {
                 try {
                     String source = Files.readString(themesDir.resolve(themeId));
                     CascaraTheme theme = new CascaraTheme(source);
+                    theme.setThemeId(themeId);
                     return theme;
                 } catch (IOException e) {
                     System.err.println(e.getMessage());
@@ -172,7 +188,19 @@ public class ThemeEngine implements AutoCloseable {
             throw new UiException(GenericDiagnosticCode.UNEXPECTED_NULL, "CascaraTheme");
         }
         activeTheme.set(theme);
-        setVariation(theme.getVariations().getFirst());
+        Variation variation = theme.getVariations().getFirst();
+        setVariation(variation);
+
+        String themeId = theme.getThemeId();
+
+        Option option;
+        if (themeId == null) {
+            option = new SimpleStringOption("default", "Default");
+        } else {
+            option = new SimpleStringOption(themeId, theme.getName());
+        }
+
+        activeThemeOption.set(option);
     }
 
     public void setTheme(String themeId) {
@@ -192,12 +220,16 @@ public class ThemeEngine implements AutoCloseable {
 
     public void setVariation(Variation variation) {
         activeVariation.set(variation);
+
+        activeVariationOption.set(variation);
     }
 
     public void setVariation(String variationName) {
         Variation variation = activeTheme.get().getVariation(variationName);
         if (variation != null) {
             activeVariation.set(variation);
+
+            activeVariationOption.set(variation);
         }
     }
 

@@ -10,6 +10,10 @@ import javafx.scene.Node;
 import javafx.scene.control.Labeled;
 
 public class StandardNumberRenderer extends AbstractScalarRenderer implements ScalarRenderer {
+    public StandardNumberRenderer() {
+        super(null, SchemaType.NUMBER, null);
+    }
+
     @Override
     public String getContentType() { return null; }
 

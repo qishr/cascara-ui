@@ -2,16 +2,15 @@ package io.github.qishr.cascara.ui.render.control;
 
 
 import java.time.LocalDate;
-import java.time.chrono.Chronology;
 import java.time.format.DateTimeParseException;
-import java.util.Locale;
 
+import io.github.qishr.cascara.schema.SchemaType;
 import io.github.qishr.cascara.ui.api.data.DataProvider;
 import io.github.qishr.cascara.ui.api.render.ScalarEditorRenderer;
 import io.github.qishr.cascara.ui.form.FieldMetadata;
-import io.github.qishr.cascara.ui.l10n.Localization;
-import io.github.qishr.cascara.ui.l10n.Localizer;
+import io.github.qishr.cascara.ui.language.Localization;
 import io.github.qishr.cascara.ui.render.AbstractScalarRenderer;
+
 import javafx.beans.Observable;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.Node;
@@ -19,14 +18,9 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Labeled;
 
 public class DateChooserRenderer extends AbstractScalarRenderer implements ScalarEditorRenderer {
-    @Override
-    public String getContentType() { return null; }
-
-    @Override
-    public String getSchemaType() { return "string"; }
-
-    @Override
-    public String getSchemaFormat() { return "date"; }
+    public DateChooserRenderer() {
+        super(null, SchemaType.STRING, "date");
+    }
 
     @SuppressWarnings("unchecked")
     @Override

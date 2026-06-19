@@ -3,6 +3,7 @@ package io.github.qishr.cascara.ui.api;
 import io.github.qishr.cascara.common.diagnostic.code.DiagnosticCode;
 
 public enum UiDiagnosticCode implements DiagnosticCode {
+    // Data
     UI_DATA_ERROR("UI-101", "UI data error."),
     PROPERTY_NOT_RECOGNIZED("UI-102","Unrecognized property name: {0}."),
     PROPERTY_NOT_FOUND_IN_MAP("UI-103","Object {0} is missing {1} from its observables map."),
@@ -10,7 +11,9 @@ public enum UiDiagnosticCode implements DiagnosticCode {
     SCHEMA_NOT_SPECIFIED("UI-105", "Schema not specified."),
     SCHEMA_GENERATION_ERROR("UI-106", "ObservableObject failed to generate schema for {0}."),
     SCHEMA_COMPILATION_ERROR("UI-107", "ObservableObject failed to compile schema."),
+    EMPTY_ENUM("UI-108", "Enum must not be empty"),
 
+    // Render
     UI_RENDER_ERROR("UI-201", "UI render error."),
     NO_RENDERER_SET("UI-202", "No renderer set for property '{0}' with schema type {1} and content type {2}."),
 

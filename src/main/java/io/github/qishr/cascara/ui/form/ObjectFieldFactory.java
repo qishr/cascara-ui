@@ -13,7 +13,9 @@ import io.github.qishr.cascara.schema.rule.ValidationRule;
 import io.github.qishr.cascara.schema.rule.MaxLengthRule;
 import io.github.qishr.cascara.ui.api.UiDiagnosticCode;
 import io.github.qishr.cascara.ui.api.data.ObservableTableData;
+import io.github.qishr.cascara.ui.data.ObservableObject;
 import io.github.qishr.cascara.ui.data.UiDataException;
+import io.github.qishr.cascara.ui.language.Localization;
 import io.github.qishr.cascara.ui.render.Renderers;
 
 import javafx.beans.Observable;
@@ -28,6 +30,19 @@ public class ObjectFieldFactory extends AbstractFieldFactory {
     private static final Reporter REPORTER = GlobalReporter.forClass(ObjectFieldFactory.class);
     private ObservableTableData object = null;
     private SchemaNode objectSchema = null;
+
+    public ObjectFieldFactory(ObservableObject object) {
+        // this(object, null);
+        super(null);
+        this.object = object;
+        this.objectSchema = object.getObjectSchema();
+    }
+
+    public ObjectFieldFactory(ObservableObject object, ServiceProviderLayer moduleLayer) {
+        super(moduleLayer);
+        this.object = object;
+        this.objectSchema = object.getObjectSchema();
+    }
 
     public ObjectFieldFactory(ObservableTableData object, Schema schema) {
         this(object, schema.getRoot(), null);
@@ -47,7 +62,12 @@ public class ObjectFieldFactory extends AbstractFieldFactory {
         this.objectSchema = schema;
     }
 
-    public void setObject(ObservableTableData object) { this.object = object; }
+    public void setObject(ObservableTableData object) {
+        this.object = object;
+        if (object instanceof ObservableObject obs) {
+            this.objectSchema = obs.getObjectSchema();
+        }
+    }
 
     public LabeledField createLabeledField(String fieldName) throws UiDataException {
         SchemaNode fieldSchema = getFieldSchema(fieldName);
@@ -59,7 +79,16 @@ public class ObjectFieldFactory extends AbstractFieldFactory {
         if (title != null && !title.isBlank()) {
             labelText = title;
         }
+
         FieldLabel label = new FieldLabel(labelText);
+
+
+        String titleKey = Localization.getTitleKey(fieldSchema);
+        if (titleKey != null) {
+            Localization.bind(label.textProperty(), titleKey);
+        }
+
+
         LabeledField field = new LabeledField(label, null, valueField.getMetadata());
         field.setInnerField(valueField);
 

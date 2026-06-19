@@ -19,17 +19,8 @@ import javafx.scene.control.Labeled;
 
 public class TagChooserRenderer extends AbstractArrayRenderer implements ArrayEditorRenderer {
 
-    @Override
-    public String getSchemaType() {
-        return null;
-    }
-
-    @Override
-    public String getSchemaFormat() { return null; }
-
-    @Override
-    public String getContentType() {
-        return "cascara/tag";
+    public TagChooserRenderer() {
+        super("cascara/tag", null, null);
     }
 
     @Override
