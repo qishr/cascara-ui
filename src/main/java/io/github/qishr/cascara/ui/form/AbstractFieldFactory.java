@@ -1,23 +1,15 @@
 package io.github.qishr.cascara.ui.form;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.function.Consumer;
 
 import io.github.qishr.cascara.common.service.ServiceProviderLayer;
 import io.github.qishr.cascara.ui.api.data.DataProvider;
-import io.github.qishr.cascara.ui.api.render.Renderer;
-import io.github.qishr.cascara.ui.api.render.RendererFactory;
 import io.github.qishr.cascara.ui.option.OptionProviderRegistry;
 import io.github.qishr.cascara.ui.render.RenderDispatcher;
-import io.github.qishr.cascara.ui.render.factory.SpiArrayEditorRendererFactory;
-import io.github.qishr.cascara.ui.render.factory.SpiScalarEditorRendererFactory;
-import io.github.qishr.cascara.ui.render.factory.SpiScalarRendererFactory;
-import io.github.qishr.cascara.ui.render.factory.StandardScalarEditorRendererFactory;
-import io.github.qishr.cascara.ui.render.factory.StandardScalarRendererFactory;
+import io.github.qishr.cascara.ui.render.RendererFactory;
 
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
@@ -38,17 +30,13 @@ public abstract class AbstractFieldFactory {
 
     protected DataProvider dataProvider;
     protected OptionProviderRegistry optionProviderRegistry;
-    protected List<RendererFactory<? extends Renderer>> rendererFactories = new ArrayList<>();
+    protected RendererFactory rendererFactory;
 
-    protected AbstractFieldFactory(ServiceProviderLayer providerLayer) {
-        if (providerLayer == null) {
-            providerLayer = ServiceProviderLayer.getRootLayer();
+    protected AbstractFieldFactory(ServiceProviderLayer splCtx) {
+        if (splCtx == null) {
+            splCtx = ServiceProviderLayer.getRootLayer();
         }
-        rendererFactories.add(new SpiArrayEditorRendererFactory(providerLayer));
-        rendererFactories.add(new SpiScalarRendererFactory(providerLayer));
-        rendererFactories.add(new SpiScalarEditorRendererFactory(providerLayer));
-        rendererFactories.add(new StandardScalarRendererFactory());
-        rendererFactories.add(new StandardScalarEditorRendererFactory());
+        rendererFactory = new RendererFactory(splCtx);
     }
 
     public URI getUri() { return uri; }

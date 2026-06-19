@@ -17,7 +17,6 @@ public class LabeledField extends Field {
     private HBox collapsibleArea = null;
     private HBox headerArea = new HBox();
     private UnlabeledField innerField;
-    private FieldMetadata metadata;
 
     public LabeledField(FieldLabel label) {
         this(label, null, null);

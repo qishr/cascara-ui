@@ -1,8 +1,9 @@
 package io.github.qishr.cascara.ui.menu;
 
+import io.github.qishr.cascara.common.service.ServiceProvider;
 import javafx.stage.Stage;
 
-public interface SystemMenusService {
+public interface SystemMenusService extends ServiceProvider {
     ObservableMenuItem buildAppMenu(String appName);
     ObservableMenuItem buildWindowMenu();
 

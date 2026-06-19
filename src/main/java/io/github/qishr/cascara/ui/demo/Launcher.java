@@ -6,8 +6,9 @@ import io.github.qishr.cascara.ui.control.OptionChooser;
 import io.github.qishr.cascara.ui.language.Localization;
 import io.github.qishr.cascara.ui.language.UiLocalizer;
 import io.github.qishr.cascara.ui.theme.ThemeEngine;
-
+import io.github.qishr.cascara.ui.vsix.VsixPackageStore;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -23,6 +24,9 @@ public class Launcher extends Application {
     private Scene scene;
 
     public static void main(String[] args) {
+        // GlobalReporter.globalInstance().setLevel(Level.DEBUG);
+        // Reporter splReporter = new StandardReporter().setLevel(Level.DEBUG);
+        // ServiceProviderLayer.getRootLayer(splReporter);
         launch(args);
     }
 

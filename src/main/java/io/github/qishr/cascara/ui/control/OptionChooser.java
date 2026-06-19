@@ -9,8 +9,7 @@ import io.github.qishr.cascara.ui.api.render.ScalarRenderer;
 import io.github.qishr.cascara.ui.language.Localization;
 import io.github.qishr.cascara.ui.option.Option;
 import io.github.qishr.cascara.ui.option.OptionProvider;
-import io.github.qishr.cascara.ui.render.factory.SpiScalarRendererFactory;
-import io.github.qishr.cascara.ui.render.factory.StandardScalarRendererFactory;
+import io.github.qishr.cascara.ui.render.RendererFactory;
 
 import javafx.application.Platform;
 import javafx.beans.property.Property;
@@ -28,6 +27,7 @@ public class OptionChooser extends ComboBox<Option> {
     private String initialId;
 
     private ServiceProviderLayer layer;
+    private RendererFactory rendererFactory;
 
     public OptionChooser(OptionProvider provider) {
         this(provider, null, null);
@@ -41,9 +41,12 @@ public class OptionChooser extends ComboBox<Option> {
         this.provider = provider;
         this.providerParameter = providerParameter;
         this.dataContext = context;
+
         layer = ServiceProviderLayer.getRootLayer(); // TODO: User provided
+        rendererFactory = new RendererFactory(layer);
+
         this.renderer = getRenderer(provider);
-        Option initialValue = provider == null ? null : provider.getActiveOption();
+        Option initialValue = provider == null ? null : provider.getActiveOption(context, providerParameter);
         setup(initialValue);
     }
 
@@ -57,14 +60,14 @@ public class OptionChooser extends ComboBox<Option> {
         // Try to get a renderer by content type
         String contentType = provider.getContentType();
         if (contentType != null && !contentType.isEmpty()) {
-            renderer = findRendererForContentType(contentType);
+            renderer = rendererFactory.createScalarRendererForContentType(contentType);
         }
 
         // Try to get a renderer by JSON Schema type
         String type = provider.getSchemaType();
         if (renderer == null && type != null) {
             String format = provider.getSchemaFormat();
-            renderer = findRendererForType(type, format);
+            renderer = rendererFactory.createScalarRendererForSchemaType(type, format);
         }
 
         // Fall back to option provider specified renderer
@@ -75,33 +78,6 @@ public class OptionChooser extends ComboBox<Option> {
         // If renderer is null, OptionProvider will just render the text
         return renderer;
     }
-
-    private ScalarRenderer findRendererForType(String type, String format) {
-        ScalarRenderer renderer = null;
-
-        // TODO: Make this more efficient
-        SpiScalarRendererFactory spiFactory = new SpiScalarRendererFactory(layer);
-        renderer = spiFactory.getRendererForSchemaType(type, format);
-
-        if (renderer == null) {
-            StandardScalarRendererFactory factory = new StandardScalarRendererFactory();
-            renderer = factory.getRendererForSchemaType(type, format);
-        }
-        return renderer;
-    }
-
-    private ScalarRenderer findRendererForContentType(String contentType) {
-        SpiScalarRendererFactory spiFactory = new SpiScalarRendererFactory(layer);
-        return spiFactory.getRendererForContentType(contentType);
-    }
-
-    // public OptionChooser(ScalarRenderer renderer, OptionProvider provider, String providerParameter, Option initialValue, Map<String,Property<?>> context) {
-    //     this.renderer = renderer;
-    //     this.provider = provider;
-    //     this.providerParameter = providerParameter;
-    //     this.dataContext = context;
-    //     setup(initialValue);
-    // }
 
     private void setup(Option initialValue) {
         initialId = initialValue == null ? null : initialValue.getOptionId();

@@ -1,19 +1,18 @@
 package io.github.qishr.cascara.ui.data;
 
 import java.util.Comparator;
-import java.util.List;
 
 import io.github.qishr.cascara.common.lang.type.ScalarDescriptor;
 import io.github.qishr.cascara.common.lang.type.TypeDescriptor;
 import io.github.qishr.cascara.schema.structure.SchemaNode;
 import io.github.qishr.cascara.ui.api.render.Renderer;
-import io.github.qishr.cascara.ui.api.render.RendererFactory;
 import io.github.qishr.cascara.ui.api.render.ScalarEditorRenderer;
 import io.github.qishr.cascara.ui.api.render.ScalarRenderer;
 import io.github.qishr.cascara.ui.form.FieldMetadata;
 import io.github.qishr.cascara.ui.language.Localization;
 import io.github.qishr.cascara.ui.option.OptionProviderRegistry;
 import io.github.qishr.cascara.ui.render.Renderers;
+import io.github.qishr.cascara.ui.render.RendererFactory;
 
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.TableCell;
@@ -34,21 +33,21 @@ public class ColumnMetadata extends FieldMetadata {
 
     public ColumnMetadata(String name, String title, SchemaNode schema,
                 OptionProviderRegistry optionProviderRegistry,
-                List<RendererFactory<? extends Renderer>> rendererFactories,
+                RendererFactory rendererFactory,
                 Callback<TableColumn<ObservableObject, Object>, TableCell<ObservableObject, Object>> cellFactory) {
 
-        super(name, schema, optionProviderRegistry, rendererFactories);
+        super(name, schema, optionProviderRegistry, rendererFactory);
         if (title != null) setTitle(title);
-        setRenderers(new Renderers(rendererFactories, this));
+        setRenderers(new Renderers(rendererFactory, this));
     }
 
     public ColumnMetadata(String name, String title, SchemaNode schema,
                 OptionProviderRegistry optionProviderRegistry,
-                List<RendererFactory<? extends Renderer>> rendererFactories) {
+                RendererFactory rendererFactory) {
 
-        super(name, schema, optionProviderRegistry, rendererFactories);
+        super(name, schema, optionProviderRegistry, rendererFactory);
         if (title != null) setTitle(title);
-        setRenderers(new Renderers(rendererFactories, this));
+        setRenderers(new Renderers(rendererFactory, this));
     }
 
     public ColumnMetadata(String name, String title, Renderer renderer) {

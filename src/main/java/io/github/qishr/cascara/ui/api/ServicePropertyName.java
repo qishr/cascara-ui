@@ -1,10 +1,11 @@
-package io.github.qishr.cascara.ui.service;
+package io.github.qishr.cascara.ui.api;
 
 public enum ServicePropertyName {
     CONTENT_TYPE("contentType"),
     NAME("name"),
     SCHEMA_TYPE("schemaType"),
-    SCHEMA_FORMAT("schemaFormat");
+    SCHEMA_FORMAT("schemaFormat"),
+    PLATFORM("platform");
 
     private final String string;
 

@@ -12,11 +12,13 @@ public enum UiDiagnosticCode implements DiagnosticCode {
     SCHEMA_GENERATION_ERROR("UI-106", "ObservableObject failed to generate schema for {0}."),
     SCHEMA_COMPILATION_ERROR("UI-107", "ObservableObject failed to compile schema."),
     EMPTY_ENUM("UI-108", "Enum must not be empty"),
+    OPTION_PROVIDER_INIT_ERROR("UI-109", "Option provider {0} failed to initialize: {0}"),
 
     // Render
     UI_RENDER_ERROR("UI-201", "UI render error."),
     NO_RENDERER_SET("UI-202", "No renderer set for property '{0}' with schema type {1} and content type {2}."),
 
+    // Controls
     ADD_UNSUPPORTED("UI-301", "createMenuItem is unsupported for root."),
 
     INVALID_THEMING_TARGET("UI-403", "Target must be a Scene or a Parent.");

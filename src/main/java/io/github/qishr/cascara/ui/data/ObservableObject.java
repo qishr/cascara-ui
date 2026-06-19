@@ -26,6 +26,7 @@ import io.github.qishr.cascara.ui.schema.UiTypeAnalyzer;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.Property;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -294,6 +295,16 @@ public class ObservableObject implements Observable, ObservableTableData {
             return property;
         }
         return null;
+    }
+
+    public Map<String,Property<?>> getDataContext() {
+        Map<String,Property<?>> contextMap = new HashMap<>();
+        for (Entry<String,Observable> entry : map.entrySet()) {
+            if (entry.getValue() instanceof Property<?> prop) {
+                contextMap.put(entry.getKey(), prop);
+            }
+        }
+        return contextMap;
     }
 
     public Object get(String key) {

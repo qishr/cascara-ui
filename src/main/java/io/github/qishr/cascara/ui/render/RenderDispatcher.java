@@ -59,6 +59,8 @@ public class RenderDispatcher {
             Object bean = objectProperty.getBean();
             if (bean instanceof ObservableTreeNode treeNode) {
                 meta.setDataContext(treeNode.getDataContext());
+            } else if (bean instanceof ObservableObject object) {
+                meta.setDataContext(object.getDataContext());
             }
 
             SchemaNode schema = meta.getSchema();

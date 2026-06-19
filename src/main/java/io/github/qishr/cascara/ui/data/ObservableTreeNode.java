@@ -173,6 +173,7 @@ public abstract class ObservableTreeNode<T extends ObservableTreeNode<T,V>,V ext
         return propertyMap(this);
     }
 
+    @Override
     public Map<String,Property<?>> getDataContext() {
         return propertyMap(getParent());
     }

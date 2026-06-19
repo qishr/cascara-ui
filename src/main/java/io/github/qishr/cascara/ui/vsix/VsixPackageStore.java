@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.github.qishr.cascara.common.diagnostic.LocalizableIOException;
-import io.github.qishr.cascara.common.diagnostic.NoOpReporter;
-import io.github.qishr.cascara.common.diagnostic.Reporter;
 import io.github.qishr.cascara.common.diagnostic.code.GenericDiagnosticCode;
 import io.github.qishr.cascara.common.io.filewatcher.FileWatcher;
 import io.github.qishr.cascara.common.io.filewatcher.FileChangeHandler;
@@ -35,8 +33,9 @@ public class VsixPackageStore implements AutoCloseable {
 
     @Override
     public void close() {
-        if (fileWatcher != null) {
+        if (instance != null) {
             fileWatcher.clear();
+            instance = null;
         }
     }
 

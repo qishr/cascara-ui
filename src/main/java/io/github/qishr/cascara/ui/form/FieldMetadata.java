@@ -15,20 +15,18 @@ import io.github.qishr.cascara.schema.SchemaType;
 import io.github.qishr.cascara.schema.rule.EnumRule;
 import io.github.qishr.cascara.schema.rule.ValidationRule;
 
-import io.github.qishr.cascara.ui.api.render.Renderer;
-import io.github.qishr.cascara.ui.api.render.RendererFactory;
 import io.github.qishr.cascara.common.data.TableData;
 import io.github.qishr.cascara.common.diagnostic.code.GenericDiagnosticCode;
 import io.github.qishr.cascara.ui.data.UiDataException;
 import io.github.qishr.cascara.ui.option.OptionProvider;
 import io.github.qishr.cascara.ui.option.OptionProviderRegistry;
 import io.github.qishr.cascara.ui.render.Renderers;
+import io.github.qishr.cascara.ui.render.RendererFactory;
 import io.github.qishr.cascara.ui.schema.DisplayColumns;
 import io.github.qishr.cascara.ui.schema.DisplayToggle;
 import io.github.qishr.cascara.ui.schema.Hidden;
 import io.github.qishr.cascara.ui.schema.ItemsEditableConstraint;
 import io.github.qishr.cascara.ui.schema.OptionConstraint;
-
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -58,7 +56,8 @@ public class FieldMetadata {
     private boolean isArray = false;
     private boolean isObject = false;
 
-    private final List<RendererFactory<?>> rendererFactories;
+    // private final List<RendererFactory<?>> rendererFactories;
+    private final RendererFactory rendererFactory;
     private Renderers renderers = new Renderers(null, null, null);
 
     public static class ColumnMeta {
@@ -76,11 +75,11 @@ public class FieldMetadata {
 
     public FieldMetadata(String fieldName, SchemaNode fieldSchema,
                 OptionProviderRegistry optionProviderRegistry,
-                List<RendererFactory<?>> rendererFactories) {
+                RendererFactory rendererFactory) {
         this. fieldSchema = fieldSchema;
         this.fieldName.set(fieldName);
         this.optionProviderRegistry = optionProviderRegistry;
-        this.rendererFactories = rendererFactories;
+        this.rendererFactory = rendererFactory;
         String optionProviderId = null;
 
         if (fieldName == null) {
@@ -198,7 +197,7 @@ public class FieldMetadata {
     public String getTitle() { return title.get(); }
 
     public OptionProviderRegistry getOptionProviderRegistry() { return optionProviderRegistry; }
-    public List<RendererFactory<? extends Renderer>> getRendererFactories() { return rendererFactories; }
+    public RendererFactory getRendererFactory() { return rendererFactory; }
 
     public boolean isHidden() { return hidden; }
     public boolean hasOptionProvider() { return optionProvider != null; }

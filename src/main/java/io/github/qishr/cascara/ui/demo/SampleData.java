@@ -13,6 +13,13 @@ public class SampleData extends ObservableObject {
     @StringConstraint(options = {"ONE", "TWO", "THREE"})
     public ObjectProperty<SampleEnum> sampleEnum;
 
+    @SchemaProperty
+    public ObjectProperty<String> text;
+
+    public SampleData() {
+        text.set("Text");
+    }
+
     public static enum SampleEnum {
         ONE,
         TWO,

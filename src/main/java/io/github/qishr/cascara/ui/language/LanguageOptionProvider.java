@@ -33,7 +33,7 @@ public class LanguageOptionProvider extends AbstractOptionProvider {
     }
 
     @Override
-    public Option getActiveOption() {
+    public Option getActiveOption(Map<String,Property<?>> contextData, String parameter) {
         if (localizer == null) initialize();
         return localizer.activeLanguageOptionProperty().get();
     }

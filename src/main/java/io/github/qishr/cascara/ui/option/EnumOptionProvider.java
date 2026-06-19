@@ -105,7 +105,7 @@ public class EnumOptionProvider extends AbstractOptionProvider {
     // }
 
     @Override
-    public Option getActiveOption() {
+    public Option getActiveOption(Map<String,Property<?>> contextData, String parameter) {
         return activeOption;
     }
 

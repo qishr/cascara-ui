@@ -20,7 +20,6 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 public class UnlabeledField extends Field {
-    private FieldMetadata metadata;
     private VBox content;
     private ViewAndControl inputControl;
     private ObjectProperty<?> property;

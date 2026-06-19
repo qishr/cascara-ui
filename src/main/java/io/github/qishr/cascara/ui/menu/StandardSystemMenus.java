@@ -1,28 +1,40 @@
 package io.github.qishr.cascara.ui.menu;
 
+import io.github.qishr.cascara.common.util.Properties;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class StandardSystemMenus implements SystemMenusService {
-
+    private Properties properties;
     private ObservableMenuItem menuRoot;
+    private Runnable onAbout = null;
+    private Runnable onSettings = null;
+    private Runnable onQuit = null;
 
     public StandardSystemMenus() {
     }
 
-    public void set(Scene mainWindow) {
+    @Override
+    public Properties getServiceProperties() {
+        if (properties == null) {
+            properties = new Properties();
+        }
+        return properties;
     }
 
-    private Runnable onAbout = null;
+    @Override
     public void setOnAbout(Runnable handler) {this.onAbout = handler;}
+
     public void onAbout() {if (onAbout != null) {onAbout.run();}}
 
-    private Runnable onSettings = null;
+    @Override
     public void setOnSettings(Runnable handler) {this.onSettings = handler;}
+
     public void onSettings() {if (onSettings != null) {onSettings.run();}}
 
-    private Runnable onQuit = null;
+    @Override
     public void setOnQuit(Runnable handler) {this.onQuit = handler;}
+
     public void onQuit() {if (onQuit != null) {onQuit.run();}}
 
     @Override

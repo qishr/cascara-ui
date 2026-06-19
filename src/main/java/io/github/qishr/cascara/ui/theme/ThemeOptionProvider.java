@@ -1,7 +1,6 @@
 package io.github.qishr.cascara.ui.theme;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -9,11 +8,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import io.github.qishr.cascara.common.diagnostic.LocalizableRuntimeException;
 import io.github.qishr.cascara.common.io.filewatcher.FileWatcher;
+import io.github.qishr.cascara.ui.api.UiDiagnosticCode;
 import io.github.qishr.cascara.ui.option.AbstractOptionProvider;
 import io.github.qishr.cascara.ui.option.Option;
 import io.github.qishr.cascara.ui.option.SimpleStringOption;
 import io.github.qishr.cascara.ui.option.StringOption;
+
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.SetProperty;
@@ -27,10 +29,10 @@ public class ThemeOptionProvider extends AbstractOptionProvider implements AutoC
     private final Path cascaraDir = Paths.get(System.getProperty("user.home")).resolve(".cascara");
     private final Path themesDir = cascaraDir.resolve("themes");
     private final Path packagesDir = cascaraDir.resolve("packages");
-    private final FileWatcher themesWatcher;
+    private FileWatcher themesWatcher;
 
     private final ObservableSet<StringOption> cascThemeSet = FXCollections.observableSet();
-    private final SetProperty<StringOption> cascThemes = new SimpleSetProperty<>(cascThemeSet);
+    private SetProperty<StringOption> cascThemes = new SimpleSetProperty<>(cascThemeSet);
     private final StringOption defaultTheme = new SimpleStringOption("default", "Default");
 
     private final ObservableSet<StringOption> vsixThemeSet = FXCollections.observableSet();
@@ -38,25 +40,31 @@ public class ThemeOptionProvider extends AbstractOptionProvider implements AutoC
 
     private ObjectProperty<Option> activeOption;
 
-    public ThemeOptionProvider() throws IOException {
+    public ThemeOptionProvider() {
         super(NAME, null, null, null);
-        this.activeOption = ThemeEngine.instance().activeThemeOptionProperty();
-        // this.activeOption = activeOption;
-        if (!Files.isDirectory(themesDir)) {
-            Files.createDirectories(themesDir);
-        }
-        themesWatcher = new FileWatcher();
-        themesWatcher.watchDirectory(themesDir, () -> {
+    }
+
+    public void initialize() {
+        try {
+            this.activeOption = ThemeEngine.instance().activeThemeOptionProperty();
+            if (!Files.isDirectory(themesDir)) {
+                Files.createDirectories(themesDir);
+            }
+            themesWatcher = new FileWatcher();
+            themesWatcher.watchDirectory(themesDir, () -> {
+                enumerateThemes();
+            });
+            themesWatcher.watchDirectory(packagesDir, () -> {
+                enumeratePackages();
+            });
+            cascThemes.addListener((obs, oldSet, newSet) -> {
+                listeners.forEach(Runnable::run);
+            });
             enumerateThemes();
-        });
-        themesWatcher.watchDirectory(packagesDir, () -> {
             enumeratePackages();
-        });
-        cascThemes.addListener((obs, oldSet, newSet) -> {
-            listeners.forEach(Runnable::run);
-        });
-        enumerateThemes();
-        enumeratePackages();
+        } catch (Exception e) {
+            throw new LocalizableRuntimeException(e, UiDiagnosticCode.OPTION_PROVIDER_INIT_ERROR, getName(), e.getLocalizedMessage());
+        }
     }
 
     @Override
@@ -64,13 +72,8 @@ public class ThemeOptionProvider extends AbstractOptionProvider implements AutoC
         themesWatcher.clear();
     }
 
-    // @Override
-    // public String getName() {
-    //     return NAME;
-    // }
-
     @Override
-    public Option getActiveOption() {
+    public Option getActiveOption(Map<String,Property<?>> contextData, String parameter) {
         return activeOption.get();
     }
 

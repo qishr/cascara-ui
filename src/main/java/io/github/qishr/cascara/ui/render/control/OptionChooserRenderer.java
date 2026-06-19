@@ -60,7 +60,8 @@ public class OptionChooserRenderer extends AbstractScalarRenderer implements Sca
             if (isJvmEnum) {
                 enumChooser = new EnumOptionChooser(
                     meta.getSchema(),
-                    initialEnumValue
+                    initialEnumValue,
+                    meta.getDataContext()
                 );
             } else {
                 if (initialStringValue == null && initialOption != null) {
@@ -68,7 +69,8 @@ public class OptionChooserRenderer extends AbstractScalarRenderer implements Sca
                 }
                 enumChooser = new EnumOptionChooser(
                     meta.getSchema(),
-                    initialStringValue
+                    initialStringValue,
+                    meta.getDataContext()
                 );
             }
             chooser = enumChooser;

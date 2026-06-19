@@ -22,7 +22,6 @@ module cascara.ui {
     exports io.github.qishr.cascara.ui.menu;
     exports io.github.qishr.cascara.ui.render;
     exports io.github.qishr.cascara.ui.render.control;
-    exports io.github.qishr.cascara.ui.render.factory;
     exports io.github.qishr.cascara.ui.render.standard;
     exports io.github.qishr.cascara.ui.schema;
     exports io.github.qishr.cascara.ui.theme;
@@ -58,7 +57,7 @@ module cascara.ui {
 
     uses io.github.qishr.cascara.common.service.ServiceProvider;
 
-    uses io.github.qishr.cascara.ui.api.render.OptionListEditor;
+    uses io.github.qishr.cascara.ui.api.OptionListEditor;
     uses io.github.qishr.cascara.ui.api.render.ArrayEditorRenderer;
     uses io.github.qishr.cascara.ui.api.render.ScalarEditorRenderer;
     uses io.github.qishr.cascara.ui.api.render.ScalarRenderer;
@@ -72,13 +71,21 @@ module cascara.ui {
              io.github.qishr.cascara.ui.render.control.TagChooserRenderer;
 
     provides io.github.qishr.cascara.ui.api.render.ScalarEditorRenderer
-        with io.github.qishr.cascara.ui.render.control.ColorChooserRenderer,
+        with io.github.qishr.cascara.ui.render.standard.StandardBooleanEditorRenderer,
+             io.github.qishr.cascara.ui.render.standard.StandardIntegerEditorRenderer,
+             io.github.qishr.cascara.ui.render.standard.StandardNumberEditorRenderer,
+             io.github.qishr.cascara.ui.render.standard.StandardStringEditorRenderer,
+             io.github.qishr.cascara.ui.render.control.ColorChooserRenderer,
              io.github.qishr.cascara.ui.render.control.DateChooserRenderer,
              io.github.qishr.cascara.ui.render.control.FileChooserRenderer,
              io.github.qishr.cascara.ui.render.control.OptionChooserRenderer;
 
     provides io.github.qishr.cascara.ui.api.render.ScalarRenderer
-        with io.github.qishr.cascara.ui.render.control.DiagnosticRenderer,
+        with io.github.qishr.cascara.ui.render.standard.StandardBooleanRenderer,
+             io.github.qishr.cascara.ui.render.standard.StandardIntegerRenderer,
+             io.github.qishr.cascara.ui.render.standard.StandardNumberRenderer,
+             io.github.qishr.cascara.ui.render.standard.StandardStringRenderer,
+             io.github.qishr.cascara.ui.render.control.DiagnosticRenderer,
              io.github.qishr.cascara.ui.render.control.SingleLineCellRenderer,
              io.github.qishr.cascara.ui.render.control.TagRenderer,
              io.github.qishr.cascara.ui.render.control.TimeRenderer,

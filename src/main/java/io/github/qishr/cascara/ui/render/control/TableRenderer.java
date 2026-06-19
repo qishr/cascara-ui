@@ -7,8 +7,6 @@ import io.github.qishr.cascara.schema.SchemaType;
 import io.github.qishr.cascara.schema.structure.SchemaNode;
 import io.github.qishr.cascara.ui.api.data.DataProvider;
 import io.github.qishr.cascara.ui.api.render.ArrayEditorRenderer;
-import io.github.qishr.cascara.ui.api.render.Renderer;
-import io.github.qishr.cascara.ui.api.render.RendererFactory;
 import io.github.qishr.cascara.ui.control.CascaraTable;
 import io.github.qishr.cascara.ui.data.ColumnMetadata;
 import io.github.qishr.cascara.ui.form.FieldMetadata;
@@ -16,7 +14,7 @@ import io.github.qishr.cascara.ui.form.FieldMetadata.ColumnMeta;
 import io.github.qishr.cascara.ui.option.OptionProviderRegistry;
 import io.github.qishr.cascara.ui.render.AbstractArrayRenderer;
 import io.github.qishr.cascara.ui.render.Renderers;
-
+import io.github.qishr.cascara.ui.render.RendererFactory;
 import javafx.beans.binding.Bindings;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
@@ -36,7 +34,7 @@ public class TableRenderer extends AbstractArrayRenderer implements ArrayEditorR
     public Node render(Labeled view, @SuppressWarnings("rawtypes") ObservableList list, DataProvider dataProvider, FieldMetadata tableMeta) {
 
         OptionProviderRegistry optionProviderRegistry = tableMeta.getOptionProviderRegistry();
-        List<RendererFactory<? extends Renderer>> rendererFactories = tableMeta.getRendererFactories();
+        RendererFactory rendererFactory = tableMeta.getRendererFactory();
         this.tableMeta = tableMeta;
 
         // Bind height to: (Number of Items * Row Height) + Header Height + Border
@@ -67,8 +65,8 @@ public class TableRenderer extends AbstractArrayRenderer implements ArrayEditorR
             // Hidden columns (TODO: Make this optional)
             boolean isIdField = columnName.toLowerCase().equals("id");
 
-            ColumnMetadata columnMeta = new ColumnMetadata(columnName, columnTitle, columnSchema, optionProviderRegistry, rendererFactories);
-            columnMeta.setRenderers(new Renderers(rendererFactories, columnMeta));
+            ColumnMetadata columnMeta = new ColumnMetadata(columnName, columnTitle, columnSchema, optionProviderRegistry, rendererFactory);
+            columnMeta.setRenderers(new Renderers(rendererFactory, columnMeta));
 
             if (columnMeta.isHidden() || isIdField) {
                 continue;

@@ -56,9 +56,7 @@ public class SamplesControls {
         GridPane grid = new GridPane();
         grid.setHgap(20);
         grid.setVgap(20);
-        // grid.setPadding(new Insets(15));
         grid.setAlignment(Pos.TOP_CENTER);
-        // grid.setBackground(Background.fill(Paint.valueOf("#1d2e28")));
 
         // --- Helper for creating a titled TitledPane for each control ---
         int row = 0;

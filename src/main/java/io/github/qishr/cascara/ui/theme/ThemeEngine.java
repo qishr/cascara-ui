@@ -16,6 +16,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import io.github.qishr.cascara.common.diagnostic.LocalizableIOException;
+import io.github.qishr.cascara.common.diagnostic.LocalizableRuntimeException;
 import io.github.qishr.cascara.common.diagnostic.code.GenericDiagnosticCode;
 import io.github.qishr.cascara.ui.api.HighlightingToken;
 import io.github.qishr.cascara.ui.api.UiDiagnosticCode;
@@ -71,6 +72,7 @@ import io.github.qishr.cascara.ui.style.standard.TreeTableViewStyle;
 import io.github.qishr.cascara.ui.style.standard.TreeViewStyle;
 import io.github.qishr.cascara.ui.theme.CodeColorsStyleSheet.StyleClass;
 import io.github.qishr.cascara.ui.vsix.VsixPackage;
+import io.github.qishr.cascara.ui.vsix.VsixPackageStore;
 import io.github.qishr.cascara.ui.vsix.VsixThemeInfo;
 
 import javafx.beans.property.SimpleObjectProperty;
@@ -129,13 +131,15 @@ public class ThemeEngine implements AutoCloseable {
     @Override
     public void close() {
         if (themeOptionProvider != null) themeOptionProvider.close();
+        VsixPackageStore.instance().close();
     }
 
     public OptionProvider getThemeOptionProvider() {
         if (themeOptionProvider == null) {
             try {
                 themeOptionProvider = new ThemeOptionProvider();
-            } catch (IOException e) {
+                themeOptionProvider.initialize();
+            } catch (LocalizableRuntimeException e) {
             }
         }
         return themeOptionProvider;
@@ -144,6 +148,7 @@ public class ThemeEngine implements AutoCloseable {
     public OptionProvider getVariationOptionProvider() {
         if (variationOptionProvider == null) {
             variationOptionProvider = new VariationOptionProvider();
+            variationOptionProvider.initialize();
         }
         return variationOptionProvider;
     }

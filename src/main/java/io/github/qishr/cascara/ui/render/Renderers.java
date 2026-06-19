@@ -8,13 +8,9 @@ import io.github.qishr.cascara.schema.rule.EnumRule;
 import io.github.qishr.cascara.schema.rule.ValidationRule;
 import io.github.qishr.cascara.schema.structure.SchemaNode;
 import io.github.qishr.cascara.ui.api.render.ArrayEditorRenderer;
-import io.github.qishr.cascara.ui.api.render.ArrayEditorRendererFactory;
 import io.github.qishr.cascara.ui.api.render.Renderer;
-import io.github.qishr.cascara.ui.api.render.RendererFactory;
 import io.github.qishr.cascara.ui.api.render.ScalarEditorRenderer;
-import io.github.qishr.cascara.ui.api.render.ScalarEditorRendererFactory;
 import io.github.qishr.cascara.ui.api.render.ScalarRenderer;
-import io.github.qishr.cascara.ui.api.render.ScalarRendererFactory;
 import io.github.qishr.cascara.ui.form.FieldMetadata;
 import io.github.qishr.cascara.ui.render.control.OptionChooserRenderer;
 
@@ -31,16 +27,16 @@ public class Renderers {
         this.arrayEditorRenderer = arrayEditorRenderer;
     }
 
-    public Renderers(List<RendererFactory<?>> rendererFactories, FieldMetadata meta) {
+    public Renderers(RendererFactory rendererFactory, FieldMetadata meta) {
         boolean isEnum = findEnumValues(meta.getSchema()) != null;
-        if (rendererFactories != null) {
+        if (rendererFactory != null) {
             if (meta.isArrayField()) {
-                configureArrayRenderer(rendererFactories, meta);
+                configureArrayRenderer(rendererFactory, meta);
             } else {
                 if (meta.hasOptionProvider() || isEnum) {
                     scalarEditorRenderer = new OptionChooserRenderer();
                 } else {
-                    configureScalarRenderers(rendererFactories, meta);
+                    configureScalarRenderers(rendererFactory, meta);
                 }
             }
         }
@@ -82,41 +78,45 @@ public class Renderers {
     }
 
 
-    private void configureArrayRenderer(List<RendererFactory<?>> rendererFactories, FieldMetadata meta) {
-        if (rendererFactories == null) return;
+    private void configureArrayRenderer(RendererFactory rendererFactory, FieldMetadata meta) {
+        if (rendererFactory == null) return;
 
         String contentType = meta.getContentType();
 
         if (contentType != null) {
-            // Set up renderers for mediaType.
-            for (RendererFactory<? extends Renderer> item : rendererFactories) {
-                if (item instanceof ArrayEditorRendererFactory factory) {
-                    ArrayEditorRenderer renderer = factory.getRendererForContentType(contentType);
-                    if (renderer != null) {
-                        arrayEditorRenderer = renderer;
-                        logRenderer(meta.getName(), renderer, "array editor by contentType " + contentType);
-                        break;
-                    }
-                }
-            }
+            arrayEditorRenderer = rendererFactory.createArrayEditorRendererForContentType(contentType);
+
+            // // Set up renderers for mediaType.
+            // for (RendererFactory<? extends Renderer> item : rendererFactories) {
+            //     if (item instanceof ArrayEditorRendererFactory factory) {
+            //         ArrayEditorRenderer renderer = factory.getRendererForContentType(contentType);
+            //         if (renderer != null) {
+            //             arrayEditorRenderer = renderer;
+            //             logRenderer(meta.getName(), renderer, "array editor by contentType " + contentType);
+            //             break;
+            //         }
+            //     }
+            // }
         }
 
         // If we failed to find a specific renderer, fall back to the table renderer
         if (arrayEditorRenderer == null) {
-            for (RendererFactory<? extends Renderer> item : rendererFactories) {
-                if (item instanceof ArrayEditorRendererFactory factory) {
-                    ArrayEditorRenderer renderer = factory.getRendererForContentType("cascara/table-row");
-                    if (renderer != null) {
-                        arrayEditorRenderer = renderer;
-                        logRenderer(meta.getName(), renderer, "array editor renderer by contentType " + "cascara/table-row");
-                        break;
-                    }
-                }
-            }
+            arrayEditorRenderer = rendererFactory.createArrayEditorRendererForContentType("cascara/table-row");
+
+            // for (RendererFactory<? extends Renderer> item : rendererFactories) {
+            //     if (item instanceof ArrayEditorRendererFactory factory) {
+            //         ArrayEditorRenderer renderer = factory.getRendererForContentType("cascara/table-row");
+            //         if (renderer != null) {
+            //             arrayEditorRenderer = renderer;
+            //             logRenderer(meta.getName(), renderer, "array editor renderer by contentType " + "cascara/table-row");
+            //             break;
+            //         }
+            //     }
+            // }
         }
     }
 
-    private void configureScalarRenderers(List<RendererFactory<?>> rendererFactories, FieldMetadata meta) {
+    private void configureScalarRenderers(RendererFactory factory, FieldMetadata meta) {
         String contentType = meta.getContentType();
         String format = meta.getFormat();
         String schemaType = meta.getSchemaType().asString();
@@ -126,55 +126,88 @@ public class Renderers {
 
         if (schemaType != null && !schemaType.isBlank() && format != null && !format.isBlank()) {
             String schemaTypeAndFormat = schemaType + "/" + format;
-            for (RendererFactory<? extends Renderer> item : rendererFactories) {
-                if (meta.allowEdit() && item instanceof ScalarEditorRendererFactory factory) {
-                    ScalarEditorRenderer renderer = factory.getRendererForSchemaType(schemaType, format);
-                    if (renderer != null && scalarEditorRenderer == null) {
-                        scalarEditorRenderer = renderer;
-                        logRenderer(meta.getName(), renderer, "editor renderer by schemaTypeAndFormat " + schemaTypeAndFormat);
-                    }
-                }
-                if (item instanceof ScalarRendererFactory factory) {
-                    ScalarRenderer renderer = factory.getRendererForSchemaType(schemaType, format);
-                    if (renderer != null && scalarRenderer == null) {
-                        scalarRenderer = renderer;
-                        logRenderer(meta.getName(), renderer, "renderer by schemaTypeAndFormat " + schemaTypeAndFormat);
-                    }
-                }
+            ScalarEditorRenderer editorRenderer = factory.createScalarEditorRendererForSchemaType(schemaType, format);
+            if (editorRenderer != null && scalarEditorRenderer == null) {
+                scalarEditorRenderer = editorRenderer;
+                logRenderer(meta.getName(), editorRenderer, "editor renderer by schemaTypeAndFormat " + schemaTypeAndFormat);
             }
+
+            ScalarRenderer renderer = factory.createScalarRendererForSchemaType(schemaType, format);
+            if (renderer != null && scalarEditorRenderer == null) {
+                scalarRenderer = renderer;
+                logRenderer(meta.getName(), renderer, "renderer by schemaTypeAndFormat " + schemaTypeAndFormat);
+            }
+
+            // String schemaTypeAndFormat = schemaType + "/" + format;
+            // for (RendererFactory<? extends Renderer> item : rendererFactories) {
+            //     if (meta.allowEdit() && item instanceof ScalarEditorRendererFactory factory) {
+            //         ScalarEditorRenderer renderer = factory.getRendererForSchemaType(schemaType, format);
+            //         if (renderer != null && scalarEditorRenderer == null) {
+            //             scalarEditorRenderer = renderer;
+            //             logRenderer(meta.getName(), renderer, "editor renderer by schemaTypeAndFormat " + schemaTypeAndFormat);
+            //         }
+            //     }
+            //     if (item instanceof ScalarRendererFactory factory) {
+            //         ScalarRenderer renderer = factory.getRendererForSchemaType(schemaType, format);
+            //         if (renderer != null && scalarRenderer == null) {
+            //             scalarRenderer = renderer;
+            //             logRenderer(meta.getName(), renderer, "renderer by schemaTypeAndFormat " + schemaTypeAndFormat);
+            //         }
+            //     }
+            // }
         }
 
+        // TODO: Should contentType not be checked first?
         if (contentType != null) {
-            // Set up renderers for contentType.
-            for (RendererFactory<? extends Renderer> item : rendererFactories) {
-                if (item instanceof ScalarEditorRendererFactory factory) {
-                    ScalarEditorRenderer renderer = factory.getRendererForContentType(contentType);
-                    if (meta.allowEdit() && renderer != null && scalarEditorRenderer == null) {
-                        scalarEditorRenderer = renderer;
-                        logRenderer(meta.getName(), renderer, "editor renderer by contentType " + contentType);
-                    }
-                }
-                if (item instanceof ScalarRendererFactory factory) {
-                    ScalarRenderer renderer = factory.getRendererForContentType(contentType);
-                    if (renderer != null && scalarRenderer == null) {
-                        scalarRenderer = renderer;
-                        logRenderer(meta.getName(), renderer, "renderer by contentType " + contentType);
-                    }
-                }
+            ScalarEditorRenderer editorRenderer = factory.createScalarEditorRendererForContentType(contentType);
+            if (meta.allowEdit() && editorRenderer != null && scalarEditorRenderer == null) {
+                scalarEditorRenderer = editorRenderer;
+                logRenderer(meta.getName(), editorRenderer, "editor renderer by contentType " + contentType);
             }
+
+            ScalarRenderer renderer = factory.createScalarRendererForContentType(contentType);
+            if (renderer != null && scalarRenderer == null) {
+                scalarRenderer = renderer;
+                logRenderer(meta.getName(), renderer, "renderer by contentType " + contentType);
+            }
+
+            // // Set up renderers for contentType.
+            // for (RendererFactory<? extends Renderer> item : rendererFactories) {
+            //     if (item instanceof ScalarEditorRendererFactory factory) {
+            //         ScalarEditorRenderer renderer = factory.getRendererForContentType(contentType);
+            //         if (meta.allowEdit() && renderer != null && scalarEditorRenderer == null) {
+            //             scalarEditorRenderer = renderer;
+            //             logRenderer(meta.getName(), renderer, "editor renderer by contentType " + contentType);
+            //         }
+            //     }
+            //     if (item instanceof ScalarRendererFactory factory) {
+            //         ScalarRenderer renderer = factory.getRendererForContentType(contentType);
+            //         if (renderer != null && scalarRenderer == null) {
+            //             scalarRenderer = renderer;
+            //             logRenderer(meta.getName(), renderer, "renderer by contentType " + contentType);
+            //         }
+            //     }
+            // }
         }
 
         // If we didn't find a renderer by media type, then try with schema type
-        if (scalarEditorRenderer == null && rendererFactories != null) {
-            for (RendererFactory<? extends Renderer> item : rendererFactories) {
-                if (item instanceof ScalarEditorRendererFactory factory) {
-                    ScalarEditorRenderer renderer = factory.getRendererForSchemaType(schemaType);
-                    if (renderer != null && scalarEditorRenderer == null) {
-                        scalarEditorRenderer = renderer;
-                        logRenderer(meta.getName(), renderer, "editor renderer by schemaType " + schemaType);
-                    }
-                }
+        if (scalarEditorRenderer == null && factory != null) {
+
+            ScalarEditorRenderer editorRenderer = factory.createScalarEditorRendererForSchemaType(schemaType, null);
+            if (editorRenderer != null && scalarEditorRenderer == null) {
+                scalarEditorRenderer = editorRenderer;
+                logRenderer(meta.getName(), editorRenderer, "editor renderer by schemaType " + schemaType);
             }
+
+            // for (RendererFactory<? extends Renderer> item : rendererFactories) {
+            //     if (item instanceof ScalarEditorRendererFactory factory) {
+            //         ScalarEditorRenderer renderer = factory.getRendererForSchemaType(schemaType);
+            //         if (renderer != null && scalarEditorRenderer == null) {
+            //             scalarEditorRenderer = renderer;
+            //             logRenderer(meta.getName(), renderer, "editor renderer by schemaType " + schemaType);
+            //         }
+            //     }
+            // }
         }
     }
 
