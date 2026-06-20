@@ -5,6 +5,7 @@ import io.github.qishr.cascara.ui.theme.ColorID;
 
 public class FormStyle extends ControlStyle {
     public static final String INPUT_ERROR = "input-error";
+    // public static final String SEARCH_MATCH = "search-match";
 
     public FormStyle() {
         super();
@@ -15,5 +16,12 @@ public class FormStyle extends ControlStyle {
             .addDeclaration(FX_BORDER_WIDTH, values(px(1)), true)
             .build()
         );
+
+        // defineRule(newRule()
+        //     .addSelector (classSelector(SEARCH_MATCH))
+        //     .addDeclaration(FX_BORDER_COLOR, values(color(ColorID.ACCENT_BACKGROUND)), true)
+        //     .addDeclaration(FX_BORDER_WIDTH, values(px(1)), true)
+        //     .build()
+        // );
     }
 }

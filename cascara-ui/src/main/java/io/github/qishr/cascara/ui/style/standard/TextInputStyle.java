@@ -4,6 +4,8 @@ import io.github.qishr.cascara.ui.style.ControlStyle;
 import io.github.qishr.cascara.ui.theme.ColorID;
 
 public class TextInputStyle extends ControlStyle {
+    // public static final String SEARCH_MATCH = "text-input-search-match";
+
     public TextInputStyle() {
         super();
         defineRule(newRule()
@@ -14,28 +16,34 @@ public class TextInputStyle extends ControlStyle {
             .addDeclaration(FX_BORDER_COLOR, values(color(ColorID.INPUT_BORDER)), false)
             .addDeclaration(FX_BORDER_WIDTH, values(px(1)), false)
             .addDeclaration(FX_BORDER_RADIUS, values(px(2)), false)
-
-            // .addDeclaration(FX_BACKGROUND_RADIUS, literal("2,2"), false)
-            // .addDeclaration(FX_BACKGROUND_COLOR, values(color(ColorID.INPUT_BORDER),color(ColorID.INPUT_BACKGROUND)), false)
-            // .addDeclaration(FX_BACKGROUND_INSETS, literal("0,1"), false)
-
-            // .addDeclaration(FX_BORDER_COLOR, values(color(ColorID.INPUT_BORDER)), false)
-            // .addDeclaration(FX_BORDER_WIDTH, values(px(1)), false)
-
-            // .addDeclaration(FX_BORDER_WIDTH, values(px(0)), false)
             .addDeclaration(FX_PROMPT_TEXT_FILL, values(color(ColorID.INPUT_PLACEHOLDER_FOREGROUND)), false)
-            // .addDeclaration(FX_HIGHLIGHT_FILL, values(color(ColorID.EDITOR_SELECTION_ACTIVE_BACKGROUND)), false)
             .addDeclaration(FX_HIGHLIGHT_TEXT_FILL, values(color(ColorID.EDITOR_SELECTION_FOREGROUND)), false)
             .addDeclaration(FX_FONT_SIZE, literal("1em"), false)
             .addDeclaration(FX_TEXT_FILL, values(color(ColorID.INPUT_FOREGROUND)), false)
             .build()
         );
 
+
+
+
+        // defineRule(newRule()
+        //     .addSelector (classSelector(SEARCH_MATCH))
+        //     .addDeclaration(FX_BACKGROUND_COLOR, values(color(ColorID.INPUT_BACKGROUND)), false)
+        //     .addDeclaration(FX_TEXT_FILL, values(color(ColorID.EDITOR_MATCH_FOREGROUND)), false)
+        //     .build()
+        // );
+
+
+
+
+
         defineRule(newRule()
             .addSelector (classSelector("text-input:hover"))
             .addDeclaration(FX_BACKGROUND_COLOR, values(color(ColorID.INPUT_BACKGROUND)), false)
             .build()
         );
+
+
         defineRule(newRule()
             .addSelector (classSelector("text-input:focused"))
             .addDeclaration(FX_BACKGROUND_COLOR, values(color(ColorID.INPUT_BACKGROUND)), false)

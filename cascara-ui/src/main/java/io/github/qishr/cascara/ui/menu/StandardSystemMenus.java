@@ -1,7 +1,7 @@
 package io.github.qishr.cascara.ui.menu;
 
 import io.github.qishr.cascara.common.util.Properties;
-import javafx.scene.Scene;
+
 import javafx.stage.Stage;
 
 public class StandardSystemMenus implements SystemMenusService {

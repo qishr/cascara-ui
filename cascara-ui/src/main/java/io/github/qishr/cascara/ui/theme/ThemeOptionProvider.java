@@ -94,7 +94,7 @@ public class ThemeOptionProvider extends AbstractOptionProvider implements AutoC
             for (File f : files) {
                 if (f.getName().endsWith(".casc")) {
                     String themeId = f.getName();
-                    CascaraTheme theme = ThemeEngine.instance().getTheme(themeId);
+                    CascaraTheme theme = ThemeEngine.getTheme(themeId);
                     String themeName = theme.getName();
                     SimpleStringOption option = new SimpleStringOption(themeId, themeName);
                     cascThemes.add(option);
@@ -110,7 +110,7 @@ public class ThemeOptionProvider extends AbstractOptionProvider implements AutoC
             for (File f : files) {
                 if (f.getName().endsWith(".vsix")) {
                     String themeId = f.getName();
-                    CascaraTheme theme = ThemeEngine.instance().getTheme(themeId);
+                    CascaraTheme theme = ThemeEngine.getTheme(themeId);
                     String themeName = theme.getName();
                     SimpleStringOption option = new SimpleStringOption(themeId, themeName);
                     vsixThemes.add(option);

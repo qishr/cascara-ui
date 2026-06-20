@@ -3,8 +3,6 @@ package io.github.qishr.cascara.ui.option;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.qishr.cascara.common.diagnostic.LocalizableException;
-import io.github.qishr.cascara.common.diagnostic.LocalizableRuntimeException;
 import io.github.qishr.cascara.common.util.Properties;
 import io.github.qishr.cascara.ui.api.ServicePropertyName;
 import io.github.qishr.cascara.ui.api.render.ScalarRenderer;

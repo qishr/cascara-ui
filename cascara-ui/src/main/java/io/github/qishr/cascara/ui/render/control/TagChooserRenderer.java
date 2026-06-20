@@ -23,6 +23,7 @@ public class TagChooserRenderer extends AbstractArrayRenderer implements ArrayEd
         super("cascara/tag", null, null);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Node render(Labeled view, @SuppressWarnings("rawtypes") ObservableList list, DataProvider dataProvider, FieldMetadata meta) {
 

@@ -6,10 +6,9 @@ import io.github.qishr.cascara.ui.form.ObjectFieldFactory;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.control.Control;
-import javafx.scene.control.TitledPane;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class SamplesSchemaDriven {
@@ -21,15 +20,23 @@ public class SamplesSchemaDriven {
 
         ObjectFieldFactory factory = new ObjectFieldFactory(sampleData);
 
-        Node[] controls = new Node[] {
+        Field[] fields = new Field[] {
             // Row 0
-            factory.createField("sampleEnum"),
-            factory.createField("sampleText"),
+            factory.createLabeledField("sampleEnum"),
+            factory.createLabeledField("sampleText"),
         };
 
-        GridPane grid = layout(controls);
+        GridPane grid = layout(fields);
 
-        view.getChildren().add(grid);
+        HBox searchBox = new HBox(20);
+        TextField searchText = new TextField();
+        for (Field field : fields) {
+            field.queryProperty().bind(searchText.textProperty());
+        }
+
+        searchBox.getChildren().add(searchText);
+
+        view.getChildren().addAll(searchBox, grid);
         view.setAlignment(Pos.TOP_CENTER);
         view.setPadding(new Insets(20, 10, 10, 10));
     }
@@ -38,7 +45,7 @@ public class SamplesSchemaDriven {
         return view;
     }
 
-    private GridPane layout(Node[] controls) {
+    private GridPane layout(Field[] fields) {
         GridPane grid = new GridPane();
         grid.setHgap(20);
         grid.setVgap(20);
@@ -47,27 +54,25 @@ public class SamplesSchemaDriven {
         int row = 0;
         int col = 0;
 
-        for (Node control : controls) {
-            String title = control.getClass().getSimpleName();
-            if (control instanceof Field field) {
-                title = field.getName();
-            }
-            TitledPane titledPane = new TitledPane(
-                title,
-                control
-            );
-            titledPane.setCollapsible(false);
+        for (Field field : fields) {
+            VBox container = new VBox();
+            container.setPadding(new Insets(20));
+            container.setAlignment(Pos.CENTER);
+            container.setStyle("""
+                -fx-border-radius: 4px;
+                -fx-border-color: -color-control-foreground;
+                -fx-border-width: 1px;
+            """);
+            container.getChildren().add(field);
 
             // Set max width to force controls to stretch and align in the grid
-            titledPane.setMaxWidth(Double.MAX_VALUE);
+            container.setMaxWidth(Double.MAX_VALUE);
             // grid.setBackground(Background.fill(Paint.valueOf("#14452f")));
 
             // Ensure the control itself takes up space
-            if (control instanceof Control) {
-                ((Control)control).setMaxWidth(Double.MAX_VALUE);
-            }
+            field.setMaxWidth(Double.MAX_VALUE);
 
-            grid.add(titledPane, col, row);
+            grid.add(container, col, row);
 
             col++;
             if (col == 4) {

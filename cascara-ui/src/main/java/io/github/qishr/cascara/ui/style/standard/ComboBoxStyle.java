@@ -4,6 +4,8 @@ import io.github.qishr.cascara.ui.style.ControlStyle;
 import io.github.qishr.cascara.ui.theme.ColorID;
 
 public class ComboBoxStyle extends ControlStyle {
+    // public static final String SEARCH_MATCH = "search-match";
+
     public ComboBoxStyle() {
         super();
 
@@ -37,6 +39,20 @@ public class ComboBoxStyle extends ControlStyle {
             .addDeclaration(FX_TEXT_FILL, values(color(ColorID.INPUT_FOREGROUND)), true)
             .build()
         );
+
+        // defineRule(newRule()
+        //     // .addSelector (classSelector("combo-box .text-input." + SEARCH_MATCH))
+        //     // .addSelector (classSelector("combo-box .label." + SEARCH_MATCH))
+        //     // .addSelector (classSelector("combo-box .list-cell." + SEARCH_MATCH))
+        //     // .addSelector (classSelector("combo-box-base .label." + SEARCH_MATCH))
+        //     .addSelector (classSelector("combo-box." + SEARCH_MATCH))
+        //     .addSelector (classSelector("combo-box." + SEARCH_MATCH + " .text-input"))
+        //     .addSelector (classSelector("combo-box." + SEARCH_MATCH + " .label"))
+        //     .addSelector (classSelector("combo-box." + SEARCH_MATCH + " .list-cell"))
+        //     .addSelector (classSelector("combo-box-base." + SEARCH_MATCH + " .label"))
+        //     .addDeclaration(FX_TEXT_FILL, values(color(ColorID.EDITOR_MATCH_FOREGROUND)), false)
+        //     .build()
+        // );
 
 
         defineRule(newRule()

@@ -205,10 +205,10 @@ public abstract class ControlStyle {
     }
 
     public void applyTo(Scene node) {
-        ThemeEngine.instance().applyStyle(this, node);
+        ThemeEngine.applyStyle(this, node);
     }
 
     public void applyTo(Parent node) {
-        ThemeEngine.instance().applyStyle(this, node);
+        ThemeEngine.applyStyle(this, node);
     }
 }

@@ -38,7 +38,7 @@ public class VariationOptionProvider extends AbstractOptionProvider {
         List<Option> optionList = new ArrayList<>();
         Property<?> themeProperty = dataContext.get("theme");
         if (themeProperty != null && themeProperty.getValue() instanceof String themeId) {
-            CascaraTheme theme = ThemeEngine.instance().getTheme(themeId);
+            CascaraTheme theme = ThemeEngine.getTheme(themeId);
             if (theme != null) {
                 for (Variation variation : theme.getVariations()) {
                     if (variation instanceof Option option) {

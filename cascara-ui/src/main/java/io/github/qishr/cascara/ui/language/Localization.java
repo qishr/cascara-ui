@@ -9,6 +9,7 @@ import java.util.function.Consumer;
 import io.github.qishr.cascara.common.diagnostic.code.DiagnosticCode;
 import io.github.qishr.cascara.schema.structure.SchemaNode;
 import io.github.qishr.cascara.schema.util.SchemaGenerator;
+import io.github.qishr.cascara.ui.form.FieldLabel;
 
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.ObjectProperty;
@@ -117,8 +118,13 @@ public class Localization {
         }
     }
 
-    // TODO: FieldLabel, Field, LabeedField
-    public static void bind() {
+    // TODO...
+    public static void bind(FieldLabel target, String key, Object... args) {
+        InvalidationListener listener = o -> target.setText(localizer.format(key, args));
+        listener.invalidated(null);
+        if (localizer.activeLocaleProperty() != null) {
+            localizer.activeLocaleProperty().addListener(listener);
+        }
 
     }
 

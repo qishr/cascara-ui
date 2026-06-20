@@ -117,7 +117,7 @@ public class ThemeEngine {
             BufferedReader reader = new BufferedReader(new InputStreamReader(ThemeEngine.class.getResourceAsStream(resPath), StandardCharsets.UTF_8));
             String yaml = reader.lines().collect(Collectors.joining("\n"));
             instance.defaultTheme = new CascaraTheme(yaml);
-            instance.setTheme(instance.defaultTheme);
+            setTheme(instance.defaultTheme);
         }
         return instance;
     }
@@ -305,7 +305,7 @@ public class ThemeEngine {
     }
 
     public static String getUiColor(String id) {
-        Variation variation = instance().getVariation();
+        Variation variation = getVariation();
         ColorDefinition colordef = variation.getUiColor(id);
         try {
             ColorUtil.processColor(colordef, variation);
@@ -524,7 +524,7 @@ public class ThemeEngine {
             sb.append(";\n");
         }
 
-        String fontFamily = instance().getFontFamily();
+        String fontFamily = getFontFamily();
         sb.append("\n");
         sb.append("    -fx-font-family: " + fontFamily + ";\n");
         sb.append("    -fx-base: -color-control-background;\n");

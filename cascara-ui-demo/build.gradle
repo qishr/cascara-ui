@@ -13,6 +13,8 @@ repositories {
 dependencies {
     implementation(platform("io.github.qishr:cascara-meta-bom:0.1.11"))
 
+    implementation(project(":cascara-ui"))
+
     // JUnit 5 (versions from BOM)
     testImplementation 'org.junit.jupiter:junit-jupiter-api'
     testImplementation 'org.junit.jupiter:junit-jupiter-params'
@@ -30,8 +32,6 @@ dependencies {
     implementation "io.github.qishr:cascara-lang-xml"
     implementation "io.github.qishr:cascara-lang-yaml"
     implementation "io.github.qishr:cascara-schema"
-
-    implementation(project(":cascara-ui"))
 }
 
 
