@@ -2,7 +2,7 @@ package io.github.qishr.cascara.ui.option;
 
 public class SimpleStringOption implements StringOption {
     private final String id;
-    private final String text;
+    private String text;
     private final String translationKey;
 
     public SimpleStringOption(String id, String text) {
@@ -18,4 +18,5 @@ public class SimpleStringOption implements StringOption {
     @Override public String getOptionId() { return id; }
     @Override public String getOptionText() { return text; }
     @Override public String getOptionTranslationKey() { return translationKey; }
+    // public void setOptionText(String text) { this.text = text; }
 }

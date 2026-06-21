@@ -57,7 +57,7 @@ public class Launcher extends Application {
         });
 
         HBox choserBox = new HBox(
-            16,
+            8,
             themeLabel,
             themeChooser,
             new Rectangle(24, 0),
@@ -65,6 +65,7 @@ public class Launcher extends Application {
             languageChooser
         );
         choserBox.setAlignment(Pos.CENTER);
+        Localization.bindDirection(choserBox);
 
         VBox layout = new VBox();
         layout.setSpacing(8);
@@ -76,6 +77,7 @@ public class Launcher extends Application {
         scene = new Scene(layout, 800, 500);
 
         ThemeEngine.bind(scene);
+        Localization.bindDirection(scene);
 
         primaryStage.setScene(scene);
         primaryStage.show();

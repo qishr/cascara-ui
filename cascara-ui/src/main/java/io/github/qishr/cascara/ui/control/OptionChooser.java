@@ -20,7 +20,7 @@ import javafx.scene.control.ListCell;
 public class OptionChooser extends ComboBox<Option> {
     private ScalarRenderer renderer;
     private final Map<String,Property<?>> dataContext;
-    private final OptionProvider provider;
+    private OptionProvider provider;
     private final String providerParameter;
     private final Runnable updateHook = this::refreshItems;
     private List<? extends Option> cachedOptions = List.of();
@@ -52,6 +52,14 @@ public class OptionChooser extends ComboBox<Option> {
 
     public OptionProvider getOptionProvider() {
         return provider;
+    }
+
+    public void setOptionProvider(OptionProvider v) {
+        if (provider != null) {
+            provider.removeListener(updateHook);
+        }
+        provider = v;
+        provider.addListener(updateHook);
     }
 
     private ScalarRenderer getRenderer(OptionProvider provider) {
@@ -194,7 +202,7 @@ public class OptionChooser extends ComboBox<Option> {
                 view.setText(option.getOptionText());
                 view.setGraphic(null);
             } else {
-                Localization.bind(view, translationKey);
+                Localization.bind(view, translationKey).withDefault(option.getOptionText());
             }
         } else {
             renderer.render(view, option, null, null);
