@@ -1,5 +1,6 @@
 package io.github.qishr.cascara.ui.language;
 
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -14,7 +15,8 @@ import io.github.qishr.cascara.ui.language.binding.FieldLabelLocalizationBinding
 import io.github.qishr.cascara.ui.language.binding.LabeledLocalizationBinding;
 import io.github.qishr.cascara.ui.language.binding.LocalizationBinding;
 import io.github.qishr.cascara.ui.language.binding.PropertyLocalizationBinding;
-
+import io.github.qishr.cascara.ui.option.Option;
+import io.github.qishr.cascara.ui.option.OptionProvider;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.Property;
 import javafx.beans.property.ReadOnlyObjectProperty;
@@ -39,6 +41,10 @@ public class Localization {
         localizer = customLocalizer != null ? customLocalizer : new UiLocalizer();
     }
 
+    public static void setActiveLanguage(Option option) {
+        localizer.setActiveLanguage(option);
+    }
+
     public static ReadOnlyObjectProperty<Locale> localeProperty() {
         return localizer.activeLocaleProperty();
     }
@@ -46,6 +52,14 @@ public class Localization {
     // TODO: Is this really needed?
     public static Locale getLocale() {
         return localeProperty().get();
+    }
+
+    public static OptionProvider getLanguageOptionProvider() {
+        return localizer.getLanguageOptionProvider();
+    }
+
+    public static void registerTranslations(InputStream translations) {
+        localizer.registerTranslations(translations);
     }
 
     //

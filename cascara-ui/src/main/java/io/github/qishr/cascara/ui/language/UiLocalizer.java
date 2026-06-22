@@ -18,6 +18,7 @@ import io.github.qishr.cascara.ui.language.detect.HybridLocaleDetector;
 import io.github.qishr.cascara.ui.option.Option;
 import io.github.qishr.cascara.ui.option.OptionProvider;
 import io.github.qishr.cascara.ui.option.OptionProviderRegistry;
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
@@ -35,7 +36,7 @@ public class UiLocalizer implements ObservableLocalizer {
     private static final Locale fallbackLocale = Locale.forLanguageTag(fallbackLanguageTag);
 
 
-    private static final LanguageOption systemLanguageOption = new LanguageOption(AUTOMATIC, "title.system");
+    private static final LanguageOption systemLanguageOption = new LanguageOption(AUTOMATIC);
 
     private final LanguageOptionProvider languageOptionProvider;
 
@@ -61,6 +62,9 @@ public class UiLocalizer implements ObservableLocalizer {
         OptionProviderRegistry.register(languageOptionProvider);
         languageOptions.add(systemLanguageOption);
         setActiveLanguage(AUTOMATIC);
+        Platform.runLater(() -> {
+            Localization.bind(systemLanguageOption.optionTextProperty(), "title.system");
+        });
     }
 
     public OptionProvider getLanguageOptionProvider() {

@@ -18,4 +18,5 @@ public interface ObservableLocalizer extends Localizer, DiagnosticLocalizer {
     void setActiveLanguage(String languageTag);
     NodeOrientation getDirection();
     String formatWithDefault(String defaultText, String key, Object... args);
+    void setActiveLanguage(Option language);
 }

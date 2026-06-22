@@ -6,9 +6,9 @@ import java.util.Map.Entry;
 
 import io.github.qishr.cascara.common.service.ServiceProviderLayer;
 import io.github.qishr.cascara.ui.api.render.ScalarRenderer;
-import io.github.qishr.cascara.ui.language.Localization;
 import io.github.qishr.cascara.ui.option.Option;
 import io.github.qishr.cascara.ui.option.OptionProvider;
+import io.github.qishr.cascara.ui.option.SimpleStringOption;
 import io.github.qishr.cascara.ui.render.RendererFactory;
 
 import javafx.application.Platform;
@@ -197,12 +197,12 @@ public class OptionChooser extends ComboBox<Option> {
 
     private void renderOption(Labeled view, Option option) {
         if (renderer == null) {
-            String translationKey = option.getOptionTranslationKey();
-            if (translationKey == null || translationKey.isEmpty()) {
-                view.setText(option.getOptionText());
-                view.setGraphic(null);
+            view.setGraphic(null);
+            view.textProperty().unbind();
+            if (option instanceof SimpleStringOption stringOption) {
+                view.textProperty().bind(stringOption.optionTextProperty());
             } else {
-                Localization.bind(view, translationKey).withDefault(option.getOptionText());
+                view.setText(option.getOptionText());
             }
         } else {
             renderer.render(view, option, null, null);

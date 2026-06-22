@@ -19,7 +19,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
 public class Launcher extends Application {
-    private UiLocalizer localizer;
     private Scene scene;
 
     public static void main(String[] args) {
@@ -28,10 +27,6 @@ public class Launcher extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        if (Localization.getLocalizer() instanceof UiLocalizer localiser) {
-            this.localizer = localiser;
-        }
-
         registerTranslations();
 
         Label themeLabel = new Label();
@@ -49,11 +44,11 @@ public class Launcher extends Application {
         });
 
         OptionChooser languageChooser = new OptionChooser(
-            localizer.getLanguageOptionProvider()
+            Localization.getLanguageOptionProvider()
         );
 
         languageChooser.getSelectionModel().selectedItemProperty().addListener((obs, old, language) -> {
-            localizer.setActiveLanguage(language);
+            Localization.setActiveLanguage(language);
         });
 
         HBox choserBox = new HBox(
@@ -104,9 +99,9 @@ public class Launcher extends Application {
     }
 
     private void registerLanguage(String languageTag) {
-        InputStream masterLang = getClass().getResourceAsStream(languageTag + ".yaml");
-        if (masterLang != null) {
-            localizer.registerTranslations(masterLang);
+        InputStream translations = getClass().getResourceAsStream(languageTag + ".yaml");
+        if (translations != null) {
+            Localization.registerTranslations(translations);
         }
     }
 }
