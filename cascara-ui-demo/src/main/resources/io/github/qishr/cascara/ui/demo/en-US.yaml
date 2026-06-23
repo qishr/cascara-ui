@@ -1,0 +1,40 @@
+meta:
+  lang: "en-US"
+  title: "English"
+
+app:
+  window-title: "Cascara UI Demo ({0})"
+
+enum:
+  sample-enum:
+    ONE: "One"
+    TWO: "Two"
+    THREE: "Three"
+
+label:
+  language: "Language:"
+  search: "Search:"
+  theme: "Theme:"
+
+text:
+  sample-description: "Sample description."
+
+title:
+  button: "Button"
+  check-box: "Check Box"
+  default: "Default"
+  hyperlink: "Hyperlink"
+  label: "Label"
+  menu-button: "Menu Button"
+  radio-button: "Radio Button"
+  sample-enum: "Sample Enum"
+  sample-text: "Sample Text"
+  split-menu-button: "Split Menu Button"
+  system: "System"
+  text-field: "Text Field"
+  toggle-button: "Toggle Button"
+
+  controls: "Controls"
+  schema-driven-controls: "Schema-driven Controls"
+  lists: "Lists"
+  boxes: "Boxes"
