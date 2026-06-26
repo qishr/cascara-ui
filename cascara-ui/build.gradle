@@ -10,7 +10,7 @@ repositories {
 }
 
 dependencies {
-    implementation(platform("io.github.qishr:cascara-meta-bom:0.1.11"))
+    implementation(platform("io.github.qishr:cascara-meta-bom:0.1.12"))
 
     // JUnit 5 (versions from BOM)
     testImplementation 'org.junit.jupiter:junit-jupiter-api'
@@ -36,6 +36,8 @@ javafx {
     version = "25"
     modules = [ 'javafx.controls', 'javafx.graphics' ]
 }
+
+
 
 
 tasks.withType(Javadoc).configureEach {

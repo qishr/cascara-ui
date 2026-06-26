@@ -58,8 +58,8 @@ public class Localization {
         return localizer.getLanguageOptionProvider();
     }
 
-    public static void registerTranslations(InputStream translations) {
-        localizer.registerTranslations(translations);
+    public static boolean registerTranslations(InputStream translations) {
+        return localizer.registerTranslations(translations);
     }
 
     //

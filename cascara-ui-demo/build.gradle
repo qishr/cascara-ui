@@ -3,7 +3,46 @@ plugins {
     id 'io.github.qishr.cascara-meta.java-library' version '0.1.0'
     id "io.github.qishr.cascara-meta.publish" version "0.1.0"
     id("org.openjfx.javafxplugin") version "0.1.0"
+
+    id 'com.gradleup.shadow' version '9.3.0'
+    id("org.panteleyev.jpackageplugin") version "2.0.1"
 }
+
+import org.gradle.internal.os.OperatingSystem
+
+def os = OperatingSystem.current()
+
+jpackage {
+    appName = 'cascara-ui-demo'
+    mainClass = 'io.github.qishr.cascara.ui.demo.Launcher'
+    version = '1.0.0'
+
+    destination = file("$buildDir/jpackage")
+    input = file("$buildDir/libs")
+    mainJar = 'cascara-ui-demo-1.0.0-all.jar'
+
+    type = os.isWindows() ? "msi" :
+           os.isLinux()   ? "deb" :
+                            "pkg"   // macOS (choose whatever your jpackage supports; "pkg" is the usual pick)
+
+    // Optional: where jpackage picks the right launcher/paths
+    // jvmArgs = []
+}
+
+
+
+
+
+
+project(":cascara-ui-demo") {
+    tasks.named("jpackage", org.panteleyev.jpackage.JPackageTask) {
+        destination = file("$buildDir/jpackage")
+    }
+}
+
+// javaLauncher = javaToolchains.launcherFor {
+//     languageVersion = JavaLanguageVersion.of(25)
+// }
 
 repositories {
     mavenLocal()
@@ -11,7 +50,7 @@ repositories {
 }
 
 dependencies {
-    implementation(platform("io.github.qishr:cascara-meta-bom:0.1.11"))
+    implementation(platform("io.github.qishr:cascara-meta-bom:0.1.12"))
 
     implementation(project(":cascara-ui"))
 
@@ -35,6 +74,12 @@ dependencies {
 }
 
 
+java {
+   sourceCompatibility = '25'
+}
+
+
+
 javafx {
     version = "25"
     modules = [ 'javafx.controls', 'javafx.graphics' ]
@@ -48,11 +93,19 @@ application {
 }
 
 
+// jar {
+//     manifest {
+//         attributes 'Main-Class': 'io.github.qishr.cascara.ui.demo.Launcher'
+//     }
+//     from {
+//         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+//     }
+// }
+
+
+
 tasks.withType(JavaExec) {
-    jvmArgs = [ //'--add-reads', 'cascara.ui=ALL-UNNAMED',
-               '--enable-native-access=javafx.graphics',
-               '--enable-native-access=javafx.media'
-            ]
+    jvmArgs = ['--enable-native-access=javafx.graphics']
 }
 
 

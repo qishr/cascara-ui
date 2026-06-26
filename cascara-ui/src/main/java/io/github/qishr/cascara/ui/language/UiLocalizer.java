@@ -11,6 +11,8 @@ import java.util.Map;
 import io.github.qishr.cascara.common.diagnostic.DiagnosticLocalizer;
 import io.github.qishr.cascara.common.diagnostic.GlobalReporter;
 import io.github.qishr.cascara.common.diagnostic.Reporter;
+import io.github.qishr.cascara.common.diagnostic.StandardReporter;
+import io.github.qishr.cascara.common.diagnostic.Diagnostic.Level;
 import io.github.qishr.cascara.common.diagnostic.code.DiagnosticCode;
 import io.github.qishr.cascara.common.diagnostic.code.GenericDiagnosticCode;
 import io.github.qishr.cascara.lang.yaml.processor.YamlSerializer;
@@ -166,13 +168,10 @@ public class UiLocalizer implements ObservableLocalizer {
     @Override
     public boolean registerTranslations(InputStream yamlStream) {
         try {
-            // TODO:
-            // cascara://organizer/CASC-00045D2F
-            // Feed the stream directly into the serializer
-
-            String content = new String(yamlStream.readAllBytes(), StandardCharsets.UTF_8);
             YamlSerializer serializer = new YamlSerializer();
-            Translation translation = serializer.fromText(content, Translation.class);
+            // serializer.setReporter(new StandardReporter().setLevel(Level.TRACE).setDisableFlush(false));
+
+            Translation translation = serializer.fromStream(yamlStream, Translation.class);
             String languageTag = translation.getLanguageTag();
             if (languageTag == null) {
                 REPORTER.error(GenericDiagnosticCode.ERROR, "No `lang` key specified in translations file");
