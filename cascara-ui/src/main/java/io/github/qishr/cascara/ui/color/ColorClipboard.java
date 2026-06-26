@@ -1,6 +1,6 @@
 package io.github.qishr.cascara.ui.color;
 
-import io.github.qishr.cascara.lang.yaml.exception.YamlSerializerException;
+import io.github.qishr.cascara.common.lang.exception.SerializerException;
 import io.github.qishr.cascara.lang.yaml.processor.YamlSerializer;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
@@ -24,8 +24,8 @@ public class ColorClipboard {
         String yaml;
         try {
             yaml = getSerializer().toText(definition);
-        } catch (YamlSerializerException e) {
-            System.err.println("YamlSerializerException: " + e.getMessage());
+        } catch (SerializerException e) {
+            System.err.println("SerializerException: " + e.getMessage());
             return;
         }
         Clipboard clipboard = Clipboard.getSystemClipboard();
@@ -42,8 +42,8 @@ public class ColorClipboard {
             String yaml = (String) clipboard.getContent(ColorDefinition.DATA_FORMAT);
             try {
                 return getSerializer().fromText(yaml, ColorDefinition.class);
-            } catch (YamlSerializerException e) {
-                System.err.println("YamlSerializerException: " + e.getMessage());
+            } catch (SerializerException e) {
+                System.err.println("SerializerException: " + e.getMessage());
                 return null;
             }
         } else if (clipboard.hasString()) {

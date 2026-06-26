@@ -1,6 +1,6 @@
 package io.github.qishr.cascara.ui.schema;
 
-import io.github.qishr.cascara.common.lang.QuoteStyle;
+import io.github.qishr.cascara.common.lang.util.QuoteStyle;
 import io.github.qishr.cascara.schema.structure.ArraySchemaNode;
 import io.github.qishr.cascara.schema.structure.BaseSchemaNode;
 import io.github.qishr.cascara.schema.structure.ObjectSchemaNode;

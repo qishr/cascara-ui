@@ -2,10 +2,10 @@ package io.github.qishr.cascara.ui.demo;
 
 import java.io.InputStream;
 
+import io.github.qishr.cascara.common.diagnostic.GlobalReporter;
 import io.github.qishr.cascara.common.io.filewatcher.FileWatcher;
 import io.github.qishr.cascara.ui.control.OptionChooser;
 import io.github.qishr.cascara.ui.language.Localization;
-import io.github.qishr.cascara.ui.language.UiLocalizer;
 import io.github.qishr.cascara.ui.theme.ThemeEngine;
 
 import javafx.application.Application;
@@ -22,6 +22,7 @@ public class Launcher extends Application {
     private Scene scene;
 
     public static void main(String[] args) {
+        // GlobalReporter.globalInstance().setPrintStackTrace(true);
         launch(args);
     }
 
@@ -77,9 +78,12 @@ public class Launcher extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
+        String version = ThemeEngine.class.getModule().getDescriptor() == null
+                ? ""
+                : ThemeEngine.class.getModule().getDescriptor().toNameAndVersion();
         Localization.bind(
             primaryStage, "app.window-title",
-            ThemeEngine.class.getModule().getDescriptor().toNameAndVersion()
+            version
         );
     }
 
@@ -101,7 +105,9 @@ public class Launcher extends Application {
     private void registerLanguage(String languageTag) {
         InputStream translations = getClass().getResourceAsStream(languageTag + ".yaml");
         if (translations != null) {
-            Localization.registerTranslations(translations);
+            if (!Localization.registerTranslations(translations)) {
+                System.exit(0);
+            }
         }
     }
 }

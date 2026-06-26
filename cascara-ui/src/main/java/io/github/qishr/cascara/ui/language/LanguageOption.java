@@ -8,7 +8,6 @@ public class LanguageOption extends SimpleStringOption {
     private Locale locale;
 
     public LanguageOption(String systemDisplayName) {
-        // super("system", systemDisplayName, translationKey);
         super("system", systemDisplayName);
     }
 
