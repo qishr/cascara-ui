@@ -13,12 +13,12 @@ import io.github.qishr.cascara.common.diagnostic.LocalizableException;
 import io.github.qishr.cascara.common.diagnostic.LocalizableIOException;
 import io.github.qishr.cascara.common.diagnostic.code.GenericDiagnosticCode;
 import io.github.qishr.cascara.common.lang.ast.ScalarAstNode;
-import io.github.qishr.cascara.lang.json.processor.JsonParser;
+import io.github.qishr.cascara.lang.json.processor.JsonAstParser;
 import io.github.qishr.cascara.lang.json.ast.JsonMapEntryNode;
 import io.github.qishr.cascara.lang.json.ast.JsonMapNode;
 import io.github.qishr.cascara.lang.json.ast.JsonNode;
 import io.github.qishr.cascara.lang.json.ast.JsonSequenceNode;
-import io.github.qishr.cascara.lang.xml.processor.XmlParser;
+import io.github.qishr.cascara.lang.xml.processor.XmlAstParser;
 import io.github.qishr.cascara.schema.SchemaDiagnosticCode;
 import io.github.qishr.cascara.ui.data.UiDataException;
 import io.github.qishr.cascara.lang.xml.ast.XmlNode;
@@ -50,10 +50,10 @@ public class VsixPackage extends ArchiveFile { // implements Importable {
     }
 
     public static VsixPackage fromJson(String jsonString) throws LocalizableException {
-        JsonParser jsonParser = new JsonParser();
+        JsonAstParser JsonAstParser = new JsonAstParser();
         JsonMapNode json = null;
         // try {
-            if (jsonParser.parse(jsonString) instanceof JsonMapNode m) {
+            if (JsonAstParser.parse(jsonString) instanceof JsonMapNode m) {
                 json = m;
             } else {
                 throw new UiDataException(SchemaDiagnosticCode.ROOT_MUST_BE_MAP);
@@ -118,10 +118,10 @@ public class VsixPackage extends ArchiveFile { // implements Importable {
 
     private void parsePackageManifest(String jsonString) throws LocalizableIOException {
         if (jsonString == null || jsonString.isBlank()) return;
-        JsonParser jsonParser = new JsonParser();
+        JsonAstParser JsonAstParser = new JsonAstParser();
         JsonMapNode json;
         // try {
-            JsonNode rootNode = jsonParser.parse(jsonString);
+            JsonNode rootNode = JsonAstParser.parse(jsonString);
             if (rootNode instanceof JsonMapNode m) {
                 json = m;
             } else {
@@ -235,9 +235,9 @@ public class VsixPackage extends ArchiveFile { // implements Importable {
     private void parseManifest(String manifest) throws LocalizableIOException {
         if (manifest == null || manifest.isBlank()) return;
         try {
-            XmlParser xmlParser = new XmlParser();
+            XmlAstParser XmlAstParser = new XmlAstParser();
 
-            XmlNode xml = xmlParser.parse(manifest);
+            XmlNode xml = XmlAstParser.parse(manifest);
             XmlNode metadataNode = xml.getChild("Metadata");
             XmlNode iconNode = metadataNode.getChild("Icon");
             if (iconNode != null) {
