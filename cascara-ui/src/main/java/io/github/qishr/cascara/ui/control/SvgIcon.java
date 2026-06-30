@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 import io.github.qishr.cascara.common.lang.exception.ParserException;
 import io.github.qishr.cascara.lang.xml.ast.XmlNode;
-import io.github.qishr.cascara.lang.xml.processor.XmlParser;
+import io.github.qishr.cascara.lang.xml.processor.XmlAstParser;
 import io.github.qishr.cascara.ui.style.custom.SvgIconStyle;
 
 import javafx.geometry.Insets;
@@ -32,7 +32,7 @@ import javafx.scene.shape.Shape;
 public class SvgIcon extends StackPane {
     private int size;
     private Node badge;
-    private XmlParser xmlParser = new XmlParser();
+    private XmlAstParser XmlAstParser = new XmlAstParser();
 
     private Stack<String> fillStack = new Stack<>();
     private Stack<String> strokeStack = new Stack<>();
@@ -62,7 +62,7 @@ public class SvgIcon extends StackPane {
     public void loadFromSource(String svgContent) {
         XmlNode root = null;
         try {
-            root = xmlParser.parse(svgContent);
+            root = XmlAstParser.parse(svgContent);
             if (root == null) {
                 root = loadDefault();
             }
@@ -291,7 +291,7 @@ public class SvgIcon extends StackPane {
     private XmlNode loadDefault() {
         try {
             String s = getTextResource("image.svg");
-            return xmlParser.parse(s);
+            return XmlAstParser.parse(s);
         } catch (Exception e) {
             // The resource should ALWAYS be there
             e.printStackTrace();

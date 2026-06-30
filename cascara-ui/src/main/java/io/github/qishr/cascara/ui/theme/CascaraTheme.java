@@ -6,7 +6,7 @@ import java.util.List;
 import io.github.qishr.cascara.lang.yaml.ast.YamlMapNode;
 import io.github.qishr.cascara.lang.yaml.ast.YamlNode;
 import io.github.qishr.cascara.lang.yaml.ast.YamlSequenceNode;
-import io.github.qishr.cascara.lang.yaml.processor.YamlParser;
+import io.github.qishr.cascara.lang.yaml.processor.YamlAstParser;
 
 public class CascaraTheme {
     private YamlMapNode projectYaml = null;
@@ -64,7 +64,7 @@ public class CascaraTheme {
     }
 
     protected void loadYamlString(String content) {
-        YamlParser parser = new YamlParser();
+        YamlAstParser parser = new YamlAstParser();
         if (parser.parse(content) instanceof YamlMapNode map) {
             this.projectYaml = map;
         } else {

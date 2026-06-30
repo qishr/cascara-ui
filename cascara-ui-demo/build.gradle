@@ -50,7 +50,7 @@ repositories {
 }
 
 dependencies {
-    implementation(platform("io.github.qishr:cascara-meta-bom:0.1.12"))
+    implementation(platform("io.github.qishr:cascara-meta-bom:0.1.13"))
 
     implementation(project(":cascara-ui"))
 

@@ -17,7 +17,7 @@ import io.github.qishr.cascara.lang.json.ast.JsonMapNode;
 import io.github.qishr.cascara.lang.json.ast.JsonNode;
 import io.github.qishr.cascara.lang.json.ast.JsonScalarNode;
 import io.github.qishr.cascara.lang.json.ast.JsonSequenceNode;
-import io.github.qishr.cascara.lang.json.processor.JsonParser;
+import io.github.qishr.cascara.lang.json.processor.JsonAstParser;
 import io.github.qishr.cascara.ui.api.HighlightingToken;
 import io.github.qishr.cascara.ui.color.ColorDefinition;
 import io.github.qishr.cascara.ui.color.ColorException;
@@ -272,7 +272,7 @@ public class VSCodeTheme {
     private static void loadDefaultColors() {
         try {
             String themeString = getTextResource("theme.json");
-            JsonParser parser = new JsonParser();
+            JsonAstParser parser = new JsonAstParser();
             JsonMapNode json = (JsonMapNode) parser.parse(themeString);
             loadUiColors(json, defaultUiColors);
             List<CodeTokenCategory> tmpCats = new ArrayList<>();
@@ -287,7 +287,7 @@ public class VSCodeTheme {
     //     // Variation defaultVariation = theme.getVariations().getFirst();
     //     // try {
     //     //     String jsonString = getVariationJson(defaultVariation);
-    //     //     JsonParser parser = new JsonParser();
+    //     //     JsonAstParser parser = new JsonAstParser();
     //     //     JsonMapNode json = (JsonMapNode) parser.parse(jsonString).getRoot();
     //     //     loadUiColors(json, defaultUiColors);
     //     //     List<CodeTokenCategory> tmpCats = new ArrayList<>();
@@ -379,7 +379,7 @@ public class VSCodeTheme {
     //
 
     public void load(String jsonString) throws ColorException {
-        JsonParser parser = new JsonParser();
+        JsonAstParser parser = new JsonAstParser();
         JsonMapNode json = (JsonMapNode) parser.parse(jsonString);
         load(json);
     }
