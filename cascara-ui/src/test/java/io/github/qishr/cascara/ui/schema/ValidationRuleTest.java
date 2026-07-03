@@ -1,18 +1,22 @@
 package io.github.qishr.cascara.ui.schema;
 
+import io.github.qishr.cascara.common.diagnostic.Diagnostic;
+import io.github.qishr.cascara.common.diagnostic.SilentCollectingReporter;
 import io.github.qishr.cascara.common.lang.util.QuoteStyle;
 import io.github.qishr.cascara.schema.structure.ArraySchemaNode;
-import io.github.qishr.cascara.schema.structure.BaseSchemaNode;
+import io.github.qishr.cascara.schema.structure.AbstractSchemaNode;
 import io.github.qishr.cascara.schema.structure.ObjectSchemaNode;
 import io.github.qishr.cascara.schema.structure.ScalarSchemaNode;
 import io.github.qishr.cascara.schema.SchemaType;
 import io.github.qishr.cascara.schema.rule.MinValueRule;
 import io.github.qishr.cascara.schema.rule.RegexRule;
-import io.github.qishr.cascara.schema.util.ValidationResult;
 import io.github.qishr.cascara.lang.yaml.ast.*;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 class ValidationRuleTest {
 
@@ -31,7 +35,7 @@ class ValidationRuleTest {
     void testNestedValidation() {
         // Setup Schema: User { age: Integer(min: 18) }
         ObjectSchemaNode userSchema = new ObjectSchemaNode(null);
-        BaseSchemaNode age = new ScalarSchemaNode(SchemaType.INTEGER, null);
+        AbstractSchemaNode age = new ScalarSchemaNode(SchemaType.INTEGER, null);
         age.addRule(new MinValueRule(18));
         userSchema.addProperty("age", age);
 
@@ -41,20 +45,24 @@ class ValidationRuleTest {
         YamlScalarNode value = createMockScalar(16, 5, 10);
         dataNode.put(new YamlMapEntryNode(key, value));
 
-        ValidationResult result = new ValidationResult();
-        userSchema.validate(dataNode, "user", result);
+        List<Diagnostic> errorMessages = new ArrayList<>();
+        SilentCollectingReporter reporter = new SilentCollectingReporter();
+        reporter.setProblemCollector(p -> errorMessages.add(p));
 
-        assertFalse(result.isValid());
-        assertEquals("user.age", result.getMessages().get(0).path());
-        assertEquals(5, result.getMessages().get(0).line());
-        assertEquals(10, result.getMessages().get(0).column());
+        boolean valid = userSchema.validate(dataNode, "#/user", reporter);
+
+        String path = errorMessages.get(0).getUri().toString();
+        assertTrue(valid);
+        assertEquals("#/user/age", path);
+        assertEquals(5, errorMessages.get(0).getLine());
+        assertEquals(10, errorMessages.get(0).getColumn());
     }
 
     @Test
     void testArrayValidation() {
         // Setup Schema: tags: Array<String(regex: ^[a-z]+$)>
         ArraySchemaNode tagsSchema = new ArraySchemaNode(null);
-        BaseSchemaNode tagItem = new ScalarSchemaNode(SchemaType.STRING, null);
+        AbstractSchemaNode tagItem = new ScalarSchemaNode(SchemaType.STRING, null);
         tagItem.addRule(new RegexRule("^[a-z]+$"));
         tagsSchema.setItemTemplate(tagItem);
 
@@ -63,14 +71,19 @@ class ValidationRuleTest {
         seqNode.add(createMockScalar("valid", 1, 1));
         seqNode.add(createMockScalar("INVALID123", 2, 5));
 
-        ValidationResult result = new ValidationResult();
-        tagsSchema.validate(seqNode, "tags", result);
+        List<Diagnostic> result = new ArrayList<>();
+        SilentCollectingReporter reporter = new SilentCollectingReporter();
+        reporter.setProblemCollector(p -> result.add(p));
 
-        assertFalse(result.isValid());
+        // ValidationResult result = new ValidationResult();
+        tagsSchema.validate(seqNode, "#/tags", reporter);
+
+        assertFalse(result.isEmpty());
         // Verify we caught the second element specifically
-        ValidationResult.Message error = result.getMessages().get(0);
-        assertEquals("tags[1]", error.path());
-        assertEquals(2, error.line());
-        assertEquals(5, error.column());
+        Diagnostic error = result.getFirst();
+        String path = error.getUri().toString();
+        assertEquals("#/tags[1]", path);
+        assertEquals(2, error.getLine());
+        assertEquals(5, error.getColumn());
     }
 }

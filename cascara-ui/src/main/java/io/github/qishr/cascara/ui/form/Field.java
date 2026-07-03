@@ -6,9 +6,9 @@ import java.util.function.Consumer;
 
 import io.github.qishr.cascara.common.data.TableData;
 import io.github.qishr.cascara.common.diagnostic.LocalizableRuntimeException;
+import io.github.qishr.cascara.common.diagnostic.SilentCollectingReporter;
 import io.github.qishr.cascara.common.diagnostic.code.GenericDiagnosticCode;
 import io.github.qishr.cascara.schema.structure.SchemaNode;
-import io.github.qishr.cascara.schema.util.ValidationResult;
 import io.github.qishr.cascara.ui.control.OptionChooser;
 import io.github.qishr.cascara.ui.option.OptionProvider;
 import io.github.qishr.cascara.ui.style.custom.FormStyle;
@@ -279,14 +279,18 @@ public class Field extends AbstractFormComponent {
         Object value = scalarData.getValue();
         String path = metadata.getName();
 
-        ValidationResult result = onValidate.performValidation(value, path, schema);
-        boolean hasError = !result.isValid();
+        List<String> errorMessages = new ArrayList<>();
+        SilentCollectingReporter reporter = new SilentCollectingReporter();
+        reporter.setProblemCollector(problem -> {
+            errorMessages.add(problem.getMessage());
+        });
+        boolean hasError = !onValidate.performValidation(value, path, schema);
 
         if (hasError) {
             if (!inputControl.view().getStyleClass().contains(FormStyle.INPUT_ERROR)) {
                 inputControl.view().getStyleClass().add(FormStyle.INPUT_ERROR);
             }
-            errorLabel.setText(result.getMessages().get(0).text());
+            errorLabel.setText(errorMessages.getFirst());
             errorLabel.setVisible(true);
         } else {
             inputControl.view().getStyleClass().remove(FormStyle.INPUT_ERROR);

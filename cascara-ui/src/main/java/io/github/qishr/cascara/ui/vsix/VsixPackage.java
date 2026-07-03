@@ -19,7 +19,7 @@ import io.github.qishr.cascara.lang.json.ast.JsonMapNode;
 import io.github.qishr.cascara.lang.json.ast.JsonNode;
 import io.github.qishr.cascara.lang.json.ast.JsonSequenceNode;
 import io.github.qishr.cascara.lang.xml.processor.XmlAstParser;
-import io.github.qishr.cascara.schema.SchemaDiagnosticCode;
+import io.github.qishr.cascara.schema.exception.SchemaDiagnosticCode;
 import io.github.qishr.cascara.ui.data.UiDataException;
 import io.github.qishr.cascara.lang.xml.ast.XmlNode;
 

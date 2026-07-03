@@ -13,7 +13,7 @@ public class LabeledLocalizationBinding extends LocalizationBinding {
             // String text = localizer.formatWithDefault(defaultText, key, args);
             String old = target.getText();
             String text = localizer.format(key, args);
-            System.out.println(target.getText()+" > "+text);
+            // System.out.println(target.getText()+" > "+text);
 
             if (old != null && old.equals("Noellch Theme")) {
                 if (text.equals("Por defecto")) {
