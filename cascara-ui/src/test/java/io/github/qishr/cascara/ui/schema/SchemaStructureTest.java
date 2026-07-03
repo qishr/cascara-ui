@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import io.github.qishr.cascara.common.lang.ast.MapAstNode;
 import io.github.qishr.cascara.schema.util.SchemaResolver;
-import io.github.qishr.cascara.schema.structure.BaseSchemaNode;
+import io.github.qishr.cascara.schema.structure.AbstractSchemaNode;
 import io.github.qishr.cascara.schema.structure.LazySchemaNode;
 import io.github.qishr.cascara.schema.structure.ObjectSchemaNode;
 import io.github.qishr.cascara.schema.structure.ScalarSchemaNode;
@@ -25,7 +25,7 @@ class SchemaStructureTest {
     void testPropertyAccess() {
         // CHANGE: Use ObjectSchemaNode so the properties are actually stored
         ObjectSchemaNode root = new ObjectSchemaNode(null);
-        BaseSchemaNode child = new ScalarSchemaNode(SchemaType.BOOLEAN, null);
+        AbstractSchemaNode child = new ScalarSchemaNode(SchemaType.BOOLEAN, null);
 
         root.addProperty("showToolbar", child);
 
@@ -74,7 +74,7 @@ class SchemaStructureTest {
         ObjectSchemaNode root = new ObjectSchemaNode(null);
 
         // Create a property
-        BaseSchemaNode email = new ScalarSchemaNode(SchemaType.STRING, null);
+        AbstractSchemaNode email = new ScalarSchemaNode(SchemaType.STRING, null);
         email.addRule(new RegexRule("^(.+)@(.+)$"));
 
         // Attach property to root
