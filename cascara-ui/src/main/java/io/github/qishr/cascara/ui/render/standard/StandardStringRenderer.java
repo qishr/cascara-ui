@@ -1,6 +1,6 @@
 package io.github.qishr.cascara.ui.render.standard;
 
-import io.github.qishr.cascara.schema.SchemaType;
+import io.github.qishr.cascara.common.lang.type.PrimitiveType;
 import io.github.qishr.cascara.ui.api.data.DataProvider;
 import io.github.qishr.cascara.ui.api.render.ScalarRenderer;
 import io.github.qishr.cascara.ui.form.FieldMetadata;
@@ -11,7 +11,7 @@ import javafx.scene.control.Labeled;
 
 public class StandardStringRenderer extends AbstractScalarRenderer implements ScalarRenderer {
     public StandardStringRenderer() {
-        super(null, SchemaType.STRING, null);
+        super(null, PrimitiveType.STRING, null);
     }
 
     @Override

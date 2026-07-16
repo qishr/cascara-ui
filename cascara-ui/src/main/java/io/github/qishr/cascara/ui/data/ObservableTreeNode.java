@@ -3,7 +3,7 @@ package io.github.qishr.cascara.ui.data;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.github.qishr.cascara.schema.SchemaType;
+import io.github.qishr.cascara.common.lang.type.PrimitiveType;
 import io.github.qishr.cascara.schema.annotation.SchemaProperty;
 import io.github.qishr.cascara.schema.structure.SchemaNode;
 import io.github.qishr.cascara.ui.api.data.ObservableTreeData;
@@ -16,7 +16,7 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
 public abstract class ObservableTreeNode<T extends ObservableTreeNode<T,V>,V extends Object> extends ObservableObject implements ObservableTreeData<T,V> {
-    private final ObjectProperty<SchemaType> schemaType = new SimpleObjectProperty<>();
+    private final ObjectProperty<PrimitiveType> schemaType = new SimpleObjectProperty<>();
     private final ObjectProperty<SchemaNode> schema = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<V> physicalValue;
     private final SimpleObjectProperty<T> parent;
@@ -39,8 +39,8 @@ public abstract class ObservableTreeNode<T extends ObservableTreeNode<T,V>,V ext
     // Properties
     //
 
-    public ObjectProperty<SchemaType> schemaTypeProperty() { return schemaType; }
-    public ObjectProperty<SchemaType> typeProperty() { return schemaType; }
+    public ObjectProperty<PrimitiveType> schemaTypeProperty() { return schemaType; }
+    public ObjectProperty<PrimitiveType> typeProperty() { return schemaType; }
     public ObjectProperty<SchemaNode> schemaProperty() { return schema; }
 
     public final ObjectProperty<String> nodeNameProperty() {return nodeName;}
@@ -63,8 +63,8 @@ public abstract class ObservableTreeNode<T extends ObservableTreeNode<T,V>,V ext
     }
     public void setSchema(SchemaNode schema) { this.schema.set(schema); }
 
-    public final SchemaType getSchemaType() {
-        return schema.get() == null ? SchemaType.NULL : schema.get().getType();
+    public final PrimitiveType getSchemaType() {
+        return schema.get() == null ? PrimitiveType.NULL : schema.get().getType();
     }
 
     //

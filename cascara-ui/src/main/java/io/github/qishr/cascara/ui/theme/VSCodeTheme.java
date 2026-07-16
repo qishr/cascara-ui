@@ -18,6 +18,7 @@ import io.github.qishr.cascara.lang.json.ast.JsonNode;
 import io.github.qishr.cascara.lang.json.ast.JsonScalarNode;
 import io.github.qishr.cascara.lang.json.ast.JsonSequenceNode;
 import io.github.qishr.cascara.lang.json.processor.JsonAstParser;
+import io.github.qishr.cascara.lang.json.util.JsonOptions;
 import io.github.qishr.cascara.ui.api.HighlightingToken;
 import io.github.qishr.cascara.ui.color.ColorDefinition;
 import io.github.qishr.cascara.ui.color.ColorException;
@@ -272,7 +273,7 @@ public class VSCodeTheme {
     private static void loadDefaultColors() {
         try {
             String themeString = getTextResource("theme.json");
-            JsonAstParser parser = new JsonAstParser();
+            JsonAstParser parser = new JsonAstParser().setOptions(JsonOptions.JSON5);
             JsonMapNode json = (JsonMapNode) parser.parse(themeString);
             loadUiColors(json, defaultUiColors);
             List<CodeTokenCategory> tmpCats = new ArrayList<>();
@@ -379,7 +380,7 @@ public class VSCodeTheme {
     //
 
     public void load(String jsonString) throws ColorException {
-        JsonAstParser parser = new JsonAstParser();
+        JsonAstParser parser = new JsonAstParser().setOptions(JsonOptions.JSON5);
         JsonMapNode json = (JsonMapNode) parser.parse(jsonString);
         load(json);
     }
@@ -405,9 +406,8 @@ public class VSCodeTheme {
     private static void loadSyntaxColors(JsonMapNode json, Properties colors, String defaultTextColor, List<CodeTokenCategory> cats) {
         cats.clear();
         JsonMapNode syntaxColorsJson = json.getMap("tokenColors");
-        for (JsonNode keyNode : syntaxColorsJson.keySet()) {
-            if (!(keyNode instanceof JsonScalarNode scalarKey)) continue;
-            JsonMapNode jsonCat = syntaxColorsJson.getMap(scalarKey.asString());
+        for (String key : syntaxColorsJson.keySet()) {
+            JsonMapNode jsonCat = syntaxColorsJson.getMap(key);
             String name = jsonCat.getString("name");
             JsonSequenceNode jsonScope = jsonCat.getSequence("scope");
             JsonMapNode jsonSettings = jsonCat.getMap("settings");
@@ -422,16 +422,13 @@ public class VSCodeTheme {
                     }
                 }
             }
-            for (JsonNode settingsKey : jsonSettings.keySet()) {
-                if (settingsKey instanceof JsonScalarNode scalar) {
-                    String propName = scalar.asString();
-                    String propValue = jsonSettings.getString(propName);
-                    Property prop = new Property(propName, propValue);
-                    if (propName.equals("foreground")) {
-                        tc.setColor(propValue);
-                    }
-                    tc.getSettings().add(prop);
+            for (String propName : jsonSettings.keySet()) {
+                String propValue = jsonSettings.getString(propName);
+                Property prop = new Property(propName, propValue);
+                if (propName.equals("foreground")) {
+                    tc.setColor(propValue);
                 }
+                tc.getSettings().add(prop);
             }
 
             cats.add(tc);

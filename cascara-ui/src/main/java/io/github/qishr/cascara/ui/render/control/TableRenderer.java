@@ -3,7 +3,7 @@ package io.github.qishr.cascara.ui.render.control;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.qishr.cascara.schema.SchemaType;
+import io.github.qishr.cascara.common.lang.type.PrimitiveType;
 import io.github.qishr.cascara.schema.structure.SchemaNode;
 import io.github.qishr.cascara.ui.api.data.DataProvider;
 import io.github.qishr.cascara.ui.api.render.ArrayEditorRenderer;
@@ -78,7 +78,7 @@ public class TableRenderer extends AbstractArrayRenderer implements ArrayEditorR
 
             columnMeta.setOnChange(() -> notifyDocumentChanged());
 
-            if (columnSchema.getType() == SchemaType.BOOLEAN) {
+            if (columnSchema.getType() == PrimitiveType.BOOLEAN) {
                 // Boolean columns don't need much room
                 columnMeta.setMinWidth(50);
                 columnMeta.setMaxWidth(250);

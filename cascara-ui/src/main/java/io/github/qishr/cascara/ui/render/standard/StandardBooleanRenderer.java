@@ -1,6 +1,6 @@
 package io.github.qishr.cascara.ui.render.standard;
 
-import io.github.qishr.cascara.schema.SchemaType;
+import io.github.qishr.cascara.common.lang.type.PrimitiveType;
 import io.github.qishr.cascara.ui.api.data.DataProvider;
 import io.github.qishr.cascara.ui.api.render.ScalarRenderer;
 import io.github.qishr.cascara.ui.form.FieldMetadata;
@@ -12,7 +12,7 @@ import javafx.scene.control.Labeled;
 
 public class StandardBooleanRenderer extends AbstractScalarRenderer implements ScalarRenderer {
     public StandardBooleanRenderer() {
-        super(null, SchemaType.BOOLEAN, null);
+        super(null, PrimitiveType.BOOLEAN, null);
     }
 
     @Override

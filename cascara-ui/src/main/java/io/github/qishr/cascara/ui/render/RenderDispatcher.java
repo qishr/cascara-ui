@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 
 import io.github.qishr.cascara.common.diagnostic.GlobalReporter;
 import io.github.qishr.cascara.common.diagnostic.Reporter;
-import io.github.qishr.cascara.schema.SchemaType;
+import io.github.qishr.cascara.common.lang.type.PrimitiveType;
 import io.github.qishr.cascara.schema.structure.SchemaNode;
 import io.github.qishr.cascara.ui.api.UiDiagnosticCode;
 import io.github.qishr.cascara.ui.api.data.DataProvider;
@@ -74,7 +74,7 @@ public class RenderDispatcher {
 
             // If this is an object and it has ui-display-string set, display whatever
             // property ui-display-string says to display.
-            if (schema != null && schema.getType() == SchemaType.OBJECT) {
+            if (schema != null && schema.getType() == PrimitiveType.OBJECT) {
                 displayString = meta.getSchema().getExtension("ui-display-string");
             }
 

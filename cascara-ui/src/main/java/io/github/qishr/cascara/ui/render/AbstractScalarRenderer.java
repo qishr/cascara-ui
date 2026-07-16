@@ -1,13 +1,13 @@
 package io.github.qishr.cascara.ui.render;
 
-import io.github.qishr.cascara.schema.SchemaType;
+import io.github.qishr.cascara.common.lang.type.PrimitiveType;
 import io.github.qishr.cascara.schema.structure.SchemaNode;
 import io.github.qishr.cascara.ui.form.FieldMetadata;
 import javafx.beans.property.ObjectProperty;
 
 public abstract class AbstractScalarRenderer extends AbstractRenderer {
 
-    protected AbstractScalarRenderer(String contentType, SchemaType schemaType, String format) {
+    protected AbstractScalarRenderer(String contentType, PrimitiveType schemaType, String format) {
         super(contentType, schemaType, format);
     }
 

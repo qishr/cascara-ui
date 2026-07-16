@@ -1,7 +1,7 @@
 package io.github.qishr.cascara.ui.render;
 
 import io.github.qishr.cascara.common.util.Properties;
-import io.github.qishr.cascara.schema.SchemaType;
+import io.github.qishr.cascara.common.lang.type.PrimitiveType;
 import io.github.qishr.cascara.ui.api.ServicePropertyName;
 import io.github.qishr.cascara.ui.api.render.Renderer;
 
@@ -15,7 +15,7 @@ public abstract class AbstractRenderer implements Renderer {
     /// @param contentType
     /// @param schemaType
     /// @param format
-    protected AbstractRenderer(String contentType, SchemaType schemaType, String format) {
+    protected AbstractRenderer(String contentType, PrimitiveType schemaType, String format) {
         this.contentType = contentType;
         this.schemaType = schemaType == null ? null : schemaType.asString();
         this.format = format;

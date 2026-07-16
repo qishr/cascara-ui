@@ -7,7 +7,7 @@ import io.github.qishr.cascara.common.diagnostic.Reporter;
 import io.github.qishr.cascara.common.diagnostic.code.GenericDiagnosticCode;
 import io.github.qishr.cascara.common.service.ServiceProviderLayer;
 import io.github.qishr.cascara.schema.Schema;
-import io.github.qishr.cascara.schema.SchemaType;
+import io.github.qishr.cascara.common.lang.type.PrimitiveType;
 import io.github.qishr.cascara.schema.structure.SchemaNode;
 import io.github.qishr.cascara.ui.api.UiDiagnosticCode;
 import io.github.qishr.cascara.ui.api.data.ObservableTableData;
@@ -86,7 +86,7 @@ public class ObjectFieldFactory extends AbstractFieldFactory {
 
         field.setLabel(label);
 
-        if (schema.getType() == SchemaType.ARRAY) {
+        if (schema.getType() == PrimitiveType.ARRAY) {
             field.setLabelPosition(LabelPosition.ABOVE);
         }
 
@@ -100,7 +100,7 @@ public class ObjectFieldFactory extends AbstractFieldFactory {
 
 
         // // TODO: Find a better way of doing this, eg fieldMets.hasDisplayToggle()
-        // boolean isLarge = fieldSchema.getType() == SchemaType.ARRAY;
+        // boolean isLarge = fieldSchema.getType() == PrimitiveType.ARRAY;
         // for (ValidationRule rule : fieldSchema.getRules()) {
         //     if (rule instanceof MaxLengthRule mlr) {
         //         if (mlr.getMax() > 256) {
@@ -148,7 +148,7 @@ public class ObjectFieldFactory extends AbstractFieldFactory {
         ViewAndControl viewAndControl = createControl(meta, data);
 
         if (viewAndControl == null) {
-            throw new UiDataException(GenericDiagnosticCode.UNEXPECTED_NULL, "viewAndControl");
+            throw new UiDataException(GenericDiagnosticCode.UNEXPECTED_NULL_RETURN, "this", "createControl");
             // REPORTER.error(null, "Failed to create form field: " + fieldSchema.getOriginUri());
             // return null;
         }

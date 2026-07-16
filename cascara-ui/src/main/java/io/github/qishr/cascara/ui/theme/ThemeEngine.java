@@ -613,7 +613,7 @@ public class ThemeEngine {
 
         public static ThemableObject of(Scene scene) {
             if (scene == null) {
-                throw new UiException(GenericDiagnosticCode.UNEXPECTED_NULL, "Scene");
+                throw new UiException(GenericDiagnosticCode.UNEXPECTED_NULL_PARAMETER, "scene", "of");
             }
             ThemableObject object = new ThemableObject();
             object.scene = scene;
@@ -622,7 +622,7 @@ public class ThemeEngine {
 
         public static ThemableObject of(Parent parent) {
             if (parent == null) {
-                throw new UiException(GenericDiagnosticCode.UNEXPECTED_NULL, "Parent");
+                throw new UiException(GenericDiagnosticCode.UNEXPECTED_NULL_PARAMETER, "parent", "of");
             }
             ThemableObject object = new ThemableObject();
             object.parent = parent;

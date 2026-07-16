@@ -1,5 +1,6 @@
 package io.github.qishr.cascara.ui.vsix;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
@@ -9,11 +10,11 @@ import io.github.qishr.cascara.common.util.ArchiveFile;
 import io.github.qishr.cascara.common.io.IOUtils;
 import io.github.qishr.cascara.common.util.Properties;
 import io.github.qishr.cascara.common.content.ResourceContent;
-import io.github.qishr.cascara.common.diagnostic.LocalizableException;
 import io.github.qishr.cascara.common.diagnostic.LocalizableIOException;
 import io.github.qishr.cascara.common.diagnostic.code.GenericDiagnosticCode;
 import io.github.qishr.cascara.common.lang.ast.ScalarAstNode;
 import io.github.qishr.cascara.lang.json.processor.JsonAstParser;
+import io.github.qishr.cascara.lang.json.util.JsonOptions;
 import io.github.qishr.cascara.lang.json.ast.JsonMapEntryNode;
 import io.github.qishr.cascara.lang.json.ast.JsonMapNode;
 import io.github.qishr.cascara.lang.json.ast.JsonNode;
@@ -49,8 +50,8 @@ public class VsixPackage extends ArchiveFile { // implements Importable {
         super(vsixPath);
     }
 
-    public static VsixPackage fromJson(String jsonString) throws LocalizableException {
-        JsonAstParser JsonAstParser = new JsonAstParser();
+    public static VsixPackage fromJson(String jsonString) {
+        JsonAstParser JsonAstParser = new JsonAstParser().setOptions(JsonOptions.JSON5);
         JsonMapNode json = null;
         // try {
             if (JsonAstParser.parse(jsonString) instanceof JsonMapNode m) {
@@ -93,14 +94,14 @@ public class VsixPackage extends ArchiveFile { // implements Importable {
         vsix.getProperties().set("displayName", getPropertyAsString(json, "displayName"));
         //TODO: The rest
 
-        // try {
+        try {
             // Get package info...
             String manifestUri = vsix.getProperties().getString("manifestUri");
             ResourceContent manifest = IOUtils.getResource(URI.create(manifestUri));
             vsix.parsePackageManifest(manifest.content());
-        // } catch (URISyntaxException | IOException e) {
-        //     throw new UiDataException("Error parsing VSIX from URL: " + e.getMessage(), e);
-        // }
+        } catch (IOException e) {
+            throw new UiDataException(e, GenericDiagnosticCode.ERROR, "Error parsing VSIX from URL: " + e.getMessage(), e);
+        }
 
 
         // String displayName = json.get("displayName").asText();
@@ -118,7 +119,7 @@ public class VsixPackage extends ArchiveFile { // implements Importable {
 
     private void parsePackageManifest(String jsonString) throws LocalizableIOException {
         if (jsonString == null || jsonString.isBlank()) return;
-        JsonAstParser JsonAstParser = new JsonAstParser();
+        JsonAstParser JsonAstParser = new JsonAstParser().setOptions(JsonOptions.JSON5);
         JsonMapNode json;
         // try {
             JsonNode rootNode = JsonAstParser.parse(jsonString);
@@ -132,7 +133,7 @@ public class VsixPackage extends ArchiveFile { // implements Importable {
         // }
 
         for (JsonMapEntryNode entry : json.getEntries()) {
-            String name = entry.getKey().asString();
+            String name = entry.getKey();
             if (entry.getValue() instanceof ScalarAstNode scalar) {
                 String value = resolveVariables(scalar.asString());
                 manifest.set(name, value);
@@ -147,7 +148,7 @@ public class VsixPackage extends ArchiveFile { // implements Importable {
                         if (themeEntry instanceof JsonMapNode themeMap) {
                             VsixThemeInfo themeInfo = new VsixThemeInfo();
                             for (JsonMapEntryNode propEntry : themeMap.getEntries()) {
-                                String propKey = propEntry.getKey().asString();
+                                String propKey = propEntry.getKey();
                                 if (propEntry.getValue() instanceof ScalarAstNode s) {
                                     themeInfo.getProperties().set(propKey, resolveVariables(s.asString()));
                                 }

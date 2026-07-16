@@ -1,6 +1,6 @@
 package io.github.qishr.cascara.ui.render.standard;
 
-import io.github.qishr.cascara.schema.SchemaType;
+import io.github.qishr.cascara.common.lang.type.PrimitiveType;
 import io.github.qishr.cascara.ui.api.data.DataProvider;
 import io.github.qishr.cascara.ui.api.render.ScalarEditorRenderer;
 import io.github.qishr.cascara.ui.form.FieldMetadata;
@@ -16,7 +16,7 @@ public class StandardStringEditorRenderer extends AbstractScalarRenderer impleme
     private boolean isUpdatingControl;
 
     public StandardStringEditorRenderer() {
-        super(null, SchemaType.STRING, null);
+        super(null, PrimitiveType.STRING, null);
     }
 
     @Override

@@ -1,6 +1,6 @@
 package io.github.qishr.cascara.ui.render.control;
 
-import io.github.qishr.cascara.schema.SchemaType;
+import io.github.qishr.cascara.common.lang.type.PrimitiveType;
 import io.github.qishr.cascara.ui.api.data.DataProvider;
 import io.github.qishr.cascara.ui.api.render.ScalarEditorRenderer;
 import io.github.qishr.cascara.ui.color.ColorException;
@@ -16,7 +16,7 @@ import javafx.scene.paint.Color;
 
 public class ColorChooserRenderer extends AbstractScalarRenderer implements ScalarEditorRenderer {
     public ColorChooserRenderer() {
-        super("cascara/color", SchemaType.STRING, "color");
+        super("cascara/color", PrimitiveType.STRING, "color");
     }
 
     @SuppressWarnings("unchecked")

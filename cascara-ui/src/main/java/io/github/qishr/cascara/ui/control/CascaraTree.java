@@ -324,11 +324,11 @@ public class CascaraTree<T extends ObservableTreeNode<T,?>> extends StackPane {
                 TreeItem<T> treeItem = data.getValue();
 
                 if (treeItem == null) {
-                    throw new UiDataException(GenericDiagnosticCode.UNEXPECTED_NULL, "TreeItem");
+                    throw new UiDataException(GenericDiagnosticCode.UNEXPECTED_NULL_RETURN, "data", "getValue");
                 }
                 T observableTreeNode = treeItem.getValue();
                 if (observableTreeNode == null) {
-                    throw new UiDataException(GenericDiagnosticCode.UNEXPECTED_NULL, "ObservableTreeNode");
+                    throw new UiDataException(GenericDiagnosticCode.UNEXPECTED_NULL_RETURN, "treeItem", "getValue");
                 }
 
                 String columnName = def.getName();

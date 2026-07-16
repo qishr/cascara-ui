@@ -4,7 +4,7 @@ package io.github.qishr.cascara.ui.render.control;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
-import io.github.qishr.cascara.schema.SchemaType;
+import io.github.qishr.cascara.common.lang.type.PrimitiveType;
 import io.github.qishr.cascara.ui.api.data.DataProvider;
 import io.github.qishr.cascara.ui.api.render.ScalarEditorRenderer;
 import io.github.qishr.cascara.ui.form.FieldMetadata;
@@ -19,7 +19,7 @@ import javafx.scene.control.Labeled;
 
 public class DateChooserRenderer extends AbstractScalarRenderer implements ScalarEditorRenderer {
     public DateChooserRenderer() {
-        super(null, SchemaType.STRING, "date");
+        super(null, PrimitiveType.STRING, "date");
     }
 
     @SuppressWarnings("unchecked")
