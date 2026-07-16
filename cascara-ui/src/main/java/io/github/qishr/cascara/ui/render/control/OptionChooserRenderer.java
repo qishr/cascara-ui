@@ -77,7 +77,7 @@ public class OptionChooserRenderer extends AbstractScalarRenderer implements Sca
         } else {
             enumChooser = null;
             if (meta.getOptionProvider() == null) {
-                throw new UiException(GenericDiagnosticCode.UNEXPECTED_NULL, "OptionProvider");
+                throw new UiException(GenericDiagnosticCode.UNEXPECTED_NULL_RETURN, "meta", "getOptionProvider");
             }
             chooser = new OptionChooser(
                 meta.getOptionProvider(),

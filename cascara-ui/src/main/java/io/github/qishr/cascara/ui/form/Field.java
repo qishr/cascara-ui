@@ -51,7 +51,7 @@ public class Field extends AbstractFormComponent {
         setPadding(new Insets(4));
 
         if (inputControl == null || inputControl.view() == null) {
-            throw new LocalizableRuntimeException(GenericDiagnosticCode.UNEXPECTED_NULL, "inputControl");
+            throw new LocalizableRuntimeException(GenericDiagnosticCode.UNEXPECTED_NULL_PARAMETER, "inputControl", "Field");
         }
 
         if (observable instanceof ObservableList<?> list) {

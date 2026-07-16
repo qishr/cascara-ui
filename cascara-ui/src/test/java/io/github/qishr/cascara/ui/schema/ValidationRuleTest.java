@@ -7,7 +7,7 @@ import io.github.qishr.cascara.schema.structure.ArraySchemaNode;
 import io.github.qishr.cascara.schema.structure.AbstractSchemaNode;
 import io.github.qishr.cascara.schema.structure.ObjectSchemaNode;
 import io.github.qishr.cascara.schema.structure.ScalarSchemaNode;
-import io.github.qishr.cascara.schema.SchemaType;
+import io.github.qishr.cascara.common.lang.type.PrimitiveType;
 import io.github.qishr.cascara.schema.rule.MinValueRule;
 import io.github.qishr.cascara.schema.rule.RegexRule;
 import io.github.qishr.cascara.lang.yaml.ast.*;
@@ -24,7 +24,7 @@ class ValidationRuleTest {
      * Helper to create a location-aware Scalar node for testing.
      */
     private YamlScalarNode createMockScalar(Object value, int line, int col) {
-        YamlScalarNode node = new YamlScalarNode(line, col, String.valueOf(value), String.valueOf(value), QuoteStyle.PLAIN);
+        YamlScalarNode node = new YamlScalarNode(line, col, PrimitiveType.of(value), String.valueOf(value), String.valueOf(value), QuoteStyle.PLAIN, null);
         // Create a token so the node has coordinate metadata
         // YamlToken mockToken = new YamlToken(null, String.valueOf(value), value, 0, line, col);
         // node.setStartToken(mockToken);
@@ -35,7 +35,7 @@ class ValidationRuleTest {
     void testNestedValidation() {
         // Setup Schema: User { age: Integer(min: 18) }
         ObjectSchemaNode userSchema = new ObjectSchemaNode(null);
-        AbstractSchemaNode age = new ScalarSchemaNode(SchemaType.INTEGER, null);
+        AbstractSchemaNode age = new ScalarSchemaNode(PrimitiveType.INTEGER, null);
         age.addRule(new MinValueRule(18));
         userSchema.addProperty("age", age);
 
@@ -62,7 +62,7 @@ class ValidationRuleTest {
     void testArrayValidation() {
         // Setup Schema: tags: Array<String(regex: ^[a-z]+$)>
         ArraySchemaNode tagsSchema = new ArraySchemaNode(null);
-        AbstractSchemaNode tagItem = new ScalarSchemaNode(SchemaType.STRING, null);
+        AbstractSchemaNode tagItem = new ScalarSchemaNode(PrimitiveType.STRING, null);
         tagItem.addRule(new RegexRule("^[a-z]+$"));
         tagsSchema.setItemTemplate(tagItem);
 

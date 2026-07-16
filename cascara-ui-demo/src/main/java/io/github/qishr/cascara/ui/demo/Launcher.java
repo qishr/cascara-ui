@@ -2,7 +2,6 @@ package io.github.qishr.cascara.ui.demo;
 
 import java.io.InputStream;
 
-import io.github.qishr.cascara.common.diagnostic.GlobalReporter;
 import io.github.qishr.cascara.common.io.filewatcher.FileWatcher;
 import io.github.qishr.cascara.ui.control.OptionChooser;
 import io.github.qishr.cascara.ui.language.Localization;

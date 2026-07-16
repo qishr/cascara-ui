@@ -13,7 +13,7 @@ import java.util.Set;
 
 import io.github.qishr.cascara.common.lang.ast.AstNode;
 import io.github.qishr.cascara.schema.Schema;
-import io.github.qishr.cascara.schema.SchemaType;
+import io.github.qishr.cascara.common.lang.type.PrimitiveType;
 import io.github.qishr.cascara.schema.structure.SchemaNode;
 import io.github.qishr.cascara.schema.util.SchemaCompiler;
 import io.github.qishr.cascara.schema.util.SchemaGenerator;
@@ -100,7 +100,7 @@ public class ObservableObject implements Observable, ObservableTableData {
 
     public final PropertyMetadata getPropertyMetadata(String name) { return properties.get(name); }
 
-    private final void defineProperty(String name, SchemaType schemaType, String mediaType, boolean isDeclaredProperty) {
+    private final void defineProperty(String name, PrimitiveType schemaType, String mediaType, boolean isDeclaredProperty) {
         properties.put(name, new PropertyMetadata(schemaType, mediaType, isDeclaredProperty));
     }
 

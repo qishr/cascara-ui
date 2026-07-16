@@ -33,12 +33,11 @@ public class ObservableMenuFactory {
     }
 
     public static void attachMenuItems(ObservableList<ObservableMenuItem> items) {
-        if (items == null) throw new UiDataException(GenericDiagnosticCode.UNEXPECTED_NULL, "items");
+        if (items == null) throw new UiDataException(GenericDiagnosticCode.UNEXPECTED_NULL_PARAMETER, "items", "attachMenuItems");
         for (ObservableMenuItem item : items) {
             ObservableMenuItem destination = item.getDestination();
             if (destination == null) {
-                // throw new UiDataException(GenericDiagnosticCode.UNEXPECTED_NULL, "item.getDestination()");
-                REPORTER.error(GenericDiagnosticCode.UNEXPECTED_NULL, "item.getDestination() in attachMenuItems " + item.getNodeName());
+                REPORTER.error(GenericDiagnosticCode.UNEXPECTED_NULL_RETURN, "item", "getDestination()");
             } else {
                 destination.getChildren().add(item);
             }
@@ -46,12 +45,11 @@ public class ObservableMenuFactory {
     }
 
     public static void detachMenuItems(ObservableList<ObservableMenuItem> items) {
-        if (items == null) throw new UiDataException(GenericDiagnosticCode.UNEXPECTED_NULL, "items");
+        if (items == null) throw new UiDataException(GenericDiagnosticCode.UNEXPECTED_NULL_PARAMETER, "items", "detachMenus");
         for (ObservableMenuItem item : items) {
             ObservableMenuItem destination = item.getDestination();
             if (destination == null) {
-                // throw new UiDataException(GenericDiagnosticCode.UNEXPECTED_NULL, "item.getDestination()");
-                REPORTER.error(GenericDiagnosticCode.UNEXPECTED_NULL, "item.getDestination() in detachMenuItems " + item.getNodeName());
+                REPORTER.error(GenericDiagnosticCode.UNEXPECTED_NULL_RETURN, "item", "getDestination()");
             } else {
                 destination.getChildren().remove(item);
             }

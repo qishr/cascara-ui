@@ -1,7 +1,6 @@
 package io.github.qishr.cascara.ui.language;
 
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.text.Bidi;
 import java.text.MessageFormat;
 import java.util.HashMap;
@@ -11,8 +10,6 @@ import java.util.Map;
 import io.github.qishr.cascara.common.diagnostic.DiagnosticLocalizer;
 import io.github.qishr.cascara.common.diagnostic.GlobalReporter;
 import io.github.qishr.cascara.common.diagnostic.Reporter;
-import io.github.qishr.cascara.common.diagnostic.StandardReporter;
-import io.github.qishr.cascara.common.diagnostic.Diagnostic.Level;
 import io.github.qishr.cascara.common.diagnostic.code.DiagnosticCode;
 import io.github.qishr.cascara.common.diagnostic.code.GenericDiagnosticCode;
 import io.github.qishr.cascara.lang.yaml.processor.YamlSerializer;

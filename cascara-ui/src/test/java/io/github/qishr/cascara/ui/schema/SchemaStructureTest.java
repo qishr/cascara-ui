@@ -9,7 +9,7 @@ import io.github.qishr.cascara.schema.structure.LazySchemaNode;
 import io.github.qishr.cascara.schema.structure.ObjectSchemaNode;
 import io.github.qishr.cascara.schema.structure.ScalarSchemaNode;
 import io.github.qishr.cascara.schema.structure.SchemaNode;
-import io.github.qishr.cascara.schema.SchemaType;
+import io.github.qishr.cascara.common.lang.type.PrimitiveType;
 import io.github.qishr.cascara.schema.rule.RegexRule;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,7 +25,7 @@ class SchemaStructureTest {
     void testPropertyAccess() {
         // CHANGE: Use ObjectSchemaNode so the properties are actually stored
         ObjectSchemaNode root = new ObjectSchemaNode(null);
-        AbstractSchemaNode child = new ScalarSchemaNode(SchemaType.BOOLEAN, null);
+        AbstractSchemaNode child = new ScalarSchemaNode(PrimitiveType.BOOLEAN, null);
 
         root.addProperty("showToolbar", child);
 
@@ -74,7 +74,7 @@ class SchemaStructureTest {
         ObjectSchemaNode root = new ObjectSchemaNode(null);
 
         // Create a property
-        AbstractSchemaNode email = new ScalarSchemaNode(SchemaType.STRING, null);
+        AbstractSchemaNode email = new ScalarSchemaNode(PrimitiveType.STRING, null);
         email.addRule(new RegexRule("^(.+)@(.+)$"));
 
         // Attach property to root
@@ -82,7 +82,7 @@ class SchemaStructureTest {
 
         // Assertions
         assertNotNull(root.getProperty("email"));
-        assertEquals(SchemaType.STRING, root.getProperty("email").getType());
+        assertEquals(PrimitiveType.STRING, root.getProperty("email").getType());
     }
 
     @SuppressWarnings("rawtypes")

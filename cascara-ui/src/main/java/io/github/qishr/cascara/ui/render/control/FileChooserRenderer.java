@@ -3,7 +3,7 @@ package io.github.qishr.cascara.ui.render.control;
 import java.net.URI;
 import java.nio.file.Path;
 
-import io.github.qishr.cascara.schema.SchemaType;
+import io.github.qishr.cascara.common.lang.type.PrimitiveType;
 import io.github.qishr.cascara.schema.structure.SchemaNode;
 import io.github.qishr.cascara.ui.api.data.DataProvider;
 import io.github.qishr.cascara.ui.api.render.ScalarEditorRenderer;
@@ -19,7 +19,7 @@ public class FileChooserRenderer extends AbstractScalarRenderer implements Scala
     private boolean isUpdatingControl;
 
     public FileChooserRenderer() {
-        super(null, SchemaType.STRING, "path");
+        super(null, PrimitiveType.STRING, "path");
     }
 
     @Override

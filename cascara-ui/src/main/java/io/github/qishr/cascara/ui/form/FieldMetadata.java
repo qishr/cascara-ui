@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 import io.github.qishr.cascara.common.data.TableData;
 import io.github.qishr.cascara.common.diagnostic.code.GenericDiagnosticCode;
 import io.github.qishr.cascara.schema.SchemaKeyword;
-import io.github.qishr.cascara.schema.SchemaType;
+import io.github.qishr.cascara.common.lang.type.PrimitiveType;
 import io.github.qishr.cascara.schema.rule.EnumRule;
 import io.github.qishr.cascara.schema.rule.ValidationRule;
 import io.github.qishr.cascara.schema.structure.ArraySchemaNode;
@@ -35,7 +35,7 @@ public class FieldMetadata {
     private final StringProperty fieldName = new SimpleStringProperty();
     private final StringProperty title = new SimpleStringProperty();
     private final SchemaNode fieldSchema;
-    private final SchemaType schemaType;
+    private final PrimitiveType schemaType;
     private final String format;
     private boolean hidden = false;
     private boolean displayToggle = false;
@@ -79,11 +79,11 @@ public class FieldMetadata {
         String optionProviderId = null;
 
         if (fieldName == null) {
-            throw new UiDataException(GenericDiagnosticCode.UNEXPECTED_NULL, "fieldName");
+            throw new UiDataException(GenericDiagnosticCode.UNEXPECTED_NULL_PARAMETER, "fieldName", "FieldMetadata");
         }
 
         if (fieldSchema == null) {
-            schemaType = SchemaType.STRING;
+            schemaType = PrimitiveType.STRING;
             format = null;
             providerParameter = null;
             enumValues = null;
@@ -141,7 +141,7 @@ public class FieldMetadata {
                 contentType = fieldSchema.getContentMediaType();
                 allowEdit = !fieldSchema.isReadOnly();
             }
-            if (fieldSchema.getType() == SchemaType.OBJECT) {
+            if (fieldSchema.getType() == PrimitiveType.OBJECT) {
                 isObject = true;
             }
         }
@@ -179,7 +179,7 @@ public class FieldMetadata {
     public String getName() { return fieldName.get(); }
     public SchemaNode getSchema() { return fieldSchema; }
     public SchemaNode getItemsSchema() { return itemsSchema; }
-    public SchemaType getSchemaType() { return schemaType; }
+    public PrimitiveType getSchemaType() { return schemaType; }
     public String getFormat() { return format; }
     public OptionProvider getOptionProvider() { return optionProvider; }
     public String getProviderParameter() { return providerParameter; }
@@ -204,10 +204,10 @@ public class FieldMetadata {
     public boolean hasMediaType() { return contentType != null && !contentType.isEmpty(); }
 
     public boolean isStringField() {
-        return SchemaType.STRING == schemaType;
+        return PrimitiveType.STRING == schemaType;
     }
 
-    public boolean isBooleanField() { return schemaType == SchemaType.BOOLEAN; }
+    public boolean isBooleanField() { return schemaType == PrimitiveType.BOOLEAN; }
 
     public boolean isEnumField() { return enumValues != null && !enumValues.isEmpty(); }
 
