@@ -38,13 +38,13 @@ package io.github.qishr.cascara.ui.theme;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.qishr.cascara.lang.yaml.ast.YamlMapNode;
+import io.github.qishr.cascara.lang.yaml.ast.YamlMap;
 import io.github.qishr.cascara.lang.yaml.ast.YamlNode;
-import io.github.qishr.cascara.lang.yaml.ast.YamlSequenceNode;
+import io.github.qishr.cascara.lang.yaml.ast.YamlSequence;
 import io.github.qishr.cascara.lang.yaml.processor.YamlAstParser;
 
 public class CascaraTheme {
-    private YamlMapNode projectYaml = null;
+    private YamlMap projectYaml = null;
     private String name;
     private String themeId;
     private List<Variation> variations = new ArrayList<>();
@@ -58,10 +58,10 @@ public class CascaraTheme {
         name = projectYaml.getString("name");
 
         variations = new ArrayList<>();
-        YamlSequenceNode seq = projectYaml.getSequence("variations");
+        YamlSequence seq = projectYaml.getSequence("variations");
         List<YamlNode> variationsNodes = seq.getChildren();
         for (YamlNode variationNode : variationsNodes) {
-            if (variationNode instanceof YamlMapNode map) {
+            if (variationNode instanceof YamlMap map) {
                 ThemeVariationFactoryImpl factory = new ThemeVariationFactoryImpl();
                 Variation variation = ThemeVariationLoader.load(map, factory);
                 variations.add(variation);
@@ -100,7 +100,7 @@ public class CascaraTheme {
 
     protected void loadYamlString(String content) {
         YamlAstParser parser = new YamlAstParser();
-        if (parser.parse(content) instanceof YamlMapNode map) {
+        if (parser.parse(content) instanceof YamlMap map) {
             this.projectYaml = map;
         } else {
             throw new RuntimeException("Expected map as root of project YAML"); // TODO: custom exception type

@@ -37,10 +37,10 @@ package io.github.qishr.cascara.ui.api.data;
 
 import java.util.Map;
 
-import io.github.qishr.cascara.common.data.TableData;
+import io.github.qishr.cascara.common.data.TabularData;
 import javafx.beans.Observable;
 
-public interface ObservableTableData extends TableData {
+public interface ObservableTableData extends TabularData {
     Observable[] getObservables();
     Map<String,Observable> getObservablesMap();
     Observable getObservable(String key);

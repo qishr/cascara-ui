@@ -39,7 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-import io.github.qishr.cascara.common.data.TableData;
+import io.github.qishr.cascara.common.data.TabularData;
 import io.github.qishr.cascara.common.diagnostic.LocalizableRuntimeException;
 import io.github.qishr.cascara.common.diagnostic.SilentCollectingReporter;
 import io.github.qishr.cascara.common.diagnostic.code.GenericDiagnosticCode;
@@ -161,7 +161,7 @@ public class Field extends AbstractFormComponent {
         }
     }
 
-    public void setRemoveRowHandler(Consumer<TableData> addRow) {
+    public void setRemoveRowHandler(Consumer<TabularData> addRow) {
         if (metadata != null) {
             metadata.setRemoveRowHandler(addRow);
         }

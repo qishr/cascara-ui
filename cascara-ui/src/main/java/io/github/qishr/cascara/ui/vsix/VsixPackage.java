@@ -50,10 +50,10 @@ import io.github.qishr.cascara.common.diagnostic.code.GenericDiagnosticCode;
 import io.github.qishr.cascara.common.lang.ast.ScalarAstNode;
 import io.github.qishr.cascara.lang.json.processor.JsonAstParser;
 import io.github.qishr.cascara.lang.json.util.JsonOptions;
-import io.github.qishr.cascara.lang.json.ast.JsonMapEntryNode;
-import io.github.qishr.cascara.lang.json.ast.JsonMapNode;
+import io.github.qishr.cascara.lang.json.ast.JsonProperty;
+import io.github.qishr.cascara.lang.json.ast.JsonObject;
 import io.github.qishr.cascara.lang.json.ast.JsonNode;
-import io.github.qishr.cascara.lang.json.ast.JsonSequenceNode;
+import io.github.qishr.cascara.lang.json.ast.JsonArray;
 import io.github.qishr.cascara.lang.xml.processor.XmlAstParser;
 import io.github.qishr.cascara.schema.exception.SchemaDiagnosticCode;
 import io.github.qishr.cascara.ui.data.UiDataException;
@@ -87,9 +87,9 @@ public class VsixPackage extends ArchiveFile { // implements Importable {
 
     public static VsixPackage fromJson(String jsonString) {
         JsonAstParser JsonAstParser = new JsonAstParser().setOptions(JsonOptions.JSON5);
-        JsonMapNode json = null;
+        JsonObject json = null;
         // try {
-            if (JsonAstParser.parse(jsonString) instanceof JsonMapNode m) {
+            if (JsonAstParser.parse(jsonString) instanceof JsonObject m) {
                 json = m;
             } else {
                 throw new UiDataException(SchemaDiagnosticCode.ROOT_MUST_BE_MAP);
@@ -104,7 +104,7 @@ public class VsixPackage extends ArchiveFile { // implements Importable {
 
         VsixPackage vsix = new VsixPackage(null);
 
-        if (extensionFiles instanceof JsonMapNode filesMap) {
+        if (extensionFiles instanceof JsonObject filesMap) {
             vsix.getProperties().set("iconUri", getPropertyAsString(filesMap, "icon"));
             vsix.getProperties().set("manifestUri", getPropertyAsString(filesMap, "manifest"));
             vsix.getProperties().set("readmeUri", getPropertyAsString(filesMap, "readme"));
@@ -143,7 +143,7 @@ public class VsixPackage extends ArchiveFile { // implements Importable {
         return vsix;
     }
 
-    private static String getPropertyAsString(JsonMapNode node, String name) {
+    private static String getPropertyAsString(JsonObject node, String name) {
         if (node == null) return "";
         var valueNode = node.get(name);
         if (valueNode instanceof ScalarAstNode scalar) {
@@ -155,10 +155,10 @@ public class VsixPackage extends ArchiveFile { // implements Importable {
     private void parsePackageManifest(String jsonString) throws LocalizableIOException {
         if (jsonString == null || jsonString.isBlank()) return;
         JsonAstParser JsonAstParser = new JsonAstParser().setOptions(JsonOptions.JSON5);
-        JsonMapNode json;
+        JsonObject json;
         // try {
             JsonNode rootNode = JsonAstParser.parse(jsonString);
-            if (rootNode instanceof JsonMapNode m) {
+            if (rootNode instanceof JsonObject m) {
                 json = m;
             } else {
                 throw new UiDataException(SchemaDiagnosticCode.ROOT_MUST_BE_MAP);
@@ -167,22 +167,22 @@ public class VsixPackage extends ArchiveFile { // implements Importable {
         //     throw new UiDataException("Error parsing JSON: " + e.getMessage(), e);
         // }
 
-        for (JsonMapEntryNode entry : json.getEntries()) {
+        for (JsonProperty entry : json.getEntries()) {
             String name = entry.getKey();
             if (entry.getValue() instanceof ScalarAstNode scalar) {
                 String value = resolveVariables(scalar.asString());
                 manifest.set(name, value);
-            } else if (name.equals("categories") && entry.getValue() instanceof JsonSequenceNode seq) {
+            } else if (name.equals("categories") && entry.getValue() instanceof JsonArray seq) {
                 for (var item : seq) {
                     if (item instanceof ScalarAstNode s) getCategories().add(s.asString());
                 }
-            } else if (name.equals("contributes") && entry.getValue() instanceof JsonMapNode contributes) {
+            } else if (name.equals("contributes") && entry.getValue() instanceof JsonObject contributes) {
                 var themesNode = contributes.get("themes");
-                if (themesNode instanceof JsonSequenceNode themesSeq) {
+                if (themesNode instanceof JsonArray themesSeq) {
                     for (var themeEntry : themesSeq) {
-                        if (themeEntry instanceof JsonMapNode themeMap) {
+                        if (themeEntry instanceof JsonObject themeMap) {
                             VsixThemeInfo themeInfo = new VsixThemeInfo();
-                            for (JsonMapEntryNode propEntry : themeMap.getEntries()) {
+                            for (JsonProperty propEntry : themeMap.getEntries()) {
                                 String propKey = propEntry.getKey();
                                 if (propEntry.getValue() instanceof ScalarAstNode s) {
                                     themeInfo.getProperties().set(propKey, resolveVariables(s.asString()));

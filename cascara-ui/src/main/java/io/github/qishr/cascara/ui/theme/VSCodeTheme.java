@@ -48,10 +48,10 @@ import java.util.ArrayList;
 
 import io.github.qishr.cascara.common.util.Properties;
 import io.github.qishr.cascara.common.util.Property;
-import io.github.qishr.cascara.lang.json.ast.JsonMapNode;
+import io.github.qishr.cascara.lang.json.ast.JsonObject;
 import io.github.qishr.cascara.lang.json.ast.JsonNode;
-import io.github.qishr.cascara.lang.json.ast.JsonScalarNode;
-import io.github.qishr.cascara.lang.json.ast.JsonSequenceNode;
+import io.github.qishr.cascara.lang.json.ast.JsonScalar;
+import io.github.qishr.cascara.lang.json.ast.JsonArray;
 import io.github.qishr.cascara.lang.json.processor.JsonAstParser;
 import io.github.qishr.cascara.lang.json.util.JsonOptions;
 import io.github.qishr.cascara.ui.api.HighlightingToken;
@@ -309,7 +309,7 @@ public class VSCodeTheme {
         try {
             String themeString = getTextResource("theme.json");
             JsonAstParser parser = new JsonAstParser().setOptions(JsonOptions.JSON5);
-            JsonMapNode json = (JsonMapNode) parser.parse(themeString);
+            JsonObject json = (JsonObject) parser.parse(themeString);
             loadUiColors(json, defaultUiColors);
             List<CodeTokenCategory> tmpCats = new ArrayList<>();
             loadSyntaxColors(json, defaultHlColors, getUiColor("editor.foreground", defaultUiColors), tmpCats);
@@ -324,7 +324,7 @@ public class VSCodeTheme {
     //     // try {
     //     //     String jsonString = getVariationJson(defaultVariation);
     //     //     JsonAstParser parser = new JsonAstParser();
-    //     //     JsonMapNode json = (JsonMapNode) parser.parse(jsonString).getRoot();
+    //     //     JsonObject json = (JsonObject) parser.parse(jsonString).getRoot();
     //     //     loadUiColors(json, defaultUiColors);
     //     //     List<CodeTokenCategory> tmpCats = new ArrayList<>();
     //     //     loadSyntaxColors(json, defaultHlColors, getUiColor("editor.foreground", defaultUiColors), tmpCats);
@@ -416,11 +416,11 @@ public class VSCodeTheme {
 
     public void load(String jsonString) throws ColorException {
         JsonAstParser parser = new JsonAstParser().setOptions(JsonOptions.JSON5);
-        JsonMapNode json = (JsonMapNode) parser.parse(jsonString);
+        JsonObject json = (JsonObject) parser.parse(jsonString);
         load(json);
     }
 
-    private void load(JsonMapNode json) throws ColorException {
+    private void load(JsonObject json) throws ColorException {
         categories = new ArrayList<>();
         uiColors = new Properties();
         hlColors = new Properties();
@@ -429,8 +429,8 @@ public class VSCodeTheme {
         addMissingUiColors();
     }
 
-    private static void loadUiColors(JsonMapNode json, Properties colors) {
-        JsonMapNode uiColorsJson = json.getMap("colors");
+    private static void loadUiColors(JsonObject json, Properties colors) {
+        JsonObject uiColorsJson = json.getMap("colors");
         for (String colorId : ColorID.UI_COLORS) {
             String vsid = uiMappingToVSCode.getString(colorId);
             String hexValue = uiColorsJson.getString(vsid);
@@ -438,21 +438,21 @@ public class VSCodeTheme {
         }
     }
 
-    private static void loadSyntaxColors(JsonMapNode json, Properties colors, String defaultTextColor, List<CodeTokenCategory> cats) {
+    private static void loadSyntaxColors(JsonObject json, Properties colors, String defaultTextColor, List<CodeTokenCategory> cats) {
         cats.clear();
-        JsonMapNode syntaxColorsJson = json.getMap("tokenColors");
+        JsonObject syntaxColorsJson = json.getMap("tokenColors");
         for (String key : syntaxColorsJson.keySet()) {
-            JsonMapNode jsonCat = syntaxColorsJson.getMap(key);
+            JsonObject jsonCat = syntaxColorsJson.getMap(key);
             String name = jsonCat.getString("name");
-            JsonSequenceNode jsonScope = jsonCat.getSequence("scope");
-            JsonMapNode jsonSettings = jsonCat.getMap("settings");
+            JsonArray jsonScope = jsonCat.getSequence("scope");
+            JsonObject jsonSettings = jsonCat.getMap("settings");
 
             CodeTokenCategory tc = new CodeTokenCategory();
             tc.setName(name.toLowerCase());
 
             if (jsonScope != null) {
                 for (JsonNode node : jsonScope.getElements()) {
-                    if (node instanceof JsonScalarNode scalar) {
+                    if (node instanceof JsonScalar scalar) {
                         tc.getScope().add(scalar.asString());
                     }
                 }

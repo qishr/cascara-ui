@@ -44,7 +44,7 @@ import io.github.qishr.cascara.ui.api.data.ObservableTableData;
 import io.github.qishr.cascara.ui.data.ObservableObject;
 import io.github.qishr.cascara.ui.data.ObservableTreeNode;
 import io.github.qishr.cascara.ui.data.ColumnMetadata;
-import io.github.qishr.cascara.common.data.TableData;
+import io.github.qishr.cascara.common.data.TabularData;
 import io.github.qishr.cascara.ui.render.RenderDispatcher;
 
 import javafx.application.Platform;
@@ -111,7 +111,7 @@ public class CascaraTable extends StackPane {
 
     @FunctionalInterface
     public interface ContextMenuHandler {
-        ContextMenu requestMenu(TableData data, MouseEvent event);
+        ContextMenu requestMenu(TabularData data, MouseEvent event);
     }
 
     public void setAllowEdit(boolean v) {
@@ -254,7 +254,7 @@ public class CascaraTable extends StackPane {
         return selectedRow;
     }
 
-    public TableData getSelectedRow() {
+    public TabularData getSelectedRow() {
         return selectedRow.get();
     }
 
@@ -271,7 +271,7 @@ public class CascaraTable extends StackPane {
         return tableView.getItems().get(n);
     }
 
-    public ObservableList<? extends TableData> getItems() {
+    public ObservableList<? extends TabularData> getItems() {
         return tableView.getItems();
     }
 
@@ -483,7 +483,7 @@ public class CascaraTable extends StackPane {
         }
     }
 
-    private void onDragDetected(TableRow<? extends TableData> row, MouseEvent event) {
+    private void onDragDetected(TableRow<? extends TabularData> row, MouseEvent event) {
         if (!row.isEmpty()) {
             // movingRow = row;
             WritableImage dragViewImage = row.snapshot(null, null);
@@ -498,7 +498,7 @@ public class CascaraTable extends StackPane {
         }
     }
 
-    private void onDragOver(TableView<? extends TableData> tableView, DragEvent event) {
+    private void onDragOver(TableView<? extends TabularData> tableView, DragEvent event) {
         if (event.getGestureSource() != tableView && event.getDragboard().hasContent(DragDropConstants.DATA_FORMAT)) {
             event.acceptTransferModes(TransferMode.MOVE);
         }

@@ -37,7 +37,6 @@ package io.github.qishr.cascara.ui.schema;
 
 import io.github.qishr.cascara.common.diagnostic.Diagnostic;
 import io.github.qishr.cascara.common.diagnostic.SilentCollectingReporter;
-import io.github.qishr.cascara.common.lang.util.QuoteStyle;
 import io.github.qishr.cascara.schema.structure.ArraySchemaNode;
 import io.github.qishr.cascara.schema.structure.AbstractSchemaNode;
 import io.github.qishr.cascara.schema.structure.ObjectSchemaNode;
@@ -58,8 +57,8 @@ class ValidationRuleTest {
     /**
      * Helper to create a location-aware Scalar node for testing.
      */
-    private YamlScalarNode createMockScalar(Object value, int line, int col) {
-        YamlScalarNode node = new YamlScalarNode(value, QuoteStyle.PLAIN, null);
+    private YamlScalar createMockScalar(Object value, int line, int col) {
+        YamlScalar node = new YamlScalar(value, ScalarStyle.PLAIN, null);
         // Create a token so the node has coordinate metadata
         // YamlToken mockToken = new YamlToken(null, String.valueOf(value), value, 0, line, col);
         // node.setStartToken(mockToken);
@@ -75,10 +74,10 @@ class ValidationRuleTest {
         userSchema.addProperty("age", age);
 
         // Setup Data AST: { age: 16 } at line 5, col 10
-        YamlMapNode dataNode = new YamlMapNode();
-        YamlScalarNode key = createMockScalar("age", 5, 1);
-        YamlScalarNode value = createMockScalar(16, 5, 10);
-        dataNode.put(new YamlMapEntryNode(key, value));
+        YamlMap dataNode = new YamlMap();
+        YamlScalar key = createMockScalar("age", 5, 1);
+        YamlScalar value = createMockScalar(16, 5, 10);
+        dataNode.put(new YamlMapEntry(key, value));
 
         List<Diagnostic> errorMessages = new ArrayList<>();
         SilentCollectingReporter reporter = new SilentCollectingReporter();
@@ -102,7 +101,7 @@ class ValidationRuleTest {
         tagsSchema.setItemTemplate(tagItem);
 
         // Setup Data AST: ["valid", "INVALID123"]
-        YamlSequenceNode seqNode = new YamlSequenceNode();
+        YamlSequence seqNode = new YamlSequence();
         seqNode.add(createMockScalar("valid", 1, 1));
         seqNode.add(createMockScalar("INVALID123", 2, 5));
 

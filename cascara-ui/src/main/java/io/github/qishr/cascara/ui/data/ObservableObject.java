@@ -257,7 +257,7 @@ public class ObservableObject implements Observable, ObservableTableData {
     }
 
     //
-    // ObservableTableData Implementation
+    // ObservableTabularData Implementation
     //
 
     @Override

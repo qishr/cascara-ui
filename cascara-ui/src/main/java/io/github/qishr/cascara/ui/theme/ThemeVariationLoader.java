@@ -35,48 +35,48 @@
 
 package io.github.qishr.cascara.ui.theme;
 
-import io.github.qishr.cascara.lang.yaml.ast.YamlMapEntryNode;
-import io.github.qishr.cascara.lang.yaml.ast.YamlMapNode;
+import io.github.qishr.cascara.lang.yaml.ast.YamlMapEntry;
+import io.github.qishr.cascara.lang.yaml.ast.YamlMap;
 import io.github.qishr.cascara.lang.yaml.ast.YamlNode;
-import io.github.qishr.cascara.lang.yaml.ast.YamlScalarNode;
+import io.github.qishr.cascara.lang.yaml.ast.YamlScalar;
 import io.github.qishr.cascara.ui.color.ColorDefinition;
 
 public class ThemeVariationLoader {
-    public static Variation load(YamlMapNode variationNode, ThemeVariationFactory factory) {
+    public static Variation load(YamlMap variationNode, ThemeVariationFactory factory) {
         Variation variation = factory.createVariation();
         variation.setName(variationNode.getString("name"));
         variation.setPath(variationNode.getString("path"));
 
-        if (variationNode.getMap("baseColors") instanceof YamlMapNode map) {
-            for (YamlMapEntryNode entry : map.getEntries()) {
+        if (variationNode.getMap("baseColors") instanceof YamlMap map) {
+            for (YamlMapEntry entry : map.getEntries()) {
                 ColorDefinition cd = loadDefinition(entry);
                 variation.getBaseColors().put(cd.getId(), cd);
             }
         }
 
-        if (variationNode.getMap("transforms") instanceof YamlMapNode map) {
-            for (YamlMapEntryNode entry : map.getEntries()) {
+        if (variationNode.getMap("transforms") instanceof YamlMap map) {
+            for (YamlMapEntry entry : map.getEntries()) {
                 ColorDefinition cd = loadDefinition(entry);
                 variation.getTransformDefinitions().put(cd.getId(), cd);
             }
         }
 
-        if (variationNode.getMap("paletteColors") instanceof YamlMapNode map) {
-            for (YamlMapEntryNode entry : map.getEntries()) {
+        if (variationNode.getMap("paletteColors") instanceof YamlMap map) {
+            for (YamlMapEntry entry : map.getEntries()) {
                 ColorDefinition cd = loadDefinition(entry);
                 variation.getPaletteColors().put(cd.getId(), cd);
             }
         }
 
-        if (variationNode.getMap("uiColors") instanceof YamlMapNode map) {
-            for (YamlMapEntryNode entry : map.getEntries()) {
+        if (variationNode.getMap("uiColors") instanceof YamlMap map) {
+            for (YamlMapEntry entry : map.getEntries()) {
                 ColorDefinition cd = loadDefinition(entry);
                 variation.getUiColors().put(cd.getId(), cd);
             }
         }
 
-        if (variationNode.getMap("codeColors") instanceof YamlMapNode map) {
-            for (YamlMapEntryNode entry : map.getEntries()) {
+        if (variationNode.getMap("codeColors") instanceof YamlMap map) {
+            for (YamlMapEntry entry : map.getEntries()) {
                 ColorDefinition cd = loadDefinition(entry);
                 variation.getCodeColors().put(cd.getId(), cd);
             }
@@ -85,13 +85,13 @@ public class ThemeVariationLoader {
         return variation;
     }
 
-    private static ColorDefinition loadDefinition(YamlMapEntryNode entry) {
-        if (!(entry.getKey() instanceof YamlScalarNode key)) {
+    private static ColorDefinition loadDefinition(YamlMapEntry entry) {
+        if (!(entry.getKey() instanceof YamlScalar key)) {
             return null;
         }
         String id = key.asString();
         YamlNode valueNode = entry.getValue();
-        if (valueNode instanceof YamlMapNode map) {
+        if (valueNode instanceof YamlMap map) {
             ColorDefinition colordef = new ColorDefinition();
             colordef.setId(nonNull(id));
             colordef.setName(nonNull(map.getString("name")));

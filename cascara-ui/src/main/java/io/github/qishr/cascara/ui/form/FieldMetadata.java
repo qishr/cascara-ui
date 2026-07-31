@@ -43,7 +43,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Consumer;
 
-import io.github.qishr.cascara.common.data.TableData;
+import io.github.qishr.cascara.common.data.TabularData;
 import io.github.qishr.cascara.common.diagnostic.code.GenericDiagnosticCode;
 import io.github.qishr.cascara.schema.SchemaKeyword;
 import io.github.qishr.cascara.common.lang.type.PrimitiveType;
@@ -85,7 +85,7 @@ public class FieldMetadata {
     private boolean allowDelete = false;
     private Collection<ColumnMeta> columnMetas;
     private Runnable addRowHandler;
-    private Consumer<TableData> removeRow;
+    private Consumer<TabularData> removeRow;
     private Runnable onChange;
     private boolean isArray = false;
     private boolean isObject = false;
@@ -202,7 +202,7 @@ public class FieldMetadata {
     public void setDataContext(Map<String,Property<?>> context) { this.dataContext = context; }
     public void setColumnMetaList(Collection<ColumnMeta> v) { columnMetas = v; }
     public void setAddRowHandler(Runnable addRow) { this.addRowHandler = addRow; }
-    public void setRemoveRowHandler(Consumer<TableData> removeRow) { this.removeRow = removeRow; }
+    public void setRemoveRowHandler(Consumer<TabularData> removeRow) { this.removeRow = removeRow; }
     public void setOnChange(Runnable onChange) { this.onChange = onChange; }
     public FieldMetadata setAllowEdit(boolean v) { allowEdit = v; return this; }
     public void setTitle(String v) { title.set(v); }
@@ -223,7 +223,7 @@ public class FieldMetadata {
     public Map<String,Property<?>> getDataContext() { return dataContext; }
     public Collection<ColumnMeta> getColumnMetaList() { return columnMetas; }
     public Runnable getAddRowHandler() { return addRowHandler; }
-    public Consumer<TableData> getRemoveRowHandler() { return removeRow; }
+    public Consumer<TabularData> getRemoveRowHandler() { return removeRow; }
     public Runnable getOnChange() { return onChange; }
     public String getTitle() { return title.get(); }
 
