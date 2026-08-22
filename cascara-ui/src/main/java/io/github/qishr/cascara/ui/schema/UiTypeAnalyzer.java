@@ -37,9 +37,9 @@ package io.github.qishr.cascara.ui.schema;
 
 import java.lang.reflect.Field;
 
-import io.github.qishr.cascara.common.lang.reference.ReferenceMapNode;
-import io.github.qishr.cascara.common.lang.reference.ReferenceScalarNode;
-import io.github.qishr.cascara.common.lang.reference.ReferenceSequenceNode;
+import io.github.qishr.cascara.common.lang.plain.PlainMapNode;
+import io.github.qishr.cascara.common.lang.plain.PlainScalarNode;
+import io.github.qishr.cascara.common.lang.plain.PlainSequenceNode;
 import io.github.qishr.cascara.schema.util.TypeAnalyzer;
 
 public class UiTypeAnalyzer implements TypeAnalyzer {
@@ -50,7 +50,7 @@ public class UiTypeAnalyzer implements TypeAnalyzer {
 
 
     @Override
-    public void analyze(Field field, ReferenceMapNode node) {
+    public void analyze(Field field, PlainMapNode node) {
 
         if (field.isAnnotationPresent(FileConstraint.class)) {
             FileConstraint anno = field.getAnnotation(FileConstraint.class);
@@ -65,7 +65,7 @@ public class UiTypeAnalyzer implements TypeAnalyzer {
             // TODO: initialDirectory, mustExist
 
             if (anno.extensions().length > 0) {
-                ReferenceSequenceNode extNode = new ReferenceSequenceNode();
+                PlainSequenceNode extNode = new PlainSequenceNode();
                 for (String ext : anno.extensions()) extNode.add(scalar(ext));
                 node.put(EXTENSIONS, extNode);
             }
@@ -73,7 +73,7 @@ public class UiTypeAnalyzer implements TypeAnalyzer {
 
         if (field.isAnnotationPresent(OptionConstraint.class)) {
             OptionConstraint anno = field.getAnnotation(OptionConstraint.class);
-            ReferenceMapNode optionMeta = new ReferenceMapNode();
+            PlainMapNode optionMeta = new PlainMapNode();
             optionMeta.put(OptionConstraint.NAME, scalar(anno.provider()));
             optionMeta.put(OptionConstraint.PARAMETER, scalar(anno.parameter()));
             node.put(OptionConstraint.UI_OPTION_PROVIDER, optionMeta);
@@ -91,10 +91,10 @@ public class UiTypeAnalyzer implements TypeAnalyzer {
     }
 
     @Override
-    public void analyze(Class<?> clazz, ReferenceMapNode node) {
+    public void analyze(Class<?> clazz, PlainMapNode node) {
     }
 
-    private ReferenceScalarNode scalar(Object value) {
-        return new ReferenceScalarNode(value);
+    private PlainScalarNode scalar(Object value) {
+        return new PlainScalarNode(value);
     }
 }

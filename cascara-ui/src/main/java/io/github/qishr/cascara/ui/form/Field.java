@@ -316,7 +316,7 @@ public class Field extends AbstractFormComponent {
 
         List<String> errorMessages = new ArrayList<>();
         SilentCollectingReporter reporter = new SilentCollectingReporter();
-        reporter.setProblemCollector(problem -> {
+        reporter.setProblemConsumer(problem -> {
             errorMessages.add(problem.getMessage());
         });
         boolean hasError = !onValidate.performValidation(value, path, schema);

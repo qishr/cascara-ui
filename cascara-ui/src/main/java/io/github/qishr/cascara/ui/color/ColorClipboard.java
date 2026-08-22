@@ -58,7 +58,7 @@ public class ColorClipboard {
         // YamlSerializerImpl serializer = new YamlSerializerImpl();
         String yaml;
         try {
-            yaml = getSerializer().toText(definition);
+            yaml = getSerializer().toString(definition);
         } catch (SerializerException e) {
             System.err.println("SerializerException: " + e.getMessage());
             return;
@@ -76,7 +76,7 @@ public class ColorClipboard {
         if (clipboard.hasContent(ColorDefinition.DATA_FORMAT)) {
             String yaml = (String) clipboard.getContent(ColorDefinition.DATA_FORMAT);
             try {
-                return getSerializer().fromText(yaml, ColorDefinition.class);
+                return getSerializer().fromString(yaml, ColorDefinition.class);
             } catch (SerializerException e) {
                 System.err.println("SerializerException: " + e.getMessage());
                 return null;

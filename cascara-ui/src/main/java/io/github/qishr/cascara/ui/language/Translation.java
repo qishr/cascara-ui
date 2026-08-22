@@ -38,14 +38,12 @@ package io.github.qishr.cascara.ui.language;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.github.qishr.cascara.common.lang.annotation.AnyGetter;
-import io.github.qishr.cascara.common.lang.annotation.AnySetter;
-import io.github.qishr.cascara.common.lang.annotation.DataIgnore;
-import io.github.qishr.cascara.common.lang.annotation.Serializable;
+import io.github.qishr.cascara.common.annotation.AnyGetter;
+import io.github.qishr.cascara.common.annotation.AnySetter;
+import io.github.qishr.cascara.common.annotation.DataIgnore;
 import io.github.qishr.cascara.schema.annotation.SchemaDefinition;
 import io.github.qishr.cascara.schema.annotation.SchemaProperty;
 
-@Serializable
 @SchemaDefinition
 public class Translation {
 
@@ -73,7 +71,6 @@ public class Translation {
         return meta.title;
     }
 
-    @Serializable
     @SchemaDefinition
     public static class Meta {
         @SchemaProperty

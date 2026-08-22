@@ -42,9 +42,15 @@ import io.github.qishr.cascara.schema.structure.AbstractSchemaNode;
 import io.github.qishr.cascara.schema.structure.ObjectSchemaNode;
 import io.github.qishr.cascara.schema.structure.ScalarSchemaNode;
 import io.github.qishr.cascara.common.lang.type.PrimitiveType;
+import io.github.qishr.cascara.lang.yaml.ast.YamlMap;
+import io.github.qishr.cascara.lang.yaml.ast.YamlMapEntry;
+import io.github.qishr.cascara.lang.yaml.ast.YamlScalar;
+import io.github.qishr.cascara.lang.yaml.ast.YamlSequence;
+import io.github.qishr.cascara.lang.yaml.token.YamlToken;
+import io.github.qishr.cascara.lang.yaml.token.YamlTokenType;
+import io.github.qishr.cascara.lang.yaml.util.ScalarStyle;
 import io.github.qishr.cascara.schema.rule.MinValueRule;
 import io.github.qishr.cascara.schema.rule.RegexRule;
-import io.github.qishr.cascara.lang.yaml.ast.*;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -58,10 +64,9 @@ class ValidationRuleTest {
      * Helper to create a location-aware Scalar node for testing.
      */
     private YamlScalar createMockScalar(Object value, int line, int col) {
-        YamlScalar node = new YamlScalar(value, ScalarStyle.PLAIN, null);
         // Create a token so the node has coordinate metadata
-        // YamlToken mockToken = new YamlToken(null, String.valueOf(value), value, 0, line, col);
-        // node.setStartToken(mockToken);
+        YamlToken mockToken = new YamlToken(line, col, 0, YamlTokenType.SCALAR, String.valueOf(value));
+        YamlScalar node = new YamlScalar(mockToken, PrimitiveType.of(value), null);
         return node;
     }
 
@@ -81,7 +86,7 @@ class ValidationRuleTest {
 
         List<Diagnostic> errorMessages = new ArrayList<>();
         SilentCollectingReporter reporter = new SilentCollectingReporter();
-        reporter.setProblemCollector(p -> errorMessages.add(p));
+        reporter.setProblemConsumer(p -> errorMessages.add(p));
 
         boolean valid = userSchema.validate(dataNode, "#/user", reporter);
 
@@ -107,7 +112,7 @@ class ValidationRuleTest {
 
         List<Diagnostic> result = new ArrayList<>();
         SilentCollectingReporter reporter = new SilentCollectingReporter();
-        reporter.setProblemCollector(p -> result.add(p));
+        reporter.setProblemConsumer(p -> result.add(p));
 
         // ValidationResult result = new ValidationResult();
         tagsSchema.validate(seqNode, "#/tags", reporter);

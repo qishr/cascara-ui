@@ -166,7 +166,7 @@ public class ObservableObject implements Observable, ObservableTableData {
         Object fieldValue = null;
         try {
             fieldValue = field.get(this);
-        } catch (IllegalArgumentException | IllegalAccessException _) {
+        } catch (Throwable _) {
             // DO NOT use GlobalReporter here. Since this class is used in the logger,
             // it would get into an infinite loop of failing to report itself.
             System.err.println("Error setting value of " + propertyName + " in " + getClass().getSimpleName());
@@ -182,7 +182,7 @@ public class ObservableObject implements Observable, ObservableTableData {
             property = new SimpleObjectProperty<>(this, propertyName);
             try {
                 field.set(this, property);
-            } catch (IllegalArgumentException | IllegalAccessException e) {
+            } catch (Throwable e) {
                 // The field value was unset and we can't set it.
                 throw new UiDataException(e, UiDiagnosticCode.CANNOT_SET_VALUE, propertyName, e.getMessage());
             }

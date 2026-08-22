@@ -36,11 +36,9 @@
 package io.github.qishr.cascara.ui.color;
 import java.util.UUID;
 
-import io.github.qishr.cascara.common.lang.annotation.DataField;
-import io.github.qishr.cascara.common.lang.annotation.Serializable;
+import io.github.qishr.cascara.common.annotation.DataField;
 import javafx.scene.input.DataFormat;
 
-@Serializable
 public class ColorDefinition {
     private static final String NAME_PLACEHOLDER = "<name>";
     public static final DataFormat DATA_FORMAT = new DataFormat("application/x-cascara-colordef");
