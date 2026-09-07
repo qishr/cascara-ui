@@ -58,12 +58,6 @@ public class ThemeVariation implements Variation {
     private String name = "";
     private String path = "";
 
-    // private ColorDefinitionGroup baseColors = new ColorDefinitionGroup(ColorDefinitionGroup.BASE_COLORS);
-    // private ColorDefinitionGroup transforms = new ColorDefinitionGroup(ColorDefinitionGroup.TRANSFORMS);
-    // private ColorDefinitionGroup paletteColors = new ColorDefinitionGroup(ColorDefinitionGroup.PALETTE_COLORS);
-    // private ColorDefinitionGroup uiColors = new ColorDefinitionGroup(ColorDefinitionGroup.UI_COLORS);
-    // private ColorDefinitionGroup codeColors = new ColorDefinitionGroup(ColorDefinitionGroup.CODE_COLORS);
-
     private Map<String, ColorDefinition> baseColors = new HashMap<>();
     private Map<String, ColorDefinition> transforms = new HashMap<>();
     private Map<String, ColorDefinition> paletteColors = new HashMap<>();
@@ -71,11 +65,6 @@ public class ThemeVariation implements Variation {
     private Map<String, ColorDefinition> codeColors = new HashMap<>();
 
     public ThemeVariation() {
-        // for (String colorId : ColorID.PALETTE_COLORS) {
-        //     ColorDefinition colordef = new ColorDefinition();
-        //     colordef.setId(colorId);
-        //     paletteColors.add(colordef);
-        // }
     }
 
     @Override
@@ -160,8 +149,6 @@ public class ThemeVariation implements Variation {
     }
 
     public void setPaletteColor(String id, String hexColor) {
-        // ColorDefinition colordef = paletteColors.getOrAdd(id);
-        // colordef.setHexColor(hexColor);
         ColorDefinition colordef = paletteColors.get(id);
         if (colordef == null) {
             colordef = new ColorDefinition();
@@ -179,8 +166,6 @@ public class ThemeVariation implements Variation {
     }
 
     public void setUiColor(String id, String hexColor) {
-        // ColorDefinition colordef = uiColors.getOrAdd(id);
-        // colordef.setHexColor(hexColor);
         ColorDefinition colordef = uiColors.get(id);
         if (colordef == null) {
             colordef = new ColorDefinition();
@@ -198,8 +183,6 @@ public class ThemeVariation implements Variation {
     }
 
     public void setCodeColor(String id, String hexColor) {
-        // ColorDefinition colordef = codeColors.getOrAdd(id);
-        // colordef.setHexColor(hexColor);
         ColorDefinition colordef = codeColors.get(id);
         if (colordef == null) {
             colordef = new ColorDefinition();

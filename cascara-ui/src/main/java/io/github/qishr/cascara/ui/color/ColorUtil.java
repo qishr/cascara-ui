@@ -142,6 +142,9 @@ public class ColorUtil {
         definition.setHexColor(toRGBHexCode(result));
     }
 
+    /// Gets the theme variation's palette color definition that matches the
+    /// specified definition, then processes it and sets the specified
+    /// definition's hex color to the result.
     private static void lookupPaletteColor(ColorDefinition definition, Variation variation) throws ColorException {
         ColorDefinition paletteColor = variation.getPaletteColor(definition.getPaletteColorId());
         if (paletteColor != null) {
@@ -150,6 +153,9 @@ public class ColorUtil {
         }
     }
 
+    /// Gets the theme variation's base color definition that matches the
+    /// specified definition, then processes it and sets the specified
+    /// definition's hex color to the result.
     private static void lookupBaseColor(ColorDefinition definition, Variation variation) throws ColorException {
         ColorDefinition baseColor = variation.getBaseColor(definition.getBaseColorId());
         if (baseColor != null) {

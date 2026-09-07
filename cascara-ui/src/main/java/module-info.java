@@ -34,16 +34,17 @@
 
 
 module cascara.ui {
-    requires transitive cascara.common;
-    requires transitive cascara.common.io;
     requires cascara.lang.json;
     requires cascara.lang.xml;
+    requires javafx.base;
+    requires javafx.graphics;
+
+    requires transitive cascara.common;
+    requires transitive cascara.common.io;
+    requires transitive cascara.format.vsix;
     requires transitive cascara.lang.yaml;
     requires transitive cascara.schema;
-
-    requires javafx.base;
     requires transitive javafx.controls;
-    requires javafx.graphics;
 
     exports io.github.qishr.cascara.ui.api;
     exports io.github.qishr.cascara.ui.api.data;

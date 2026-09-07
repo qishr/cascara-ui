@@ -48,6 +48,9 @@ import io.github.qishr.cascara.common.io.filewatcher.FileWatcher;
 import io.github.qishr.cascara.common.io.filewatcher.FileChangeHandler;
 import io.github.qishr.cascara.common.io.filewatcher.FileChangeType;
 import io.github.qishr.cascara.common.util.Properties;
+import io.github.qishr.cascara.format.vsix.VsixMetadata;
+import io.github.qishr.cascara.format.vsix.VsixPackage;
+// import io.github.qishr.cascara.ui.vsix.VsixPackageInfo;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -148,10 +151,10 @@ public class VsixPackageStore implements AutoCloseable {
     private VsixPackageInfo readPackageInfo(Path path) {
         try {
             VsixPackage pkg = VsixPackage.load(path);
-            Properties manifest = pkg.getManifest();
+            VsixMetadata manifest = pkg.getMetadata();
 
-            String name = manifest.getString("name");
-            String displayName = manifest.getString("displayName");
+            String name = manifest.getName();
+            String displayName = manifest.getDisplayName();
 
             if (name == null || displayName == null) {
                 return null;

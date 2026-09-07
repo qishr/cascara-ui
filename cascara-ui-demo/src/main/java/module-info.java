@@ -36,6 +36,7 @@
 module cascara.ui.demo {
     requires transitive cascara.common;
     requires transitive cascara.common.io;
+    requires cascara.format.vsix;
     requires cascara.lang.json;
     requires cascara.lang.xml;
     requires transitive cascara.lang.yaml;

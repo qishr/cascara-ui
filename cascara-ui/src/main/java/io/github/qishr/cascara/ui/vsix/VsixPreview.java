@@ -46,8 +46,13 @@ import io.github.qishr.cascara.common.io.IOUtils;
 import io.github.qishr.cascara.common.util.Properties;
 import io.github.qishr.cascara.common.content.ResourceContent;
 import io.github.qishr.cascara.common.diagnostic.LocalizableIOException;
+import io.github.qishr.cascara.common.diagnostic.LocalizableRuntimeException;
 import io.github.qishr.cascara.common.diagnostic.code.GenericDiagnosticCode;
 import io.github.qishr.cascara.common.lang.ast.ScalarAstNode;
+
+import io.github.qishr.cascara.format.vsix.VsixPackage;
+import io.github.qishr.cascara.format.vsix.VsixThemeInfo;
+
 import io.github.qishr.cascara.lang.json.processor.JsonAstParser;
 import io.github.qishr.cascara.lang.json.util.JsonOptions;
 import io.github.qishr.cascara.lang.json.ast.JsonProperty;
@@ -55,54 +60,63 @@ import io.github.qishr.cascara.lang.json.ast.JsonObject;
 import io.github.qishr.cascara.lang.json.ast.JsonNode;
 import io.github.qishr.cascara.lang.json.ast.JsonArray;
 import io.github.qishr.cascara.lang.xml.processor.XmlAstParser;
-import io.github.qishr.cascara.schema.exception.SchemaDiagnosticCode;
-import io.github.qishr.cascara.ui.data.UiDataException;
+import io.github.qishr.cascara.schema.diagnostic.SchemaDiagnosticCode;
+import io.github.qishr.cascara.schema.diagnostic.SchemaException;
 import io.github.qishr.cascara.lang.xml.ast.XmlNode;
 
-public class VsixPackage extends ArchiveFile { // implements Importable {
+public class VsixPreview {
     private Properties properties = new Properties();
     private Properties manifest = new Properties();
+
     private List<String> categories = new ArrayList<>();
     private List<VsixThemeInfo> themes = new ArrayList<>();
+
     private URI downloadOrigin = null;
     private URI previewUri = null;
 
-    public static VsixPackage load(Path vsixPath) throws LocalizableIOException {
-        String packageInfo = new String(extractFile(vsixPath, "extension/package.json"));
-        String vsixManifest = new String(extractFile(vsixPath, "extension.vsixmanifest"));
-        VsixPackage vsix;
-        // try {
-            vsix = new VsixPackage(vsixPath);
-        // } catch (ParserException e) {
-        //     throw new UiDataException("Error parsing JSON: " + e.getMessage(), e);
-        // }
-        vsix.parseManifest(vsixManifest);
-        vsix.parsePackageManifest(packageInfo);
-        return vsix;
+    private VsixPreview(Path vsixPath) throws LocalizableIOException {
+        // super(vsixPath, create);
     }
 
-    private VsixPackage(Path vsixPath) {
-        super(vsixPath);
-    }
+    //
+    // Static Methods
+    //
 
-    public static VsixPackage fromJson(String jsonString) {
+    // public static VsixPreview load(Path vsixPath) throws LocalizableIOException {
+    //     String packageInfo = new String(extractFile(vsixPath, "extension/package.json"));
+    //     String vsixManifest = new String(extractFile(vsixPath, "extension.vsixmanifest"));
+    //     VsixPackage vsix = new VsixPackage(vsixPath, false);
+    //     vsix.parseManifest(vsixManifest);
+    //     vsix.parsePackageManifest(packageInfo);
+    //     return vsix;
+    // }
+
+    // public static VsixPreview create(Path vsixPath) throws LocalizableIOException {
+    //     VsixPackage vsix = new VsixPackage(vsixPath, true);
+    //     return vsix;
+    // }
+
+    public static VsixPreview fromJson(String jsonString) {
         JsonAstParser JsonAstParser = new JsonAstParser().setOptions(JsonOptions.JSON5);
         JsonObject json = null;
-        // try {
-            if (JsonAstParser.parse(jsonString) instanceof JsonObject m) {
-                json = m;
-            } else {
-                throw new UiDataException(SchemaDiagnosticCode.ROOT_MUST_BE_MAP);
-            }
-        // } catch (ParserException e) {
-        //     throw new UiDataException("Error parsing JSON: " + e.getMessage(), e);
-        // }
+        if (JsonAstParser.parse(jsonString) instanceof JsonObject m) {
+            json = m;
+        } else {
+            throw new SchemaException(SchemaDiagnosticCode.ROOT_MUST_BE_MAP);
+        }
 
         // Use getEntries() from MappingAstNode
         io.github.qishr.cascara.lang.json.ast.JsonNode extensionFiles =
             (io.github.qishr.cascara.lang.json.ast.JsonNode) json.get("files");
 
-        VsixPackage vsix = new VsixPackage(null);
+            VsixPreview vsix;
+        try {
+            vsix = new VsixPreview(null);
+        } catch (LocalizableIOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return null;
+        }
 
         if (extensionFiles instanceof JsonObject filesMap) {
             vsix.getProperties().set("iconUri", getPropertyAsString(filesMap, "icon"));
@@ -135,80 +149,15 @@ public class VsixPackage extends ArchiveFile { // implements Importable {
             ResourceContent manifest = IOUtils.getResource(URI.create(manifestUri));
             vsix.parsePackageManifest(manifest.content());
         } catch (IOException e) {
-            throw new UiDataException(e, GenericDiagnosticCode.ERROR, "Error parsing VSIX from URL: " + e.getMessage(), e);
+            throw new LocalizableRuntimeException(e, GenericDiagnosticCode.ERROR, "Error parsing VSIX from URL: " + e.getMessage(), e);
         }
 
-
-        // String displayName = json.get("displayName").asText();
         return vsix;
     }
 
-    private static String getPropertyAsString(JsonObject node, String name) {
-        if (node == null) return "";
-        var valueNode = node.get(name);
-        if (valueNode instanceof ScalarAstNode scalar) {
-            return scalar.asString();
-        }
-        return "";
-    }
-
-    private void parsePackageManifest(String jsonString) throws LocalizableIOException {
-        if (jsonString == null || jsonString.isBlank()) return;
-        JsonAstParser JsonAstParser = new JsonAstParser().setOptions(JsonOptions.JSON5);
-        JsonObject json;
-        // try {
-            JsonNode rootNode = JsonAstParser.parse(jsonString);
-            if (rootNode instanceof JsonObject m) {
-                json = m;
-            } else {
-                throw new UiDataException(SchemaDiagnosticCode.ROOT_MUST_BE_MAP);
-            }
-        // } catch (ParserException e) {
-        //     throw new UiDataException("Error parsing JSON: " + e.getMessage(), e);
-        // }
-
-        for (JsonProperty entry : json.getEntries()) {
-            String name = entry.getKey();
-            if (entry.getValue() instanceof ScalarAstNode scalar) {
-                String value = resolveVariables(scalar.asString());
-                manifest.set(name, value);
-            } else if (name.equals("categories") && entry.getValue() instanceof JsonArray seq) {
-                for (var item : seq) {
-                    if (item instanceof ScalarAstNode s) getCategories().add(s.asString());
-                }
-            } else if (name.equals("contributes") && entry.getValue() instanceof JsonObject contributes) {
-                var themesNode = contributes.get("themes");
-                if (themesNode instanceof JsonArray themesSeq) {
-                    for (var themeEntry : themesSeq) {
-                        if (themeEntry instanceof JsonObject themeMap) {
-                            VsixThemeInfo themeInfo = new VsixThemeInfo();
-                            for (JsonProperty propEntry : themeMap.getEntries()) {
-                                String propKey = propEntry.getKey();
-                                if (propEntry.getValue() instanceof ScalarAstNode s) {
-                                    themeInfo.getProperties().set(propKey, resolveVariables(s.asString()));
-                                }
-                            }
-                            getThemes().add(themeInfo);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private String resolveVariables(String value) {
-        // TODO: Improve this
-        if (value.startsWith("%")) {
-            if (value.length() > 2) {
-                String varName = value.substring(1, value.length() - 1);
-                String varValue = properties.getString(varName);
-                if (varValue != null) {
-                    value = varValue;
-                }
-            }
-        }
-        return value;
-    }
+    //
+    // Getters
+    //
 
     public URI getDownloadUri() {
         return downloadOrigin;
@@ -232,9 +181,9 @@ public class VsixPackage extends ArchiveFile { // implements Importable {
         return properties.getString("description");
     }
 
-    public Path getPath() {
-        return archivePath;
-    }
+    // public Path getPath() {
+    //     return archivePath;
+    // }
 
     public Properties getProperties() {
         return properties;
@@ -282,7 +231,87 @@ public class VsixPackage extends ArchiveFile { // implements Importable {
             }
         }catch (Exception e) {
             e.printStackTrace();
-            throw new UiDataException(e, GenericDiagnosticCode.ERROR, e.getMessage());
+            throw new LocalizableRuntimeException(e, GenericDiagnosticCode.ERROR, e.getMessage());
         }
     }
+
+
+    // .setName(getManifestName().get())
+    // .setVersion(getManifestVersion().get())
+    // .setDisplayName(getManifestDisplayName().getOrNull())
+    // .setDescription(getManifestDescription().getOrNull())
+    // .setPublisher(getManifestPublisher().getOrNull())
+    // .setIcon(getManifestIcon().getOrNull())
+    // .setCategories(getCategories().getOrElse(java.util.Collections.emptyList()))
+    // .setEngines(getEngines().getOrElse(java.util.Collections.emptyMap()))
+    // .setRepository(getRepository().getOrElse(java.util.Collections.emptyMap()));
+
+
+    private void parsePackageManifest(String jsonString) throws LocalizableIOException {
+        if (jsonString == null || jsonString.isBlank()) return;
+        JsonAstParser JsonAstParser = new JsonAstParser().setOptions(JsonOptions.JSON5);
+        JsonObject json;
+        JsonNode rootNode = JsonAstParser.parse(jsonString);
+        if (rootNode instanceof JsonObject m) {
+            json = m;
+        } else {
+            throw new SchemaException(SchemaDiagnosticCode.ROOT_MUST_BE_MAP);
+        }
+
+        for (JsonProperty entry : json.getEntries()) {
+            String name = entry.getKey();
+            if (entry.getValue() instanceof ScalarAstNode scalar) {
+                String value = resolveVariables(scalar.asString());
+                manifest.set(name, value);
+            } else if (name.equals("categories") && entry.getValue() instanceof JsonArray seq) {
+                for (var item : seq) {
+                    if (item instanceof ScalarAstNode s) getCategories().add(s.asString());
+                }
+            } else if (name.equals("contributes") && entry.getValue() instanceof JsonObject contributes) {
+                var themesNode = contributes.get("themes");
+                if (themesNode instanceof JsonArray themesSeq) {
+                    for (var themeEntry : themesSeq) {
+                        if (themeEntry instanceof JsonObject themeMap) {
+                            VsixThemeInfo themeInfo = new VsixThemeInfo();
+                            for (JsonProperty propEntry : themeMap.getEntries()) {
+                                String propKey = propEntry.getKey();
+                                if (propEntry.getValue() instanceof ScalarAstNode s) {
+                                    themeInfo.getProperties().set(propKey, resolveVariables(s.asString()));
+                                }
+                            }
+                            getThemes().add(themeInfo);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    //
+    //
+    //
+
+    private static String getPropertyAsString(JsonObject node, String name) {
+        if (node == null) return "";
+        var valueNode = node.get(name);
+        if (valueNode instanceof ScalarAstNode scalar) {
+            return scalar.asString();
+        }
+        return "";
+    }
+
+    private String resolveVariables(String value) {
+        // TODO: Improve this
+        if (value.startsWith("%")) {
+            if (value.length() > 2) {
+                String varName = value.substring(1, value.length() - 1);
+                String varValue = properties.getString(varName);
+                if (varValue != null) {
+                    value = varValue;
+                }
+            }
+        }
+        return value;
+    }
+
 }

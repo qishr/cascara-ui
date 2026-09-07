@@ -40,6 +40,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.github.qishr.cascara.common.util.Properties;
+import io.github.qishr.cascara.format.vsix.VsixPackage;
+import io.github.qishr.cascara.format.vsix.VsixThemeInfo;
 
 public class VsixPackageInfo {
     private String name;

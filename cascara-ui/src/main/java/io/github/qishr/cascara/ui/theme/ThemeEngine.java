@@ -107,9 +107,9 @@ import io.github.qishr.cascara.ui.style.standard.ToolTipStyle;
 import io.github.qishr.cascara.ui.style.standard.TreeTableViewStyle;
 import io.github.qishr.cascara.ui.style.standard.TreeViewStyle;
 import io.github.qishr.cascara.ui.theme.CodeColorsStyleSheet.StyleClass;
-import io.github.qishr.cascara.ui.vsix.VsixPackage;
+import io.github.qishr.cascara.format.vsix.VsixPackage;
 import io.github.qishr.cascara.ui.vsix.VsixPackageStore;
-import io.github.qishr.cascara.ui.vsix.VsixThemeInfo;
+import io.github.qishr.cascara.format.vsix.VsixThemeInfo;
 
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
@@ -456,8 +456,8 @@ public class ThemeEngine {
         }
 
         CascaraTheme theme = new CascaraTheme();
-        theme.setName(vsixPackage.getDisplayName());
-        for (VsixThemeInfo themeInfo : vsixPackage.getThemes()) {
+        theme.setName(vsixPackage.getMetadata().getDisplayName());
+        for (VsixThemeInfo themeInfo : vsixPackage.getMetadata().getThemes()) {
            String themePath = themeInfo.getPath();
            Path relativePath = Path.of(EXTENSION, themePath);
            try {

@@ -201,8 +201,6 @@ public class UiLocalizer implements ObservableLocalizer {
     public boolean registerTranslations(InputStream yamlStream) {
         try {
             YamlSerializer serializer = new YamlSerializer();
-            // serializer.setReporter(new StandardReporter().setLevel(Level.TRACE).setDisableFlush(false));
-
             Translation translation = serializer.fromStream(yamlStream, Translation.class);
             String languageTag = translation.getLanguageTag();
             if (languageTag == null) {
@@ -214,13 +212,10 @@ public class UiLocalizer implements ObservableLocalizer {
                 translations = addLanguage(translation);
             }
             mergeMaps(translations, translation.getTranslations());
-
             if (usingAutoLocale) {
                 setActiveLocale(HybridLocaleDetector.detectOSLocale());
             }
-
             return true;
-
         } catch (Exception e) {
             REPORTER.error(e, GenericDiagnosticCode.ERROR, "Failed to load translations: " + e.getMessage());
             return false;
