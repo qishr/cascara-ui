@@ -38,7 +38,7 @@ package io.github.qishr.cascara.ui.theme;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.qishr.cascara.common.util.Property;
+import io.github.qishr.cascara.common.property.Property;
 
 public class CodeTokenCategory {
     String name = "";

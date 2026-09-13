@@ -342,7 +342,7 @@ public class ObservableObject implements Observable, ObservableTableData {
         return contextMap;
     }
 
-    public Object get(String key) {
+    public Object getValue(String key) {
         if (key.equals("self")) {
             return this;
         }

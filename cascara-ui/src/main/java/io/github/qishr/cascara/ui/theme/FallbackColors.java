@@ -39,7 +39,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.github.qishr.cascara.common.util.Properties;
+import io.github.qishr.cascara.common.property.Properties;
 import io.github.qishr.cascara.ui.color.ColorException;
 import io.github.qishr.cascara.ui.color.ColorUtil;
 import javafx.scene.paint.Color;

@@ -46,8 +46,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-import io.github.qishr.cascara.common.util.Properties;
-import io.github.qishr.cascara.common.util.Property;
+import io.github.qishr.cascara.common.property.Properties;
+import io.github.qishr.cascara.common.property.Property;
 import io.github.qishr.cascara.lang.json.ast.JsonObject;
 import io.github.qishr.cascara.lang.json.ast.JsonNode;
 import io.github.qishr.cascara.lang.json.ast.JsonScalar;
@@ -340,10 +340,10 @@ public class VSCodeTheme {
     public ThemeVariation getVariation() throws ColorException {
         ThemeVariation variation = new ThemeVariation();
         for (Property colorProp : uiColors.asList()) {
-            variation.setUiColor(colorProp.getName(), colorProp.getString());
+            variation.setUiColor(colorProp.getName(), colorProp.asString());
         }
         for (Property colorProp : hlColors.asList()) {
-            variation.setCodeColor(colorProp.getName(), colorProp.getString());
+            variation.setCodeColor(colorProp.getName(), colorProp.asString());
         }
         addDefaultPaletteColors(variation);
         return variation;
@@ -390,7 +390,7 @@ public class VSCodeTheme {
     public static String getUiColor(String name, Properties colors) throws ColorException {
         for (Property prop : colors.asList()) {
             if (prop.getName().equals(name)) {
-                return prop.getString();
+                return prop.asString();
             }
         }
 
@@ -532,7 +532,7 @@ public class VSCodeTheme {
 
     private void addMissingUiColors() throws ColorException {
         for (String id : ColorID.UI_COLORS) {
-            Property colorprop = uiColors.get(id);
+            Property colorprop = uiColors.getValue(id);
             if (colorprop == null) {
                 colorprop = new Property(id);
                 uiColors.add(colorprop);

@@ -43,7 +43,7 @@ import java.util.*;
 
 import io.github.qishr.cascara.common.util.ArchiveFile;
 import io.github.qishr.cascara.common.io.IOUtils;
-import io.github.qishr.cascara.common.util.Properties;
+import io.github.qishr.cascara.common.property.Properties;
 import io.github.qishr.cascara.common.content.ResourceContent;
 import io.github.qishr.cascara.common.diagnostic.LocalizableIOException;
 import io.github.qishr.cascara.common.diagnostic.LocalizableRuntimeException;

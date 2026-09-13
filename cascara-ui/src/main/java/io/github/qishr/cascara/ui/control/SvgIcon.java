@@ -43,7 +43,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import io.github.qishr.cascara.common.lang.exception.ParserException;
+import io.github.qishr.cascara.common.lang.diagnostic.ParserException;
 import io.github.qishr.cascara.lang.xml.ast.XmlNode;
 import io.github.qishr.cascara.lang.xml.processor.XmlAstParser;
 import io.github.qishr.cascara.ui.style.custom.SvgIconStyle;

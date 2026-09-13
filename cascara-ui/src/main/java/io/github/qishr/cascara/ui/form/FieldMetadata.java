@@ -45,12 +45,12 @@ import java.util.function.Consumer;
 
 import io.github.qishr.cascara.common.data.TabularData;
 import io.github.qishr.cascara.common.diagnostic.code.GenericDiagnosticCode;
-import io.github.qishr.cascara.schema.SchemaKeyword;
 import io.github.qishr.cascara.common.lang.type.PrimitiveType;
 import io.github.qishr.cascara.schema.rule.EnumRule;
 import io.github.qishr.cascara.schema.rule.ValidationRule;
 import io.github.qishr.cascara.schema.structure.ArraySchemaNode;
 import io.github.qishr.cascara.schema.structure.SchemaNode;
+import io.github.qishr.cascara.schema.util.SchemaKeyword;
 import io.github.qishr.cascara.ui.data.UiDataException;
 import io.github.qishr.cascara.ui.option.OptionProvider;
 import io.github.qishr.cascara.ui.option.OptionProviderRegistry;
@@ -61,7 +61,6 @@ import io.github.qishr.cascara.ui.schema.DisplayToggle;
 import io.github.qishr.cascara.ui.schema.Hidden;
 import io.github.qishr.cascara.ui.schema.ItemsEditableConstraint;
 import io.github.qishr.cascara.ui.schema.OptionConstraint;
-
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;

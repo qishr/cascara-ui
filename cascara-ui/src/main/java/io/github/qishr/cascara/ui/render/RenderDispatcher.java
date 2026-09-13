@@ -193,7 +193,7 @@ public class RenderDispatcher {
             String result = displayStringFormat;
             Set<String> propNames = entity.getPropertyNames();
             for (String propName : propNames) {
-                Object value = entity.get(propName);
+                Object value = entity.getValue(propName);
                 if (value == null) continue;
 
                 String replacement = "";

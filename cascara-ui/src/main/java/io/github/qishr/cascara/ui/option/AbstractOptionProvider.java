@@ -38,7 +38,7 @@ package io.github.qishr.cascara.ui.option;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.qishr.cascara.common.util.Properties;
+import io.github.qishr.cascara.common.property.Properties;
 import io.github.qishr.cascara.ui.api.ServicePropertyName;
 import io.github.qishr.cascara.ui.api.render.ScalarRenderer;
 

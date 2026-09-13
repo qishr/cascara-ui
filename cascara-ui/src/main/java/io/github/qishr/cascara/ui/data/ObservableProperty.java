@@ -35,7 +35,7 @@
 
 package io.github.qishr.cascara.ui.data;
 
-import io.github.qishr.cascara.common.util.Property;
+import io.github.qishr.cascara.common.property.Property;
 import io.github.qishr.cascara.schema.annotation.SchemaDefinition;
 import io.github.qishr.cascara.schema.annotation.SchemaProperty;
 

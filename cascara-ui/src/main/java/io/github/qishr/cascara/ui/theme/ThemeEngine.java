@@ -446,35 +446,32 @@ public class ThemeEngine {
         Path packagesDir = cascaraDir.resolve("packages");
         Path packagePath = packagesDir.resolve(fileName);
 
-        VsixPackage vsixPackage;
-        try {
-            vsixPackage = VsixPackage.load(packagePath);
-        } catch (LocalizableIOException e) {
+        try (VsixPackage vsixPackage = VsixPackage.open(packagePath)) {
+
+            CascaraTheme theme = new CascaraTheme();
+            theme.setName(vsixPackage.getDisplayName());
+            for (VsixThemeInfo themeInfo : vsixPackage.getThemes()) {
+                String themePath = themeInfo.getPath();
+                Path relativePath = Path.of(EXTENSION, themePath);
+                String pathString = relativePath.toString();
+                String themeString = new String(vsixPackage.extractFile(pathString));
+                VSCodeTheme vsTheme = new VSCodeTheme(themeString);
+                ThemeVariation variation = vsTheme.getVariation();
+                variation.setPath(themeInfo.getPath());
+                variation.setName(themeInfo.getLabel());
+                theme.getVariations().add(variation);
+                VSCodeTheme.populateMissingColorGroups(variation);
+                VSCodeTheme.populateMissingColorNames(variation);
+            }
+            return theme;
+
+        } catch (Exception e) {
             // TODO: Handle this properly
             e.printStackTrace();
             return null;
         }
 
-        CascaraTheme theme = new CascaraTheme();
-        theme.setName(vsixPackage.getMetadata().getDisplayName());
-        for (VsixThemeInfo themeInfo : vsixPackage.getMetadata().getThemes()) {
-           String themePath = themeInfo.getPath();
-           Path relativePath = Path.of(EXTENSION, themePath);
-           try {
-               String pathString = relativePath.toString();
-               String themeString = new String(vsixPackage.extractFile(pathString));
-               VSCodeTheme vsTheme = new VSCodeTheme(themeString);
-               ThemeVariation variation = vsTheme.getVariation();
-               variation.setPath(themeInfo.getPath());
-               variation.setName(themeInfo.getLabel());
-               theme.getVariations().add(variation);
-               VSCodeTheme.populateMissingColorGroups(variation);
-               VSCodeTheme.populateMissingColorNames(variation);
-           } catch (ColorException e) {
-               e.printStackTrace();
-           }
-        }
-        return theme;
+
     }
 
     private static String getFxControlsCss() {

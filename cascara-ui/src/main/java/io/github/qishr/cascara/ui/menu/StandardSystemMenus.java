@@ -35,7 +35,7 @@
 
 package io.github.qishr.cascara.ui.menu;
 
-import io.github.qishr.cascara.common.util.Properties;
+import io.github.qishr.cascara.common.property.Properties;
 
 import javafx.stage.Stage;
 

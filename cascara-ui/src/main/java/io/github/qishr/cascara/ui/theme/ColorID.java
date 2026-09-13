@@ -37,7 +37,7 @@ package io.github.qishr.cascara.ui.theme;
 
 import java.util.List;
 
-import io.github.qishr.cascara.common.util.Properties;
+import io.github.qishr.cascara.common.property.Properties;
 
 public class ColorID {
 

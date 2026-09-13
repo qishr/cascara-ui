@@ -35,7 +35,7 @@
 
 package io.github.qishr.cascara.ui.color;
 
-import io.github.qishr.cascara.common.lang.exception.SerializerException;
+import io.github.qishr.cascara.common.lang.diagnostic.SerializerException;
 import io.github.qishr.cascara.lang.yaml.processor.YamlSerializer;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
