@@ -50,7 +50,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import io.github.qishr.cascara.common.diagnostic.LocalizableIOException;
 import io.github.qishr.cascara.common.diagnostic.LocalizableRuntimeException;
 import io.github.qishr.cascara.common.diagnostic.code.GenericDiagnosticCode;
 import io.github.qishr.cascara.ui.api.HighlightingToken;
@@ -109,7 +108,7 @@ import io.github.qishr.cascara.ui.style.standard.TreeViewStyle;
 import io.github.qishr.cascara.ui.theme.CodeColorsStyleSheet.StyleClass;
 import io.github.qishr.cascara.format.vsix.VsixPackage;
 import io.github.qishr.cascara.ui.vsix.VsixPackageStore;
-import io.github.qishr.cascara.format.vsix.VsixThemeInfo;
+import io.github.qishr.cascara.format.vsix.ThemeContribution;
 
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
@@ -450,7 +449,7 @@ public class ThemeEngine {
 
             CascaraTheme theme = new CascaraTheme();
             theme.setName(vsixPackage.getDisplayName());
-            for (VsixThemeInfo themeInfo : vsixPackage.getThemes()) {
+            for (ThemeContribution themeInfo : vsixPackage.getThemes()) {
                 String themePath = themeInfo.getPath();
                 Path relativePath = Path.of(EXTENSION, themePath);
                 String pathString = relativePath.toString();

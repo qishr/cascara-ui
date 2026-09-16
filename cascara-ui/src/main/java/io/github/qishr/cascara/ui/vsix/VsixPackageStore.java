@@ -47,9 +47,7 @@ import io.github.qishr.cascara.common.diagnostic.code.GenericDiagnosticCode;
 import io.github.qishr.cascara.common.io.filewatcher.FileWatcher;
 import io.github.qishr.cascara.common.io.filewatcher.FileChangeHandler;
 import io.github.qishr.cascara.common.io.filewatcher.FileChangeType;
-import io.github.qishr.cascara.common.property.Properties;
 import io.github.qishr.cascara.format.vsix.VsixPackage;
-// import io.github.qishr.cascara.ui.vsix.VsixPackageInfo;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

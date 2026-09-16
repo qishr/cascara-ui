@@ -40,8 +40,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.github.qishr.cascara.common.property.Properties;
-import io.github.qishr.cascara.format.vsix.VsixPackage;
-import io.github.qishr.cascara.format.vsix.VsixThemeInfo;
+import io.github.qishr.cascara.format.vsix.ThemeContribution;
 
 public class VsixPackageInfo {
     private String name;
@@ -50,7 +49,7 @@ public class VsixPackageInfo {
 
     private Properties properties = new Properties();
     private List<String> categories = new ArrayList<>();
-    private List<VsixThemeInfo> themes = new ArrayList<>();
+    private List<ThemeContribution> themes = new ArrayList<>();
 
     public VsixPackageInfo(Path path, String name, String displayName) {
         this.path = path;
@@ -66,7 +65,7 @@ public class VsixPackageInfo {
         return categories;
     }
 
-    public List<VsixThemeInfo> getThemes() {
+    public List<ThemeContribution> getThemes() {
         return themes;
     }
 

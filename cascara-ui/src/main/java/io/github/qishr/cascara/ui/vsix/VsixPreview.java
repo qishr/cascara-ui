@@ -41,7 +41,6 @@ import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.util.*;
 
-import io.github.qishr.cascara.common.util.ArchiveFile;
 import io.github.qishr.cascara.common.io.IOUtils;
 import io.github.qishr.cascara.common.property.Properties;
 import io.github.qishr.cascara.common.content.ResourceContent;
@@ -50,8 +49,7 @@ import io.github.qishr.cascara.common.diagnostic.LocalizableRuntimeException;
 import io.github.qishr.cascara.common.diagnostic.code.GenericDiagnosticCode;
 import io.github.qishr.cascara.common.lang.ast.ScalarAstNode;
 
-import io.github.qishr.cascara.format.vsix.VsixPackage;
-import io.github.qishr.cascara.format.vsix.VsixThemeInfo;
+import io.github.qishr.cascara.format.vsix.ThemeContribution;
 
 import io.github.qishr.cascara.lang.json.processor.JsonAstParser;
 import io.github.qishr.cascara.lang.json.util.JsonOptions;
@@ -69,7 +67,7 @@ public class VsixPreview {
     private Properties manifest = new Properties();
 
     private List<String> categories = new ArrayList<>();
-    private List<VsixThemeInfo> themes = new ArrayList<>();
+    private List<ThemeContribution> themes = new ArrayList<>();
 
     private URI downloadOrigin = null;
     private URI previewUri = null;
@@ -213,7 +211,7 @@ public class VsixPreview {
         return categories;
     }
 
-    public List<VsixThemeInfo> getThemes() {
+    public List<ThemeContribution> getThemes() {
         return themes;
     }
 
@@ -272,7 +270,7 @@ public class VsixPreview {
                 if (themesNode instanceof JsonArray themesSeq) {
                     for (var themeEntry : themesSeq) {
                         if (themeEntry instanceof JsonObject themeMap) {
-                            VsixThemeInfo themeInfo = new VsixThemeInfo();
+                            ThemeContribution themeInfo = new ThemeContribution();
                             for (JsonProperty propEntry : themeMap.getEntries()) {
                                 String propKey = propEntry.getKey();
                                 if (propEntry.getValue() instanceof ScalarAstNode s) {
