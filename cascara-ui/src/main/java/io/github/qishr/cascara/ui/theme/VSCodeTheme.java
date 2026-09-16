@@ -532,7 +532,7 @@ public class VSCodeTheme {
 
     private void addMissingUiColors() throws ColorException {
         for (String id : ColorID.UI_COLORS) {
-            Property colorprop = uiColors.getValue(id);
+            Property colorprop = uiColors.getProperty(id);
             if (colorprop == null) {
                 colorprop = new Property(id);
                 uiColors.add(colorprop);
