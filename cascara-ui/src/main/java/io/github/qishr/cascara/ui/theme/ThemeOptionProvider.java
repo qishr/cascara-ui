@@ -44,7 +44,8 @@ import java.util.List;
 import java.util.Map;
 
 import io.github.qishr.cascara.common.diagnostic.LocalizableRuntimeException;
-import io.github.qishr.cascara.common.io.filewatcher.FileWatcher;
+import io.github.qishr.cascara.common.filewatcher.FileWatcher;
+import io.github.qishr.cascara.common.util.Cascara;
 import io.github.qishr.cascara.ui.api.UiDiagnosticCode;
 import io.github.qishr.cascara.ui.option.AbstractOptionProvider;
 import io.github.qishr.cascara.ui.option.Option;
@@ -61,9 +62,8 @@ import javafx.collections.ObservableSet;
 public class ThemeOptionProvider extends AbstractOptionProvider implements AutoCloseable {
     public static final String NAME = "ui-theme";
 
-    private final Path cascaraDir = Paths.get(System.getProperty("user.home")).resolve(".cascara");
-    private final Path themesDir = cascaraDir.resolve("themes");
-    private final Path packagesDir = cascaraDir.resolve("packages");
+    private final Path themesDir = Cascara.getSharedPath().resolve("themes");
+    private final Path packagesDir = Cascara.getSharedPath().resolve("packages");
     private FileWatcher themesWatcher;
 
     private final ObservableSet<StringOption> cascThemeSet = FXCollections.observableSet();
@@ -83,16 +83,22 @@ public class ThemeOptionProvider extends AbstractOptionProvider implements AutoC
     public void initialize() {
         try {
             this.activeOption = ThemeEngine.activeThemeOptionProperty();
+            themesWatcher = new FileWatcher();
+
             if (!Files.isDirectory(themesDir)) {
                 Files.createDirectories(themesDir);
             }
-            themesWatcher = new FileWatcher();
             themesWatcher.watchDirectory(themesDir, () -> {
                 enumerateThemes();
             });
+
+            if (!Files.isDirectory(packagesDir)) {
+                Files.createDirectories(packagesDir);
+            }
             themesWatcher.watchDirectory(packagesDir, () -> {
                 enumeratePackages();
             });
+
             cascThemes.addListener((obs, oldSet, newSet) -> {
                 listeners.forEach(Runnable::run);
             });

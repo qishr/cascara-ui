@@ -15,7 +15,8 @@ package io.github.qishr.cascara.ui.demo;
 
 import java.io.InputStream;
 
-import io.github.qishr.cascara.common.io.filewatcher.FileWatcher;
+import io.github.qishr.cascara.common.diagnostic.GlobalReporter;
+import io.github.qishr.cascara.common.filewatcher.FileWatcher;
 import io.github.qishr.cascara.ui.control.OptionChooser;
 import io.github.qishr.cascara.ui.language.Localization;
 import io.github.qishr.cascara.ui.theme.ThemeEngine;
@@ -34,6 +35,7 @@ public class Launcher extends Application {
     private Scene scene;
 
     public static void main(String[] args) {
+        GlobalReporter.globalInstance().setStackTraceEnabled(true);
         // GlobalReporter.globalInstance().setPrintStackTrace(true);
         launch(args);
     }

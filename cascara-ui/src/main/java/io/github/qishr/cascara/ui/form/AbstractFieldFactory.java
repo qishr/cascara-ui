@@ -70,7 +70,7 @@ public abstract class AbstractFieldFactory {
 
     protected AbstractFieldFactory(ServiceProviderLayer spl) {
         if (spl == null) {
-            spl = ServiceProviderLayer.getRootLayer();
+            spl = ServiceProviderLayer.getRoot();
         }
         rendererFactory = new RendererFactory(spl);
         rendererAllocator = new RendererAllocator(rendererFactory);

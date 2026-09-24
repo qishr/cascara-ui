@@ -119,7 +119,6 @@ public abstract class ObservableTreeNode<T extends ObservableTreeNode<T,V>,V ext
 
     public ObservableList<T> getChildren() { return children; }
 
-    @Override
     public final void setParent(T v) {
         this.parent.set(v);
     }

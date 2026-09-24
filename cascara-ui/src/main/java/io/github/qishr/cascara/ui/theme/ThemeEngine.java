@@ -52,6 +52,7 @@ import java.util.stream.Collectors;
 
 import io.github.qishr.cascara.common.diagnostic.LocalizableRuntimeException;
 import io.github.qishr.cascara.common.diagnostic.code.GenericDiagnosticCode;
+import io.github.qishr.cascara.common.util.Cascara;
 import io.github.qishr.cascara.ui.api.HighlightingToken;
 import io.github.qishr.cascara.ui.api.UiDiagnosticCode;
 import io.github.qishr.cascara.ui.api.UiException;
@@ -121,8 +122,7 @@ public class ThemeEngine {
 
     private static ThemeEngine instance;
 
-    private static final Path cascaraDir = Paths.get(System.getProperty("user.home")).resolve(".cascara");
-    private static final Path themesDir = cascaraDir.resolve("themes");
+    private static final Path themesDir = Cascara.getSharedPath().resolve("themes");
 
     private final StringOption defaultThemeOption = new SimpleStringOption("default", "Default");
     private CascaraTheme defaultTheme;
@@ -217,6 +217,9 @@ public class ThemeEngine {
         }
         if (themeId.endsWith(".vsix")) {
             CascaraTheme theme = instance.convertVsix(themeId);
+            if (theme == null) {
+                throw new LocalizableRuntimeException(GenericDiagnosticCode.ERROR, "Failed to convert VSIX to Cascara Theme: " + themeId);
+            }
             theme.setThemeId(themeId);
             return theme;
         } else {
@@ -441,8 +444,7 @@ public class ThemeEngine {
     }
 
     private CascaraTheme convertVsix(String fileName) {
-        Path cascaraDir = Paths.get(System.getProperty("user.home")).resolve(".cascara");
-        Path packagesDir = cascaraDir.resolve("packages");
+        Path packagesDir = Cascara.getSharedPath().resolve("packages");
         Path packagePath = packagesDir.resolve(fileName);
 
         try (VsixPackage vsixPackage = VsixPackage.open(packagePath)) {
@@ -451,8 +453,23 @@ public class ThemeEngine {
             theme.setName(vsixPackage.getDisplayName());
             for (ThemeContribution themeInfo : vsixPackage.getThemes()) {
                 String themePath = themeInfo.getPath();
-                Path relativePath = Path.of(EXTENSION, themePath);
-                String pathString = relativePath.toString();
+
+
+                // TODO: The problem is here
+                // An extra ./ ends up in pathString because themePath starts with "./"
+
+                // Perhaps the ThemeContribution's path should be absolute?
+                // TODO: The real solution is to convert from relative to absolute in VsixPackage
+                // when the contributions objects are created.
+                // Then remove this local conversion...
+
+                // TODO: No, ThemeContribution must be exactly as it is in the JSON file.
+
+
+                // Path relativePath = Path.of(EXTENSION, themePath);
+                // String pathString = relativePath.toString();
+                String pathString = VsixPackage.normalizeEntry(EXTENSION, themePath);
+
                 String themeString = new String(vsixPackage.extractFile(pathString));
                 VSCodeTheme vsTheme = new VSCodeTheme(themeString);
                 ThemeVariation variation = vsTheme.getVariation();

@@ -77,7 +77,7 @@ public class OptionChooser extends ComboBox<Option> {
         this.providerParameter = providerParameter;
         this.dataContext = context;
 
-        layer = ServiceProviderLayer.getRootLayer(); // TODO: User provided
+        layer = ServiceProviderLayer.getRoot(); // TODO: User provided
         rendererFactory = new RendererFactory(layer);
 
         this.renderer = getRenderer(provider);

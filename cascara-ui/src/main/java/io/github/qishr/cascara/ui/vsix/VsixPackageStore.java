@@ -44,17 +44,17 @@ import java.util.List;
 
 import io.github.qishr.cascara.common.diagnostic.LocalizableIOException;
 import io.github.qishr.cascara.common.diagnostic.code.GenericDiagnosticCode;
-import io.github.qishr.cascara.common.io.filewatcher.FileWatcher;
-import io.github.qishr.cascara.common.io.filewatcher.FileChangeHandler;
-import io.github.qishr.cascara.common.io.filewatcher.FileChangeType;
+import io.github.qishr.cascara.common.filewatcher.FileWatcher;
+import io.github.qishr.cascara.common.util.Cascara;
+import io.github.qishr.cascara.common.filewatcher.FileChangeHandler;
+import io.github.qishr.cascara.common.filewatcher.FileChangeType;
 import io.github.qishr.cascara.format.vsix.VsixPackage;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class VsixPackageStore implements AutoCloseable {
-    private static final Path cascaraDir = Paths.get(System.getProperty("user.home")).resolve(".cascara");
-    private static final Path packageDir = cascaraDir.resolve("packages");
+    private static final Path packageDir = Cascara.getSharedPath().resolve("packages");
 
     private final ObservableList<VsixPackageInfo> packagesList = FXCollections.observableArrayList();
     private FileWatcher fileWatcher;
