@@ -38,9 +38,9 @@ package io.github.qishr.cascara.ui.control;
 import java.util.List;
 import java.util.function.Consumer;
 
-import io.github.qishr.cascara.common.diagnostic.code.GenericDiagnosticCode;
+import io.github.qishr.cascara.common.diagnostic.message.GenericMessage;
 import io.github.qishr.cascara.ui.api.ToolTipProvider;
-import io.github.qishr.cascara.ui.api.UiDiagnosticCode;
+import io.github.qishr.cascara.ui.api.UiDiagnosticMessage;
 import io.github.qishr.cascara.ui.api.render.ScalarRenderer;
 import io.github.qishr.cascara.ui.data.ColumnMetadata;
 import io.github.qishr.cascara.ui.data.ObservableObject;
@@ -359,18 +359,18 @@ public class CascaraTree<T extends ObservableTreeNode<T,?>> extends StackPane {
                 TreeItem<T> treeItem = data.getValue();
 
                 if (treeItem == null) {
-                    throw new UiDataException(GenericDiagnosticCode.UNEXPECTED_NULL_RETURN, "data", "getValue");
+                    throw new UiDataException(GenericMessage.UNEXPECTED_NULL_RETURN, "data", "getValue");
                 }
                 T observableTreeNode = treeItem.getValue();
                 if (observableTreeNode == null) {
-                    throw new UiDataException(GenericDiagnosticCode.UNEXPECTED_NULL_RETURN, "treeItem", "getValue");
+                    throw new UiDataException(GenericMessage.UNEXPECTED_NULL_RETURN, "treeItem", "getValue");
                 }
 
                 String columnName = def.getName();
 
                 Observable observable = observableTreeNode.getObservable(columnName);
                 if (observable == null) {
-                    throw new UiDataException(UiDiagnosticCode.PROPERTY_NOT_RECOGNIZED, columnName);
+                    throw new UiDataException(UiDiagnosticMessage.PROPERTY_NOT_RECOGNIZED, columnName);
                 }
 
                 if (observable instanceof ObservableValue obs) {

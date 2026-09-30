@@ -40,7 +40,7 @@ import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.function.Consumer;
 
-import io.github.qishr.cascara.common.service.ServiceProviderLayer;
+import io.github.qishr.cascara.common.service.SPL;
 import io.github.qishr.cascara.ui.api.data.DataProvider;
 import io.github.qishr.cascara.ui.render.RenderDispatcher;
 import io.github.qishr.cascara.ui.render.RendererAllocator;
@@ -68,9 +68,9 @@ public abstract class AbstractFieldFactory {
     protected final RendererFactory rendererFactory;
     protected final RendererAllocator rendererAllocator;
 
-    protected AbstractFieldFactory(ServiceProviderLayer spl) {
+    protected AbstractFieldFactory(SPL spl) {
         if (spl == null) {
-            spl = ServiceProviderLayer.getRoot();
+            spl = SPL.getRoot();
         }
         rendererFactory = new RendererFactory(spl);
         rendererAllocator = new RendererAllocator(rendererFactory);

@@ -42,7 +42,7 @@ import java.util.function.Consumer;
 import io.github.qishr.cascara.common.data.TabularData;
 import io.github.qishr.cascara.common.diagnostic.LocalizableRuntimeException;
 import io.github.qishr.cascara.common.diagnostic.SilentCollectingReporter;
-import io.github.qishr.cascara.common.diagnostic.code.GenericDiagnosticCode;
+import io.github.qishr.cascara.common.diagnostic.message.GenericMessage;
 import io.github.qishr.cascara.schema.structure.SchemaNode;
 import io.github.qishr.cascara.ui.control.OptionChooser;
 import io.github.qishr.cascara.ui.option.OptionProvider;
@@ -86,7 +86,7 @@ public class Field extends AbstractFormComponent {
         setPadding(new Insets(4));
 
         if (inputControl == null || inputControl.view() == null) {
-            throw new LocalizableRuntimeException(GenericDiagnosticCode.UNEXPECTED_NULL_PARAMETER, "inputControl", "Field");
+            throw new LocalizableRuntimeException(GenericMessage.UNEXPECTED_NULL_PARAMETER, "inputControl", "Field");
         }
 
         if (observable instanceof ObservableList<?> list) {
@@ -317,7 +317,7 @@ public class Field extends AbstractFormComponent {
         List<String> errorMessages = new ArrayList<>();
         SilentCollectingReporter reporter = new SilentCollectingReporter();
         reporter.setProblemConsumer(problem -> {
-            errorMessages.add(problem.getMessage());
+            errorMessages.add(problem.getFormattedMessage());
         });
         boolean hasError = !onValidate.performValidation(value, path, schema);
 

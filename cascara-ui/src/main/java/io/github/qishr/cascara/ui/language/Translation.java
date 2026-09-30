@@ -41,8 +41,8 @@ import java.util.Map;
 import io.github.qishr.cascara.common.annotation.AnyGetter;
 import io.github.qishr.cascara.common.annotation.AnySetter;
 import io.github.qishr.cascara.common.annotation.DataIgnore;
-import io.github.qishr.cascara.schema.annotation.SchemaDefinition;
-import io.github.qishr.cascara.schema.annotation.SchemaProperty;
+import io.github.qishr.cascara.common.annotation.SchemaDefinition;
+import io.github.qishr.cascara.common.annotation.SchemaProperty;
 
 @SchemaDefinition
 public class Translation {

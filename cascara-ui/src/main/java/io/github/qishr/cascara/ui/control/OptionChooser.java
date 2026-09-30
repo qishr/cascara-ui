@@ -39,7 +39,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import io.github.qishr.cascara.common.service.ServiceProviderLayer;
+import io.github.qishr.cascara.common.service.SPL;
 import io.github.qishr.cascara.ui.api.render.ScalarRenderer;
 import io.github.qishr.cascara.ui.option.Option;
 import io.github.qishr.cascara.ui.option.OptionProvider;
@@ -61,7 +61,7 @@ public class OptionChooser extends ComboBox<Option> {
     private List<? extends Option> cachedOptions = List.of();
     private String initialId;
 
-    private ServiceProviderLayer layer;
+    private SPL layer;
     private RendererFactory rendererFactory;
 
     public OptionChooser(OptionProvider provider) {
@@ -77,7 +77,7 @@ public class OptionChooser extends ComboBox<Option> {
         this.providerParameter = providerParameter;
         this.dataContext = context;
 
-        layer = ServiceProviderLayer.getRoot(); // TODO: User provided
+        layer = SPL.getRoot(); // TODO: User provided
         rendererFactory = new RendererFactory(layer);
 
         this.renderer = getRenderer(provider);

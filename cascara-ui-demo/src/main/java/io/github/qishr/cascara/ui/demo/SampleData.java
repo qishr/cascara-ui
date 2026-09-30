@@ -13,9 +13,9 @@
 
 package io.github.qishr.cascara.ui.demo;
 
-import io.github.qishr.cascara.schema.annotation.ContentMediaType;
-import io.github.qishr.cascara.schema.annotation.SchemaDefinition;
-import io.github.qishr.cascara.schema.annotation.SchemaProperty;
+import io.github.qishr.cascara.common.annotation.ContentMediaType;
+import io.github.qishr.cascara.common.annotation.SchemaDefinition;
+import io.github.qishr.cascara.common.annotation.SchemaProperty;
 import io.github.qishr.cascara.schema.constraint.StringConstraint;
 import io.github.qishr.cascara.ui.data.ObservableObject;
 import javafx.beans.property.ObjectProperty;

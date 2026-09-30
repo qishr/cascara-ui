@@ -44,7 +44,7 @@ import java.util.Map.Entry;
 import java.util.function.Consumer;
 
 import io.github.qishr.cascara.common.data.TabularData;
-import io.github.qishr.cascara.common.diagnostic.code.GenericDiagnosticCode;
+import io.github.qishr.cascara.common.diagnostic.message.GenericMessage;
 import io.github.qishr.cascara.common.lang.type.PrimitiveType;
 import io.github.qishr.cascara.schema.rule.EnumRule;
 import io.github.qishr.cascara.schema.rule.ValidationRule;
@@ -113,7 +113,7 @@ public class FieldMetadata {
         String optionProviderId = null;
 
         if (fieldName == null) {
-            throw new UiDataException(GenericDiagnosticCode.UNEXPECTED_NULL_PARAMETER, "fieldName", "FieldMetadata");
+            throw new UiDataException(GenericMessage.UNEXPECTED_NULL_PARAMETER, "fieldName", "FieldMetadata");
         }
 
         if (fieldSchema == null) {

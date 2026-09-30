@@ -43,7 +43,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.github.qishr.cascara.common.diagnostic.LocalizableIOException;
-import io.github.qishr.cascara.common.diagnostic.code.GenericDiagnosticCode;
+import io.github.qishr.cascara.common.diagnostic.message.GenericMessage;
 import io.github.qishr.cascara.common.filewatcher.FileWatcher;
 import io.github.qishr.cascara.common.util.Cascara;
 import io.github.qishr.cascara.common.filewatcher.FileChangeHandler;
@@ -172,7 +172,7 @@ public class VsixPackageStore implements AutoCloseable {
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-            throw new LocalizableIOException(e, GenericDiagnosticCode.IO_ERROR, e.getMessage());
+            throw new LocalizableIOException(e, GenericMessage.IO_ERROR, e.getMessage());
         }
     }
 }

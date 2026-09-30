@@ -45,8 +45,8 @@ import java.util.Map;
 import io.github.qishr.cascara.common.diagnostic.DiagnosticLocalizer;
 import io.github.qishr.cascara.common.diagnostic.GlobalReporter;
 import io.github.qishr.cascara.common.diagnostic.Reporter;
-import io.github.qishr.cascara.common.diagnostic.code.DiagnosticCode;
-import io.github.qishr.cascara.common.diagnostic.code.GenericDiagnosticCode;
+import io.github.qishr.cascara.common.diagnostic.message.DiagnosticMessage;
+import io.github.qishr.cascara.common.diagnostic.message.GenericMessage;
 import io.github.qishr.cascara.lang.yaml.processor.YamlSerializer;
 import io.github.qishr.cascara.ui.language.detect.HybridLocaleDetector;
 import io.github.qishr.cascara.ui.option.Option;
@@ -204,7 +204,7 @@ public class UiLocalizer implements ObservableLocalizer {
             Translation translation = serializer.fromStream(yamlStream, Translation.class);
             String languageTag = translation.getLanguageTag();
             if (languageTag == null) {
-                REPORTER.error(GenericDiagnosticCode.ERROR, "No `lang` key specified in translations file");
+                REPORTER.error(GenericMessage.ERROR, "No `lang` key specified in translations file");
                 return false;
             }
             Map<String, Object> translations = translationsByLanguage.get(languageTag);
@@ -217,7 +217,7 @@ public class UiLocalizer implements ObservableLocalizer {
             }
             return true;
         } catch (Exception e) {
-            REPORTER.error(e, GenericDiagnosticCode.ERROR, "Failed to load translations: " + e.getMessage());
+            REPORTER.error(e, GenericMessage.ERROR, "Failed to load translations: " + e.getMessage());
             return false;
         }
     }
@@ -232,7 +232,7 @@ public class UiLocalizer implements ObservableLocalizer {
         try {
             return MessageFormat.format(pattern, args);
         } catch (IllegalArgumentException e) {
-            REPORTER.error(e, GenericDiagnosticCode.MESSAGE_FORMATTING_ERROR, key, pattern);
+            REPORTER.error(e, GenericMessage.MESSAGE_FORMATTING_ERROR, key, pattern);
             return "!!" + defaultText == null ? key : defaultText;
         }
     }
@@ -247,23 +247,23 @@ public class UiLocalizer implements ObservableLocalizer {
         try {
             return MessageFormat.format(pattern, args);
         } catch (IllegalArgumentException e) {
-            REPORTER.error(e, GenericDiagnosticCode.MESSAGE_FORMATTING_ERROR, key, pattern);
+            REPORTER.error(e, GenericMessage.MESSAGE_FORMATTING_ERROR, key, pattern);
             return "!!" + key;
         }
     }
 
     /// {@inheritDoc}
     @Override
-    public String format(DiagnosticCode diagnosticCode, Object... args) {
+    public String format(DiagnosticMessage diagnosticCode, Object... args) {
         if (diagnosticCode.getCode() == null || diagnosticCode.getCode().isEmpty()) {
-            return String.format(DiagnosticLocalizer.FORMATTING_ERROR, diagnosticCode.getCode(), diagnosticCode.getMessage());
+            return String.format(DiagnosticLocalizer.FORMATTING_ERROR, diagnosticCode.getCode(), diagnosticCode.getFormat());
         }
         String pattern = getPattern("diagnostic/" + diagnosticCode.getCode());
         if (pattern == null) {
             try {
-                return MessageFormat.format(diagnosticCode.getMessage(), args);
+                return MessageFormat.format(diagnosticCode.getFormat(), args);
             } catch (IllegalArgumentException e) {
-                REPORTER.error(e, GenericDiagnosticCode.DIAGNOSTIC_FORMATTING_ERROR, diagnosticCode.getCode(), diagnosticCode.getMessage());
+                REPORTER.error(e, GenericMessage.DIAGNOSTIC_FORMATTING_ERROR, diagnosticCode.getCode(), diagnosticCode.getFormat());
                 return "!!" + diagnosticCode.getCode();
                 // return String.format(DiagnosticLocalizer.FORMATTING_ERROR, diagnosticCode.getCode(), diagnosticCode.getMessage());
             }
@@ -271,7 +271,7 @@ public class UiLocalizer implements ObservableLocalizer {
         try {
             return MessageFormat.format(pattern, args);
         } catch (IllegalArgumentException e) {
-            REPORTER.error(e, GenericDiagnosticCode.DIAGNOSTIC_FORMATTING_ERROR, diagnosticCode.getCode(), pattern);
+            REPORTER.error(e, GenericMessage.DIAGNOSTIC_FORMATTING_ERROR, diagnosticCode.getCode(), pattern);
             return "!!" + diagnosticCode.getCode();
             // return String.format(DiagnosticLocalizer.FORMATTING_ERROR, diagnosticCode.getCode(), pattern);
         }

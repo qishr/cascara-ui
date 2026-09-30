@@ -38,7 +38,7 @@ package io.github.qishr.cascara.ui.render;
 import io.github.qishr.cascara.common.service.AbstractServiceProviderFactory;
 import io.github.qishr.cascara.common.service.CapabilityQueries;
 import io.github.qishr.cascara.common.service.ServiceException;
-import io.github.qishr.cascara.common.service.ServiceProviderLayer;
+import io.github.qishr.cascara.common.service.SPL;
 import io.github.qishr.cascara.ui.api.ServicePropertyName;
 import io.github.qishr.cascara.ui.api.render.ArrayEditorRenderer;
 import io.github.qishr.cascara.ui.api.render.ScalarEditorRenderer;
@@ -49,7 +49,7 @@ public class RendererFactory extends AbstractServiceProviderFactory {
         super();
     }
 
-    public RendererFactory(ServiceProviderLayer layer) {
+    public RendererFactory(SPL layer) {
         super(layer);
     }
 

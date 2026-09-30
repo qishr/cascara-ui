@@ -47,13 +47,13 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import io.github.qishr.cascara.common.lang.ast.AstNode;
-import io.github.qishr.cascara.schema.Schema;
+import io.github.qishr.cascara.schema.util.Schema;
 import io.github.qishr.cascara.common.lang.type.PrimitiveType;
 import io.github.qishr.cascara.schema.structure.SchemaNode;
 import io.github.qishr.cascara.schema.util.SchemaCompiler;
 import io.github.qishr.cascara.schema.util.SchemaGenerator;
 import io.github.qishr.cascara.schema.util.CascaraSchemaUri;
-import io.github.qishr.cascara.ui.api.UiDiagnosticCode;
+import io.github.qishr.cascara.ui.api.UiDiagnosticMessage;
 import io.github.qishr.cascara.ui.api.data.ObservableTableData;
 import io.github.qishr.cascara.ui.schema.TypeAnalyzers;
 import io.github.qishr.cascara.ui.schema.UiTypeAnalyzer;
@@ -89,7 +89,7 @@ public class ObservableObject implements Observable, ObservableTableData {
         displayStringProperty = new SimpleObjectProperty<>(this, "displayString", "");
         createObjectSchema();
         if (objectSchema.get() == null) {
-            throw new UiDataException(UiDiagnosticCode.SCHEMA_GENERATION_ERROR, this.getClass().getSimpleName());
+            throw new UiDataException(UiDiagnosticMessage.SCHEMA_GENERATION_ERROR, this.getClass().getSimpleName());
         }
         registerProperties();
     }
@@ -124,7 +124,7 @@ public class ObservableObject implements Observable, ObservableTableData {
             Schema compiledSchema = compiler.compile(doc, schemaUri.toUri());
             schemaNode = compiledSchema.getRoot();
             if (schemaNode == null) {
-                throw new UiDataException(UiDiagnosticCode.SCHEMA_COMPILATION_ERROR);
+                throw new UiDataException(UiDiagnosticMessage.SCHEMA_COMPILATION_ERROR);
             }
             objectSchemas.put(getClass(), schemaNode);
         }
@@ -184,7 +184,7 @@ public class ObservableObject implements Observable, ObservableTableData {
                 field.set(this, property);
             } catch (Throwable e) {
                 // The field value was unset and we can't set it.
-                throw new UiDataException(e, UiDiagnosticCode.CANNOT_SET_VALUE, propertyName, e.getMessage());
+                throw new UiDataException(e, UiDiagnosticMessage.CANNOT_SET_VALUE, propertyName, e.getMessage());
             }
         }
 
@@ -399,7 +399,7 @@ public class ObservableObject implements Observable, ObservableTableData {
                 list.setAll(collection);
             }
         } else {
-            throw new UiDataException(UiDiagnosticCode.PROPERTY_NOT_RECOGNIZED, key);
+            throw new UiDataException(UiDiagnosticMessage.PROPERTY_NOT_RECOGNIZED, key);
         }
         invalidate();
     }

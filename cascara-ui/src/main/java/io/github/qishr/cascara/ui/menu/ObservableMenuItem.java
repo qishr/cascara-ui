@@ -38,10 +38,10 @@ package io.github.qishr.cascara.ui.menu;
 import io.github.qishr.cascara.common.diagnostic.GlobalReporter;
 import io.github.qishr.cascara.common.diagnostic.LocalizableRuntimeException;
 import io.github.qishr.cascara.common.diagnostic.Reporter;
-import io.github.qishr.cascara.common.diagnostic.code.GenericDiagnosticCode;
-import io.github.qishr.cascara.schema.annotation.SchemaDefinition;
-import io.github.qishr.cascara.schema.annotation.SchemaProperty;
-import io.github.qishr.cascara.ui.api.UiDiagnosticCode;
+import io.github.qishr.cascara.common.diagnostic.message.GenericMessage;
+import io.github.qishr.cascara.common.annotation.SchemaDefinition;
+import io.github.qishr.cascara.common.annotation.SchemaProperty;
+import io.github.qishr.cascara.ui.api.UiDiagnosticMessage;
 import io.github.qishr.cascara.ui.api.UiException;
 import io.github.qishr.cascara.ui.data.ObservableTreeNode;
 import io.github.qishr.cascara.ui.language.Localization;
@@ -281,7 +281,7 @@ public class ObservableMenuItem extends ObservableTreeNode<ObservableMenuItem, O
             }
         } else {
             if (isRoot) {
-                throw new LocalizableRuntimeException(UiDiagnosticCode.ADD_UNSUPPORTED);
+                throw new LocalizableRuntimeException(UiDiagnosticMessage.ADD_UNSUPPORTED);
             }
             if (this.fxMenuItem instanceof Menu fxParentMenu) {
                 try {
@@ -291,7 +291,7 @@ public class ObservableMenuItem extends ObservableTreeNode<ObservableMenuItem, O
                         fxParentMenu.getItems().add(child.fxMenuItem);
                     }
                 } catch (UnsupportedOperationException e) {
-                    throw new UiException(e, GenericDiagnosticCode.UNSUPPORTED_OPERATION, e.getMessage());
+                    throw new UiException(e, GenericMessage.UNSUPPORTED_OPERATION, e.getMessage());
                 }
             }
         }

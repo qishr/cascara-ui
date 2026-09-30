@@ -46,7 +46,7 @@ import java.util.Map;
 import io.github.qishr.cascara.common.diagnostic.LocalizableRuntimeException;
 import io.github.qishr.cascara.common.filewatcher.FileWatcher;
 import io.github.qishr.cascara.common.util.Cascara;
-import io.github.qishr.cascara.ui.api.UiDiagnosticCode;
+import io.github.qishr.cascara.ui.api.UiDiagnosticMessage;
 import io.github.qishr.cascara.ui.option.AbstractOptionProvider;
 import io.github.qishr.cascara.ui.option.Option;
 import io.github.qishr.cascara.ui.option.SimpleStringOption;
@@ -105,7 +105,7 @@ public class ThemeOptionProvider extends AbstractOptionProvider implements AutoC
             enumerateThemes();
             enumeratePackages();
         } catch (Exception e) {
-            throw new LocalizableRuntimeException(e, UiDiagnosticCode.OPTION_PROVIDER_INIT_ERROR, getName(), e.getLocalizedMessage());
+            throw new LocalizableRuntimeException(e, UiDiagnosticMessage.OPTION_PROVIDER_INIT_ERROR, getName(), e.getLocalizedMessage());
         }
     }
 

@@ -39,7 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import io.github.qishr.cascara.common.diagnostic.code.GenericDiagnosticCode;
+import io.github.qishr.cascara.common.diagnostic.message.GenericMessage;
 import io.github.qishr.cascara.ui.api.UiException;
 import io.github.qishr.cascara.ui.api.data.DataProvider;
 import io.github.qishr.cascara.ui.api.render.ScalarEditorRenderer;
@@ -112,7 +112,7 @@ public class OptionChooserRenderer extends AbstractScalarRenderer implements Sca
         } else {
             enumChooser = null;
             if (meta.getOptionProvider() == null) {
-                throw new UiException(GenericDiagnosticCode.UNEXPECTED_NULL_RETURN, "meta", "getOptionProvider");
+                throw new UiException(GenericMessage.UNEXPECTED_NULL_RETURN, "meta", "getOptionProvider");
             }
             chooser = new OptionChooser(
                 meta.getOptionProvider(),

@@ -43,7 +43,7 @@ import io.github.qishr.cascara.common.diagnostic.GlobalReporter;
 import io.github.qishr.cascara.common.diagnostic.Reporter;
 import io.github.qishr.cascara.common.lang.type.PrimitiveType;
 import io.github.qishr.cascara.schema.structure.SchemaNode;
-import io.github.qishr.cascara.ui.api.UiDiagnosticCode;
+import io.github.qishr.cascara.ui.api.UiDiagnosticMessage;
 import io.github.qishr.cascara.ui.api.data.DataProvider;
 import io.github.qishr.cascara.ui.api.render.ArrayEditorRenderer;
 import io.github.qishr.cascara.ui.api.render.ScalarRenderer;
@@ -79,7 +79,7 @@ public class RenderDispatcher {
         Renderers renderers = meta.getRenderers();
 
         if (renderers == null) {
-            // throw new LocalizableRuntimeException(GenericDiagnosticCode.UNEXPECTED_NULL, "renderers");
+            // throw new LocalizableRuntimeException(GenericMessage.UNEXPECTED_NULL, "renderers");
             renderPlainText(view, data);
             return null;
         }
@@ -90,7 +90,7 @@ public class RenderDispatcher {
                 control = renderer.render(view, list, dataProvider, meta);
             } else {
                 REPORTER.warn(
-                    UiDiagnosticCode.NO_RENDERER_SET,
+                    UiDiagnosticMessage.NO_RENDERER_SET,
                     meta.getName(), meta.getSchemaType(), meta.getContentType()
                 );
             }

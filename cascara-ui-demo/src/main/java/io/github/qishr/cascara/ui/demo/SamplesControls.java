@@ -18,7 +18,7 @@ import java.util.Arrays;
 
 import io.github.qishr.cascara.common.diagnostic.GlobalReporter;
 import io.github.qishr.cascara.common.diagnostic.Reporter;
-import io.github.qishr.cascara.common.diagnostic.code.GenericDiagnosticCode;
+import io.github.qishr.cascara.common.diagnostic.message.GenericMessage;
 import io.github.qishr.cascara.ui.language.Localization;
 import javafx.css.CssMetaData;
 import javafx.css.Styleable;
@@ -264,7 +264,7 @@ public class SamplesControls {
 
         public void printComputedCssValuesFixed(Node node) {
 
-        REPORTER.info(GenericDiagnosticCode.INFO, "--- Computed CSS Values for Node: " + node.getClass().getSimpleName() + " ---");
+        REPORTER.info(GenericMessage.INFO, "--- Computed CSS Values for Node: " + node.getClass().getSimpleName() + " ---");
 
         // 1. Iterate using raw types (or the less restrictive wildcard form)
         for (CssMetaData<?, ?> metaData : node.getCssMetaData()) {
@@ -293,7 +293,7 @@ public class SamplesControls {
                 }
             } catch (Exception e) {
                 // If the property lookup fails (e.g., internal error), log the exception
-                REPORTER.error(GenericDiagnosticCode.ERROR, "Error fetching "+metaData.getProperty()+": "+e.getMessage()+"\n");
+                REPORTER.error(GenericMessage.ERROR, "Error fetching "+metaData.getProperty()+": "+e.getMessage()+"\n");
             }
         }
 

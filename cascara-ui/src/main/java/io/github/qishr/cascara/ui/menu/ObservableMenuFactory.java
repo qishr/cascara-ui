@@ -37,7 +37,7 @@ package io.github.qishr.cascara.ui.menu;
 
 import io.github.qishr.cascara.common.diagnostic.GlobalReporter;
 import io.github.qishr.cascara.common.diagnostic.Reporter;
-import io.github.qishr.cascara.common.diagnostic.code.GenericDiagnosticCode;
+import io.github.qishr.cascara.common.diagnostic.message.GenericMessage;
 import io.github.qishr.cascara.ui.data.UiDataException;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Menu;
@@ -68,11 +68,11 @@ public class ObservableMenuFactory {
     }
 
     public static void attachMenuItems(ObservableList<ObservableMenuItem> items) {
-        if (items == null) throw new UiDataException(GenericDiagnosticCode.UNEXPECTED_NULL_PARAMETER, "items", "attachMenuItems");
+        if (items == null) throw new UiDataException(GenericMessage.UNEXPECTED_NULL_PARAMETER, "items", "attachMenuItems");
         for (ObservableMenuItem item : items) {
             ObservableMenuItem destination = item.getDestination();
             if (destination == null) {
-                REPORTER.error(GenericDiagnosticCode.UNEXPECTED_NULL_RETURN, "item", "getDestination()");
+                REPORTER.error(GenericMessage.UNEXPECTED_NULL_RETURN, "item", "getDestination()");
             } else {
                 destination.getChildren().add(item);
             }
@@ -80,11 +80,11 @@ public class ObservableMenuFactory {
     }
 
     public static void detachMenuItems(ObservableList<ObservableMenuItem> items) {
-        if (items == null) throw new UiDataException(GenericDiagnosticCode.UNEXPECTED_NULL_PARAMETER, "items", "detachMenus");
+        if (items == null) throw new UiDataException(GenericMessage.UNEXPECTED_NULL_PARAMETER, "items", "detachMenus");
         for (ObservableMenuItem item : items) {
             ObservableMenuItem destination = item.getDestination();
             if (destination == null) {
-                REPORTER.error(GenericDiagnosticCode.UNEXPECTED_NULL_RETURN, "item", "getDestination()");
+                REPORTER.error(GenericMessage.UNEXPECTED_NULL_RETURN, "item", "getDestination()");
             } else {
                 destination.getChildren().remove(item);
             }

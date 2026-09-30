@@ -42,7 +42,7 @@ import java.time.format.FormatStyle;
 import java.util.Locale;
 import java.util.function.Consumer;
 
-import io.github.qishr.cascara.common.diagnostic.code.DiagnosticCode;
+import io.github.qishr.cascara.common.diagnostic.message.DiagnosticMessage;
 import io.github.qishr.cascara.schema.structure.SchemaNode;
 import io.github.qishr.cascara.schema.util.SchemaGenerator;
 import io.github.qishr.cascara.ui.form.FieldLabel;
@@ -105,7 +105,7 @@ public class Localization {
         return localizer.format(key, details);
     }
 
-    public static String format(DiagnosticCode diagnosticCode, Object... details) {
+    public static String format(DiagnosticMessage diagnosticCode, Object... details) {
         return localizer.format(diagnosticCode, details);
     }
 

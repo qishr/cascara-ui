@@ -54,7 +54,7 @@ public class EnumOptionProvider extends AbstractOptionProvider {
         super(NAME, null, null, null);
         // this.enumValues = findEnumValues(schema);
         // if (enumValues == null) {
-        //     throw new UiSchemaException(UiDiagnosticCode.EMPTY_ENUM);
+        //     throw new UiSchemaException(UiDiagnosticMessage.EMPTY_ENUM);
         // }
         activeOption = populateEnumOptions(options, schema, initialStringValue);
     }
@@ -64,7 +64,7 @@ public class EnumOptionProvider extends AbstractOptionProvider {
         // super(NAME, null, null, null);
         // this.enumValues = findEnumValues(schema);
         // if (enumValues == null) {
-        //     throw new UiSchemaException(UiDiagnosticCode.EMPTY_ENUM);
+        //     throw new UiSchemaException(UiDiagnosticMessage.EMPTY_ENUM);
         // }
         // String initialValueString = initialValue == null ? null : initialValue.toString();
 

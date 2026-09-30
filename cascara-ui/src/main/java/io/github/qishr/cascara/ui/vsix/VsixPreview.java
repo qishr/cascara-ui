@@ -46,7 +46,7 @@ import io.github.qishr.cascara.common.property.Properties;
 import io.github.qishr.cascara.common.content.ResourceContent;
 import io.github.qishr.cascara.common.diagnostic.LocalizableIOException;
 import io.github.qishr.cascara.common.diagnostic.LocalizableRuntimeException;
-import io.github.qishr.cascara.common.diagnostic.code.GenericDiagnosticCode;
+import io.github.qishr.cascara.common.diagnostic.message.GenericMessage;
 import io.github.qishr.cascara.common.lang.ast.ScalarAstNode;
 
 import io.github.qishr.cascara.format.vsix.ThemeContribution;
@@ -58,7 +58,7 @@ import io.github.qishr.cascara.lang.json.ast.JsonObject;
 import io.github.qishr.cascara.lang.json.ast.JsonNode;
 import io.github.qishr.cascara.lang.json.ast.JsonArray;
 import io.github.qishr.cascara.lang.xml.processor.XmlAstParser;
-import io.github.qishr.cascara.schema.diagnostic.SchemaDiagnosticCode;
+import io.github.qishr.cascara.schema.diagnostic.SchemaDiagnosticMessage;
 import io.github.qishr.cascara.schema.diagnostic.SchemaException;
 import io.github.qishr.cascara.lang.xml.ast.XmlNode;
 
@@ -100,7 +100,7 @@ public class VsixPreview {
         if (JsonAstParser.parse(jsonString) instanceof JsonObject m) {
             json = m;
         } else {
-            throw new SchemaException(SchemaDiagnosticCode.ROOT_MUST_BE_MAP);
+            throw new SchemaException(SchemaDiagnosticMessage.ROOT_MUST_BE_MAP);
         }
 
         // Use getEntries() from MappingAstNode
@@ -147,7 +147,7 @@ public class VsixPreview {
             ResourceContent manifest = IOUtils.getResource(URI.create(manifestUri));
             vsix.parsePackageManifest(manifest.content());
         } catch (IOException e) {
-            throw new LocalizableRuntimeException(e, GenericDiagnosticCode.ERROR, "Error parsing VSIX from URL: " + e.getMessage(), e);
+            throw new LocalizableRuntimeException(e, GenericMessage.ERROR, "Error parsing VSIX from URL: " + e.getMessage(), e);
         }
 
         return vsix;
@@ -229,7 +229,7 @@ public class VsixPreview {
             }
         }catch (Exception e) {
             e.printStackTrace();
-            throw new LocalizableRuntimeException(e, GenericDiagnosticCode.ERROR, e.getMessage());
+            throw new LocalizableRuntimeException(e, GenericMessage.ERROR, e.getMessage());
         }
     }
 
@@ -253,7 +253,7 @@ public class VsixPreview {
         if (rootNode instanceof JsonObject m) {
             json = m;
         } else {
-            throw new SchemaException(SchemaDiagnosticCode.ROOT_MUST_BE_MAP);
+            throw new SchemaException(SchemaDiagnosticMessage.ROOT_MUST_BE_MAP);
         }
 
         for (JsonProperty entry : json.getEntries()) {

@@ -39,12 +39,12 @@ import java.util.Map.Entry;
 
 import io.github.qishr.cascara.common.diagnostic.GlobalReporter;
 import io.github.qishr.cascara.common.diagnostic.Reporter;
-import io.github.qishr.cascara.common.diagnostic.code.GenericDiagnosticCode;
-import io.github.qishr.cascara.common.service.ServiceProviderLayer;
-import io.github.qishr.cascara.schema.Schema;
+import io.github.qishr.cascara.common.diagnostic.message.GenericMessage;
+import io.github.qishr.cascara.common.service.SPL;
+import io.github.qishr.cascara.schema.util.Schema;
 import io.github.qishr.cascara.common.lang.type.PrimitiveType;
 import io.github.qishr.cascara.schema.structure.SchemaNode;
-import io.github.qishr.cascara.ui.api.UiDiagnosticCode;
+import io.github.qishr.cascara.ui.api.UiDiagnosticMessage;
 import io.github.qishr.cascara.ui.api.data.ObservableTableData;
 import io.github.qishr.cascara.ui.data.ObservableObject;
 import io.github.qishr.cascara.ui.data.UiDataException;
@@ -67,7 +67,7 @@ public class ObjectFieldFactory extends AbstractFieldFactory {
         this.objectSchema = object.getObjectSchema();
     }
 
-    public ObjectFieldFactory(ObservableObject object, ServiceProviderLayer moduleLayer) {
+    public ObjectFieldFactory(ObservableObject object, SPL moduleLayer) {
         super(moduleLayer);
         this.object = object;
         this.objectSchema = object.getObjectSchema();
@@ -81,11 +81,11 @@ public class ObjectFieldFactory extends AbstractFieldFactory {
         this(object, schema, null);
     }
 
-    public ObjectFieldFactory(ObservableTableData object, Schema schema, ServiceProviderLayer moduleLayer) {
+    public ObjectFieldFactory(ObservableTableData object, Schema schema, SPL moduleLayer) {
         this(object, schema.getRoot(), moduleLayer);
     }
 
-    public ObjectFieldFactory(ObservableTableData object, SchemaNode schema, ServiceProviderLayer moduleLayer) {
+    public ObjectFieldFactory(ObservableTableData object, SchemaNode schema, SPL moduleLayer) {
         super(moduleLayer);
         this.object = object;
         this.objectSchema = schema;
@@ -160,7 +160,7 @@ public class ObjectFieldFactory extends AbstractFieldFactory {
     public Field createField(String fieldName) throws UiDataException {
         SchemaNode schema = getFieldSchema(fieldName);
         if (schema == null) {
-            REPORTER.error(UiDiagnosticCode.SCHEMA_NOT_SPECIFIED);
+            REPORTER.error(UiDiagnosticMessage.SCHEMA_NOT_SPECIFIED);
             return null;
         }
 
@@ -169,7 +169,7 @@ public class ObjectFieldFactory extends AbstractFieldFactory {
 
         Observable data = object.getObservablesMap().get(fieldName);
         if (data == null) {
-            throw new UiDataException(UiDiagnosticCode.PROPERTY_NOT_FOUND_IN_MAP, object.getClass().getSimpleName(), fieldName);
+            throw new UiDataException(UiDiagnosticMessage.PROPERTY_NOT_FOUND_IN_MAP, object.getClass().getSimpleName(), fieldName);
         }
 
         if (meta.isArrayField() && data instanceof ObservableList list) {
@@ -183,7 +183,7 @@ public class ObjectFieldFactory extends AbstractFieldFactory {
         ViewAndControl viewAndControl = createControl(meta, data);
 
         if (viewAndControl == null) {
-            throw new UiDataException(GenericDiagnosticCode.UNEXPECTED_NULL_RETURN, "this", "createControl");
+            throw new UiDataException(GenericMessage.UNEXPECTED_NULL_RETURN, "this", "createControl");
             // REPORTER.error(null, "Failed to create form field: " + fieldSchema.getOriginUri());
             // return null;
         }

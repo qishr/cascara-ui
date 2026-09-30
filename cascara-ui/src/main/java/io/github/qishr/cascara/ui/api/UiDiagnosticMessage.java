@@ -35,9 +35,9 @@
 
 package io.github.qishr.cascara.ui.api;
 
-import io.github.qishr.cascara.common.diagnostic.code.DiagnosticCode;
+import io.github.qishr.cascara.common.diagnostic.message.DiagnosticMessage;
 
-public enum UiDiagnosticCode implements DiagnosticCode {
+public enum UiDiagnosticMessage implements DiagnosticMessage {
     // Data
     UI_DATA_ERROR("UI-101", "UI data error."),
     PROPERTY_NOT_RECOGNIZED("UI-102","Unrecognized property name: {0}."),
@@ -62,13 +62,13 @@ public enum UiDiagnosticCode implements DiagnosticCode {
 
 
     private final String code;
-    private final String message;
+    private final String format;
 
-    UiDiagnosticCode(String code, String message) {
+    UiDiagnosticMessage(String code, String format) {
         this.code = code;
-        this.message = message;
+        this.format = format;
     }
 
     @Override public String getCode() { return code; }
-    @Override public String getMessage() { return message; }
+    @Override public String getFormat() { return format; }
 }

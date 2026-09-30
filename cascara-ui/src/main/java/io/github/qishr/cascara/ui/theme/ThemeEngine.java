@@ -51,10 +51,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import io.github.qishr.cascara.common.diagnostic.LocalizableRuntimeException;
-import io.github.qishr.cascara.common.diagnostic.code.GenericDiagnosticCode;
+import io.github.qishr.cascara.common.diagnostic.message.GenericMessage;
 import io.github.qishr.cascara.common.util.Cascara;
 import io.github.qishr.cascara.ui.api.HighlightingToken;
-import io.github.qishr.cascara.ui.api.UiDiagnosticCode;
+import io.github.qishr.cascara.ui.api.UiDiagnosticMessage;
 import io.github.qishr.cascara.ui.api.UiException;
 import io.github.qishr.cascara.ui.color.ColorDefinition;
 import io.github.qishr.cascara.ui.color.ColorException;
@@ -155,7 +155,7 @@ public class ThemeEngine {
                 instance.defaultTheme = new CascaraTheme(yaml);
                 setTheme(instance.defaultTheme);
             } catch(Exception e) {
-                throw new UiException(e, UiDiagnosticCode.LOAD_DEFAULT_FAILURE);
+                throw new UiException(e, UiDiagnosticMessage.LOAD_DEFAULT_FAILURE);
             }
         }
         return instance;
@@ -218,7 +218,7 @@ public class ThemeEngine {
         if (themeId.endsWith(".vsix")) {
             CascaraTheme theme = instance.convertVsix(themeId);
             if (theme == null) {
-                throw new LocalizableRuntimeException(GenericDiagnosticCode.ERROR, "Failed to convert VSIX to Cascara Theme: " + themeId);
+                throw new LocalizableRuntimeException(GenericMessage.ERROR, "Failed to convert VSIX to Cascara Theme: " + themeId);
             }
             theme.setThemeId(themeId);
             return theme;
@@ -246,7 +246,7 @@ public class ThemeEngine {
     public static void setTheme(CascaraTheme theme) {
         ThemeEngine instance = instance();
         if (theme == null) {
-            throw new UiException(GenericDiagnosticCode.UNEXPECTED_NULL_PARAMETER, "ThemeEngine.setTheme", "theme");
+            throw new UiException(GenericMessage.UNEXPECTED_NULL_PARAMETER, "ThemeEngine.setTheme", "theme");
         }
         instance.activeTheme.set(theme);
         Variation variation = theme.getVariations().getFirst();
@@ -407,7 +407,7 @@ public class ThemeEngine {
 
     private void applyVariation(Variation variation, ThemableObject target) throws ColorException {
         if (target == null) {
-            throw new UiException(UiDiagnosticCode.INVALID_THEMING_TARGET);
+            throw new UiException(UiDiagnosticMessage.INVALID_THEMING_TARGET);
         }
         setFontFamily("Verdana");
 
@@ -661,7 +661,7 @@ public class ThemeEngine {
 
         public static ThemableObject of(Scene scene) {
             if (scene == null) {
-                throw new UiException(GenericDiagnosticCode.UNEXPECTED_NULL_PARAMETER, "scene", "of");
+                throw new UiException(GenericMessage.UNEXPECTED_NULL_PARAMETER, "scene", "of");
             }
             ThemableObject object = new ThemableObject();
             object.scene = scene;
@@ -670,7 +670,7 @@ public class ThemeEngine {
 
         public static ThemableObject of(Parent parent) {
             if (parent == null) {
-                throw new UiException(GenericDiagnosticCode.UNEXPECTED_NULL_PARAMETER, "parent", "of");
+                throw new UiException(GenericMessage.UNEXPECTED_NULL_PARAMETER, "parent", "of");
             }
             ThemableObject object = new ThemableObject();
             object.parent = parent;
@@ -684,7 +684,7 @@ public class ThemeEngine {
             if (scene != null) {
                 return scene.getStylesheets();
             }
-            throw new UiException(GenericDiagnosticCode.INCONSISTENT_STATE);
+            throw new UiException(GenericMessage.INCONSISTENT_STATE);
         }
 
         @Override
