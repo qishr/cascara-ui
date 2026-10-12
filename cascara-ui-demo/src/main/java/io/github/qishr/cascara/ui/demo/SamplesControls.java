@@ -16,8 +16,8 @@ package io.github.qishr.cascara.ui.demo;
 import java.time.LocalDate;
 import java.util.Arrays;
 
-import io.github.qishr.cascara.common.diagnostic.GlobalReporter;
-import io.github.qishr.cascara.common.diagnostic.Reporter;
+import io.github.qishr.cascara.common.diagnostic.report.GlobalReporter;
+import io.github.qishr.cascara.common.diagnostic.report.Reporter;
 import io.github.qishr.cascara.common.diagnostic.message.GenericMessage;
 import io.github.qishr.cascara.ui.language.Localization;
 import javafx.css.CssMetaData;

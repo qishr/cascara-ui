@@ -35,7 +35,7 @@
 
 package io.github.qishr.cascara.ui.api;
 
-import io.github.qishr.cascara.common.diagnostic.LocalizableRuntimeException;
+import io.github.qishr.cascara.common.diagnostic.exception.LocalizableRuntimeException;
 import io.github.qishr.cascara.common.diagnostic.message.DiagnosticMessage;
 
 public class UiException extends LocalizableRuntimeException {

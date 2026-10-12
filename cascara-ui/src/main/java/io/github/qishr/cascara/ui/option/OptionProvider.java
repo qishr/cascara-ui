@@ -38,7 +38,7 @@ package io.github.qishr.cascara.ui.option;
 import java.util.List;
 import java.util.Map;
 
-import io.github.qishr.cascara.common.diagnostic.LocalizableRuntimeException;
+import io.github.qishr.cascara.common.diagnostic.exception.LocalizableRuntimeException;
 import io.github.qishr.cascara.common.service.ServiceProvider;
 import io.github.qishr.cascara.ui.api.render.ScalarRenderer;
 import javafx.beans.property.Property;

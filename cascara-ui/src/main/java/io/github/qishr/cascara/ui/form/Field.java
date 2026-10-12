@@ -40,8 +40,8 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import io.github.qishr.cascara.common.data.TabularData;
-import io.github.qishr.cascara.common.diagnostic.LocalizableRuntimeException;
-import io.github.qishr.cascara.common.diagnostic.SilentCollectingReporter;
+import io.github.qishr.cascara.common.diagnostic.exception.LocalizableRuntimeException;
+import io.github.qishr.cascara.common.diagnostic.report.SilentCollectingReporter;
 import io.github.qishr.cascara.common.diagnostic.message.GenericMessage;
 import io.github.qishr.cascara.schema.structure.SchemaNode;
 import io.github.qishr.cascara.ui.control.OptionChooser;

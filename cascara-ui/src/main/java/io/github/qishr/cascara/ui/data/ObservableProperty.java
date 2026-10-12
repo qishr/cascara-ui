@@ -36,8 +36,8 @@
 package io.github.qishr.cascara.ui.data;
 
 import io.github.qishr.cascara.common.property.Property;
-import io.github.qishr.cascara.common.annotation.SchemaDefinition;
-import io.github.qishr.cascara.common.annotation.SchemaProperty;
+import io.github.qishr.cascara.schema.annotation.SchemaDefinition;
+import io.github.qishr.cascara.schema.annotation.SchemaProperty;
 
 import javafx.beans.property.ObjectProperty;
 

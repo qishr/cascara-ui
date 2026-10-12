@@ -37,8 +37,8 @@ package io.github.qishr.cascara.ui.language.detect;
 
 import java.util.Locale;
 
-import io.github.qishr.cascara.common.diagnostic.GlobalReporter;
-import io.github.qishr.cascara.common.diagnostic.Reporter;
+import io.github.qishr.cascara.common.diagnostic.report.GlobalReporter;
+import io.github.qishr.cascara.common.diagnostic.report.Reporter;
 
 public class HybridLocaleDetector {
     private static final Reporter REPORTER = GlobalReporter.forClass(HybridLocaleDetector.class);
