@@ -35,7 +35,7 @@
 
 package io.github.qishr.cascara.ui.data;
 
-import io.github.qishr.cascara.common.lang.type.PrimitiveType;
+import io.github.qishr.cascara.common.type.PrimitiveType;
 
 public class PropertyMetadata {
     private PrimitiveType schemaType;

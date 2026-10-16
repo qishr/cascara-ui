@@ -38,7 +38,7 @@ package io.github.qishr.cascara.ui.render.control;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.qishr.cascara.common.lang.type.PrimitiveType;
+import io.github.qishr.cascara.common.type.PrimitiveType;
 import io.github.qishr.cascara.schema.structure.SchemaNode;
 import io.github.qishr.cascara.ui.api.data.DataProvider;
 import io.github.qishr.cascara.ui.api.render.ArrayEditorRenderer;

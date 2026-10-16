@@ -44,7 +44,7 @@ import io.github.qishr.cascara.schema.structure.LazySchemaNode;
 import io.github.qishr.cascara.schema.structure.ObjectSchemaNode;
 import io.github.qishr.cascara.schema.structure.ScalarSchemaNode;
 import io.github.qishr.cascara.schema.structure.SchemaNode;
-import io.github.qishr.cascara.common.lang.type.PrimitiveType;
+import io.github.qishr.cascara.common.type.PrimitiveType;
 import io.github.qishr.cascara.schema.rule.RegexRule;
 
 import static org.junit.jupiter.api.Assertions.*;

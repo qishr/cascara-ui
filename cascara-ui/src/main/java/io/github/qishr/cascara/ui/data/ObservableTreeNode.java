@@ -38,7 +38,7 @@ package io.github.qishr.cascara.ui.data;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.github.qishr.cascara.common.lang.type.PrimitiveType;
+import io.github.qishr.cascara.common.type.PrimitiveType;
 import io.github.qishr.cascara.schema.annotation.SchemaProperty;
 import io.github.qishr.cascara.schema.structure.SchemaNode;
 import io.github.qishr.cascara.ui.api.data.ObservableTreeData;

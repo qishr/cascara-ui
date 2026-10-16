@@ -41,7 +41,7 @@ import io.github.qishr.cascara.schema.structure.ArraySchemaNode;
 import io.github.qishr.cascara.schema.structure.AbstractSchemaNode;
 import io.github.qishr.cascara.schema.structure.ObjectSchemaNode;
 import io.github.qishr.cascara.schema.structure.ScalarSchemaNode;
-import io.github.qishr.cascara.common.lang.type.PrimitiveType;
+import io.github.qishr.cascara.common.type.PrimitiveType;
 import io.github.qishr.cascara.lang.yaml.ast.YamlMap;
 import io.github.qishr.cascara.lang.yaml.ast.YamlMapEntry;
 import io.github.qishr.cascara.lang.yaml.ast.YamlScalar;

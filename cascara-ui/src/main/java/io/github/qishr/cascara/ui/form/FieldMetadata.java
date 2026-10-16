@@ -45,7 +45,7 @@ import java.util.function.Consumer;
 
 import io.github.qishr.cascara.common.data.TabularData;
 import io.github.qishr.cascara.common.diagnostic.message.GenericMessage;
-import io.github.qishr.cascara.common.lang.type.PrimitiveType;
+import io.github.qishr.cascara.common.type.PrimitiveType;
 import io.github.qishr.cascara.schema.rule.EnumRule;
 import io.github.qishr.cascara.schema.rule.ValidationRule;
 import io.github.qishr.cascara.schema.structure.ArraySchemaNode;

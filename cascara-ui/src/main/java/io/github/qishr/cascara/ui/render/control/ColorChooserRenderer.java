@@ -35,7 +35,7 @@
 
 package io.github.qishr.cascara.ui.render.control;
 
-import io.github.qishr.cascara.common.lang.type.PrimitiveType;
+import io.github.qishr.cascara.common.type.PrimitiveType;
 import io.github.qishr.cascara.ui.api.data.DataProvider;
 import io.github.qishr.cascara.ui.api.render.ScalarEditorRenderer;
 import io.github.qishr.cascara.ui.color.ColorException;

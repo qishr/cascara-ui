@@ -35,7 +35,7 @@
 
 package io.github.qishr.cascara.ui.render;
 
-import io.github.qishr.cascara.common.lang.type.PrimitiveType;
+import io.github.qishr.cascara.common.type.PrimitiveType;
 import io.github.qishr.cascara.schema.structure.SchemaNode;
 import io.github.qishr.cascara.ui.form.FieldMetadata;
 import javafx.beans.property.ObjectProperty;

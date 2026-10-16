@@ -48,7 +48,7 @@ import java.util.Set;
 
 import io.github.qishr.cascara.common.lang.ast.AstNode;
 import io.github.qishr.cascara.schema.util.Schema;
-import io.github.qishr.cascara.common.lang.type.PrimitiveType;
+import io.github.qishr.cascara.common.type.PrimitiveType;
 import io.github.qishr.cascara.schema.structure.SchemaNode;
 import io.github.qishr.cascara.schema.util.SchemaCompiler;
 import io.github.qishr.cascara.schema.util.SchemaGenerator;

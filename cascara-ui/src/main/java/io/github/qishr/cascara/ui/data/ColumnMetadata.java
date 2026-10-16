@@ -37,8 +37,8 @@ package io.github.qishr.cascara.ui.data;
 
 import java.util.Comparator;
 
-import io.github.qishr.cascara.common.lang.type.ScalarDescriptor;
-import io.github.qishr.cascara.common.lang.type.TypeDescriptor;
+import io.github.qishr.cascara.common.type.ScalarDescriptor;
+import io.github.qishr.cascara.common.type.TypeDescriptor;
 import io.github.qishr.cascara.schema.structure.SchemaNode;
 import io.github.qishr.cascara.ui.api.render.Renderer;
 import io.github.qishr.cascara.ui.api.render.ScalarEditorRenderer;
