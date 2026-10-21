@@ -32,7 +32,7 @@
 // you do not wish to do so, delete this exception statement from your
 // version.
 
-
+/// JavaFX schema-driven controls, theme engine, and styling with support for VS Code themes.
 module cascara.ui {
     requires cascara.lang.json;
     requires cascara.lang.xml;

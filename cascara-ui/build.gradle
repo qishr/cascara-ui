@@ -1,12 +1,23 @@
 plugins {
-    id 'io.github.qishr.cascara-meta.java-library' version '0.1.0'
-    id "io.github.qishr.cascara-meta.publish" version "0.1.0"
+    id "java-library"
+    id "io.github.qishr.cascara.conventions" version "0.1.0"
+    id "io.github.qishr.cascara.publish" version "0.1.0"
     id("org.openjfx.javafxplugin") version "0.1.0"
 }
 
 repositories {
     mavenLocal()
     mavenCentral()
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.release = 25
 }
 
 dependencies {
@@ -32,14 +43,10 @@ dependencies {
     implementation "io.github.qishr:cascara-schema"
 }
 
-
 javafx {
     version = "25"
     modules = [ 'javafx.controls', 'javafx.graphics' ]
 }
-
-
-
 
 tasks.withType(Javadoc).configureEach {
     options.addStringOption('Xdoclint:-missing', '-quiet')

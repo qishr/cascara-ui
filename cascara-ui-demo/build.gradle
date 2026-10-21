@@ -1,7 +1,7 @@
 plugins {
     id 'application'
-    id 'io.github.qishr.cascara-meta.java-library' version '0.1.0'
-    id "io.github.qishr.cascara-meta.publish" version "0.1.0"
+    id "io.github.qishr.cascara.conventions" version "0.1.0"
+    id "io.github.qishr.cascara.publish" version "0.1.0"
     id("org.openjfx.javafxplugin") version "0.1.0"
 
     id 'com.gradleup.shadow' version '9.3.0'
@@ -40,13 +40,20 @@ project(":cascara-ui-demo") {
     }
 }
 
-// javaLauncher = javaToolchains.launcherFor {
-//     languageVersion = JavaLanguageVersion.of(25)
-// }
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
 
 repositories {
     mavenLocal()
     mavenCentral()
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.release = 25
 }
 
 dependencies {
