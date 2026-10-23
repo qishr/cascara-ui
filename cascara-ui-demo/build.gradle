@@ -1,7 +1,7 @@
 plugins {
     id 'application'
     id "io.github.qishr.cascara.conventions" version "0.1.0"
-    id "io.github.qishr.cascara.publish" version "0.1.0"
+    id "io.github.qishr.cascara.publish" version "0.1.1"
     id("org.openjfx.javafxplugin") version "0.1.0"
 
     id 'com.gradleup.shadow' version '9.3.0'
